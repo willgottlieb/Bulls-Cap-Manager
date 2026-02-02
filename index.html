@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bulls Salary Cap Sheet</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --red:#CE1141; --red-dark:#a00d33;
+  --bg0:#0a0a0a; --bg1:#1a1a1a; --bg2:#2a2a2a; --bg3:#333;
+  --txt:#fff; --txt2:#a0a0a0;
+  --green:#10b981; --amber:#f59e0b; --danger:#ef4444;
+  --pink:#ec4899; --blue:#3b82f6; --gray:#6b7280;
+}
+
+body {
+  font-family:'Inter',sans-serif;
+  background:linear-gradient(135deg,var(--bg0) 0%,#1a0a0f 100%);
+  color:var(--txt); min-height:100vh; padding:20px;
+}
+.container { max-width:1700px; margin:0 auto; }
+
+/* ─── HEADER ─── */
+.header {
+  background:linear-gradient(135deg,var(--red),var(--red-dark));
+  padding:28px 32px; border-radius:14px; margin-bottom:24px;
+  box-shadow:0 16px 48px rgba(206,17,65,.3);
+  position:relative; overflow:hidden;
+}
+.header::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(circle at 80% 50%,rgba(255,255,255,.07) 0%,transparent 60%);
+}
+.header > * { position:relative; z-index:1; }
+.header h1 { font-size:38px; font-weight:800; letter-spacing:-.02em; margin-bottom:4px; }
+.header .sub { font-size:15px; opacity:.85; font-weight:500; }
+
+/* ─── CONTROLS ─── */
+.controls { display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; align-items:center; }
+.search-wrap { position:relative; flex:1; max-width:380px; }
+.search-wrap .icon { position:absolute; left:12px; top:50%; transform:translateY(-50%); font-size:16px; pointer-events:none; }
+.search-input {
+  width:100%; background:var(--bg1); border:1px solid var(--bg3); color:var(--txt);
+  padding:11px 14px 11px 38px; border-radius:8px; font-size:14px; font-family:inherit;
+}
+.search-input:focus { outline:none; border-color:var(--red); }
+
+.dropdown {
+  position:absolute; top:calc(100% + 4px); left:0; right:0;
+  background:var(--bg1); border:1px solid var(--bg3); border-radius:8px;
+  max-height:260px; overflow-y:auto; z-index:200; display:none;
+}
+.dropdown.show { display:block; }
+.dropdown-item { padding:11px 14px; cursor:pointer; border-bottom:1px solid var(--bg3); transition:background .15s; }
+.dropdown-item:last-child { border-bottom:none; }
+.dropdown-item:hover { background:var(--bg2); }
+.dropdown-item .d-name { font-weight:600; font-size:14px; }
+.dropdown-item .d-meta { font-size:12px; color:var(--txt2); margin-top:2px; }
+
+.btn {
+  background:var(--bg1); border:1px solid var(--bg3); color:var(--txt);
+  padding:11px 20px; border-radius:8px; font-size:13px; font-weight:600;
+  cursor:pointer; transition:.2s; display:flex; align-items:center; gap:6px; white-space:nowrap;
+}
+.btn:hover { background:var(--bg2); transform:translateY(-1px); box-shadow:0 4px 12px rgba(0,0,0,.3); }
+.btn-red { background:var(--red); border-color:var(--red); }
+.btn-red:hover { background:var(--red-dark); }
+
+/* ─── SUMMARY CARDS ─── */
+.cards { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:22px; }
+.card {
+  background:var(--bg1); border:1px solid var(--bg3); border-radius:10px; padding:18px;
+  transition:.25s;
+}
+.card:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,.4); }
+.card.c-ok   { border-color:var(--green); background:linear-gradient(135deg,var(--bg1),rgba(16,185,129,.08)); }
+.card.c-warn { border-color:var(--amber); background:linear-gradient(135deg,var(--bg1),rgba(245,158,11,.08)); }
+.card.c-bad  { border-color:var(--danger); background:linear-gradient(135deg,var(--bg1),rgba(239,68,68,.08)); }
+.card .c-lbl { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); margin-bottom:6px; }
+.card .c-val { font-size:26px; font-weight:700; }
+.card .c-sub { font-size:12px; color:var(--txt2); margin-top:3px; }
+.card .c-row { display:flex; justify-content:space-between; margin-top:8px; padding-top:8px; border-top:1px solid var(--bg3); }
+.card .c-row span { font-size:11px; color:var(--txt2); }
+.card .c-row strong { font-size:11px; font-weight:600; }
+.card .c-row strong.pos { color:var(--green); }
+.card .c-row strong.neg { color:var(--danger); }
+
+/* ─── LEGEND ─── */
+.legend {
+  background:var(--bg1); border:1px solid var(--bg3); border-radius:10px;
+  padding:14px 18px; margin-bottom:20px; display:flex; align-items:center; gap:20px; flex-wrap:wrap;
+}
+.legend .lbl { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); }
+.legend-items { display:flex; gap:14px; flex-wrap:wrap; }
+.legend-item { display:flex; align-items:center; gap:6px; font-size:12px; }
+
+/* ─── BADGES ─── */
+.badge {
+  display:inline-block; padding:2px 7px; border-radius:4px;
+  font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.04em;
+}
+.b-gtd  { background:rgba(16,185,129,.2);  color:var(--green); }
+.b-po   { background:rgba(236,72,153,.2);  color:var(--pink);  }
+.b-to   { background:rgba(59,130,246,.2);  color:var(--blue);  }
+.b-hold { background:rgba(245,158,11,.2);  color:var(--amber); }
+.b-dead { background:rgba(107,114,128,.2); color:var(--gray);  }
+
+/* ─── TABLE ─── */
+.section { background:var(--bg1); border:1px solid var(--bg3); border-radius:10px; overflow:hidden; margin-bottom:18px; }
+.section-hdr {
+  padding:12px 18px; background:var(--bg2); font-size:12px; font-weight:700;
+  text-transform:uppercase; letter-spacing:.06em; color:var(--txt2);
+  display:flex; align-items:center; gap:8px;
+}
+
+.tbl-head, .tbl-row {
+  display:grid;
+  grid-template-columns: 42px 1fr 140px 140px 140px 140px 130px;
+  gap:8px; padding:12px 18px; align-items:center;
+}
+.tbl-head {
+  background:var(--bg2); border-bottom:1px solid var(--bg3);
+  font-size:11px; font-weight:700; text-transform:uppercase;
+  letter-spacing:.05em; color:var(--txt2);
+}
+.tbl-row { border-bottom:1px solid var(--bg3); transition:background .15s; }
+.tbl-row:hover { background:var(--bg2); }
+.tbl-row:last-child { border-bottom:none; }
+.tbl-row .r-num { font-weight:600; color:var(--txt2); font-size:13px; text-align:center; }
+.tbl-row .r-name { font-weight:600; font-size:14px; }
+
+/* salary cell — filled */
+.sal-cell {
+  display:flex; flex-direction:column; gap:2px;
+  cursor:pointer; padding:4px 6px; border-radius:5px; transition:background .15s;
+}
+.sal-cell:hover { background:rgba(255,255,255,.06); }
+.sal-cell .s-amt { font-weight:600; font-size:13px; }
+.sal-cell .s-pct { font-size:11px; color:var(--txt2); display:flex; align-items:center; gap:4px; }
+
+/* salary cell — empty / editable */
+.sal-cell-empty {
+  display:flex; align-items:center; justify-content:center;
+  height:40px; border:1px dashed rgba(255,255,255,.15); border-radius:5px;
+  cursor:pointer; transition:all .15s; color:var(--txt2); font-size:12px;
+}
+.sal-cell-empty:hover { border-color:var(--red); color:var(--red); background:rgba(206,17,65,.06); }
+
+/* ─── POPUPS ─── */
+.popup {
+  position:absolute; background:var(--bg1); border:1px solid var(--bg3);
+  border-radius:8px; padding:8px; z-index:300; display:none;
+  box-shadow:0 8px 24px rgba(0,0,0,.5);
+}
+.popup.show { display:block; }
+.popup button {
+  display:block; width:100%; text-align:left; background:transparent; border:none;
+  color:var(--txt); padding:7px 12px; font-size:12px; font-weight:600; cursor:pointer;
+  border-radius:5px; font-family:inherit; transition:background .15s;
+}
+.popup button:hover { background:var(--bg2); }
+.popup button.active { background:var(--bg2); }
+
+.sal-input-wrap { display:flex; gap:6px; align-items:center; padding:4px 0; }
+.sal-input {
+  flex:1; background:var(--bg0); border:1px solid var(--bg3); color:var(--txt);
+  padding:8px 10px; border-radius:6px; font-size:14px; font-weight:600; font-family:inherit; width:120px;
+}
+.sal-input:focus { outline:none; border-color:var(--red); }
+.sal-input-wrap .popup-btn {
+  background:var(--red); border:none; color:#fff; padding:8px 12px;
+  border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; font-family:inherit;
+}
+.sal-input-wrap .popup-btn:hover { background:var(--red-dark); }
+
+/* empty row */
+.tbl-row.empty { background:rgba(206,17,65,.06); border:1px dashed var(--red) !important; }
+.empty-input {
+  background:rgba(206,17,65,.1); border:1px solid var(--red); color:var(--txt);
+  padding:7px 10px; border-radius:6px; font-size:13px; font-weight:600;
+  width:100%; font-family:inherit;
+}
+.empty-input:focus { outline:none; background:rgba(206,17,65,.17); }
+
+/* hold / dead rows */
+.tbl-row.hold-row { background:rgba(245,158,11,.06); border-left:3px solid var(--amber) !important; }
+.tbl-row.dead-row { background:rgba(107,114,128,.08); border-left:3px solid var(--gray) !important; }
+
+/* totals */
+.tbl-row.totals {
+  background:linear-gradient(135deg,rgba(206,17,65,.12),var(--bg2));
+  border-top:2px solid var(--red) !important; font-weight:700;
+}
+.tbl-row.totals .s-amt { font-size:15px; }
+
+/* status rows */
+.tbl-row.status { background:var(--bg2); }
+.tbl-row.status .r-name { font-size:12px; font-weight:600; color:var(--txt2); }
+.status-val { font-weight:600; font-size:13px; }
+.status-val.pos { color:var(--green); }
+.status-val.neg { color:var(--danger); }
+
+/* ─── ACTION COLUMN ─── */
+.act { display:flex; gap:3px; flex-wrap:wrap; justify-content:center; }
+.act-btn {
+  background:var(--bg2); border:1px solid var(--bg3); color:var(--txt);
+  width:26px; height:26px; border-radius:5px; cursor:pointer; font-size:11px;
+  display:flex; align-items:center; justify-content:center; transition:.15s;
+}
+.act-btn:hover { background:var(--red); border-color:var(--red); }
+
+.act-btn.pickup  { background:rgba(16,185,129,.15); border-color:var(--green); color:var(--green); font-size:10px; font-weight:700; width:auto; padding:0 7px; }
+.act-btn.pickup:hover  { background:var(--green); color:#fff; border-color:var(--green); }
+.act-btn.decline { background:rgba(239,68,68,.15); border-color:var(--danger); color:var(--danger); font-size:10px; font-weight:700; width:auto; padding:0 7px; }
+.act-btn.decline:hover { background:var(--danger); color:#fff; border-color:var(--danger); }
+.act-btn.renounce { background:rgba(245,158,11,.15); border-color:var(--amber); color:var(--amber); font-size:10px; font-weight:700; width:auto; padding:0 7px; }
+.act-btn.renounce:hover { background:var(--amber); color:#fff; border-color:var(--amber); }
+
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:var(--bg0); }
+::-webkit-scrollbar-thumb { background:var(--bg3); border-radius:3px; }
+
+@media(max-width:1100px){ .cards { grid-template-columns:repeat(2,1fr); } }
+@media(max-width:600px)  { .cards { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <h1>🏀 Chicago Bulls Salary Cap Sheet</h1>
+  <p class="sub">2025-26 through 2028-29 · Luxury Tax &amp; Apron Tracking</p>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <span class="icon">🔍</span>
+    <input type="text" class="search-input" id="searchInput" placeholder="Search NBA players to add…" autocomplete="off">
+    <div class="dropdown" id="searchDrop"></div>
+  </div>
+  <button class="btn btn-red" onclick="addEmptyRow()">➕ Add Row</button>
+  <button class="btn" onclick="exportCSV()">📊 Export CSV</button>
+</div>
+
+<div class="cards" id="cards"></div>
+
+<div class="legend">
+  <span class="lbl">Legend</span>
+  <div class="legend-items">
+    <div class="legend-item"><span class="badge b-gtd">GTD</span> Guaranteed</div>
+    <div class="legend-item"><span class="badge b-po">PO</span> Player Option</div>
+    <div class="legend-item"><span class="badge b-to">TO</span> Team Option</div>
+    <div class="legend-item"><span class="badge b-hold">HOLD</span> Cap Hold</div>
+    <div class="legend-item"><span class="badge b-dead">DEAD</span> Dead Money</div>
+  </div>
+  <span style="margin-left:auto;color:var(--txt2);font-size:11px;">💡 Click any salary to edit type · Click <strong style="color:var(--red)">+ Add</strong> to enter a new amount</span>
+</div>
+
+<div class="section" id="activeSection">
+  <div class="section-hdr">👥 Active Roster · <span id="activeCount">0</span> / 15</div>
+  <div class="tbl-head">
+    <div style="text-align:center">Ros.</div>
+    <div>Player</div>
+    <div>2025-26</div>
+    <div>2026-27</div>
+    <div>2027-28</div>
+    <div>2028-29</div>
+    <div>Actions</div>
+  </div>
+  <div id="rosterBody"></div>
+  <div class="tbl-row totals" id="totalsRow"></div>
+</div>
+
+<div class="section" id="holdsSection" style="display:none">
+  <div class="section-hdr">🔶 Cap Holds</div>
+  <div id="holdsBody"></div>
+</div>
+
+<div class="section" id="deadSection" style="display:none">
+  <div class="section-hdr">💀 Dead Money</div>
+  <div id="deadBody"></div>
+</div>
+
+<div class="section">
+  <div id="statusRows"></div>
+</div>
+
+</div>
+
+<div class="popup" id="typePopup"></div>
+<div class="popup" id="salPopup"></div>
+
+<script>
+const YEARS = ['2025-26','2026-27','2027-28','2028-29'];
+const SORT_YEAR = '2025-26';
+
+const CAP = {
+  '2025-26':{ cap:154647000, tax:187897000, a1:195946000, a2:207825000 },
+  '2026-27':{ cap:165472290, tax:201049790, a1:209662220, a2:222372750 },
+  '2027-28':{ cap:173745905, tax:215123275, a1:224338575, a2:237938843 },
+  '2028-29':{ cap:182433200, tax:230181905, a1:240042276, a2:254594561 }
+};
+
+let roster = [
+  { id:1,  name:"Josh Giddey",      sal:{ '2025-26':25000000,'2026-27':25000000,'2027-28':25000000,'2028-29':25000000 }, typ:{ '2025-26':'gtd','2026-27':'gtd','2027-28':'gtd','2028-29':'gtd' } },
+  { id:2,  name:"Nikola Vučević",   sal:{ '2025-26':21481481,'2026-27':32222222 },                                     typ:{ '2025-26':'gtd','2026-27':'po'  } },
+  { id:3,  name:"Zach Collins",     sal:{ '2025-26':18080496,'2026-27':27120744 },                                     typ:{ '2025-26':'gtd','2026-27':'po'  } },
+  { id:4,  name:"Patrick Williams", sal:{ '2025-26':18000000,'2026-27':18000000,'2027-28':18000000,'2028-29':18000000 }, typ:{ '2025-26':'gtd','2026-27':'gtd','2027-28':'gtd','2028-29':'po'  } },
+  { id:5,  name:"Kevin Huerter",    sal:{ '2025-26':17991071,'2026-27':26986607 },                                     typ:{ '2025-26':'gtd','2026-27':'po'  } },
+  { id:6,  name:"Coby White",       sal:{ '2025-26':12888889,'2026-27':24488889 },                                     typ:{ '2025-26':'gtd','2026-27':'po'  } },
+  { id:7,  name:"Isaac Okoro",      sal:{ '2025-26':11000000,'2026-27':11814814,'2027-28':22448147 },                  typ:{ '2025-26':'gtd','2026-27':'gtd','2027-28':'po'  } },
+  { id:8,  name:"Jalen Smith",      sal:{ '2025-26':9000000, '2026-27':9428571, '2027-28':17914285 },                  typ:{ '2025-26':'gtd','2026-27':'gtd','2027-28':'po'  } },
+  { id:9,  name:"Tre Jones",        sal:{ '2025-26':8000000, '2026-27':8000000, '2027-28':8000000, '2028-29':15200000 }, typ:{ '2025-26':'gtd','2026-27':'gtd','2027-28':'gtd','2028-29':'po'  } },
+  { id:10, name:"Ayo Dosunmu",      sal:{ '2025-26':7518518, '2026-27':14285184 },                                     typ:{ '2025-26':'gtd','2026-27':'po'  } },
+  { id:16, name:"Dario Šarić",      sal:{ '2025-26':5426400 },                                                         typ:{ '2025-26':'gtd'  } },
+  { id:12, name:"Matas Buzelis",    sal:{ '2025-26':5455560, '2026-27':5715360, '2027-28':7584283, '2028-29':10689716 }, typ:{ '2025-26':'gtd','2026-27':'gtd','2027-28':'gtd','2028-29':'to'  } },
+  { id:13, name:"Noa Essengue",     sal:{ '2025-26':5429520, '2026-27':5701200, '2027-28':5972760, '2028-29':8230464  }, typ:{ '2025-26':'gtd','2026-27':'gtd','2027-28':'gtd','2028-29':'to'  } },
+  { id:14, name:"Dalen Terry",      sal:{ '2025-26':5399118, '2026-27':7661087  },                                     typ:{ '2025-26':'gtd','2026-27':'to'  } },
+  { id:15, name:"Julian Phillips",  sal:{ '2025-26':2221677, '2026-27':2406205, '2027-28':2702711  },                  typ:{ '2025-26':'gtd','2026-27':'gtd','2027-28':'to'  } }
+];
+
+let capHolds  = [];
+let deadMoney = [
+  { id:11, name:"Jevon Carter (waived)", sal:{ '2025-26':6809524 }, typ:{ '2025-26':'dead' } }
+];
+let emptyRows = [];
+let nextId    = 200;
+
+const NBA_DB = [
+  { name:"LeBron James",            team:"Lakers",     sal:{ '2025-26':51415938,'2026-27':55528704 } },
+  { name:"Stephen Curry",           team:"Warriors",  sal:{ '2025-26':55761216,'2026-27':59606817 } },
+  { name:"Kevin Durant",            team:"Suns",      sal:{ '2025-26':51915938,'2026-27':54669528 } },
+  { name:"Giannis Antetokounmpo",   team:"Bucks",     sal:{ '2025-26':48787676,'2026-27':51935806 } },
+  { name:"Luka Doncic",             team:"Mavericks", sal:{ '2025-26':43031940,'2026-27':46021476 } },
+  { name:"Jayson Tatum",            team:"Celtics",   sal:{ '2025-26':34848340,'2026-27':37096500 } },
+  { name:"Joel Embiid",             team:"76ers",     sal:{ '2025-26':51415938,'2026-27':55528704 } },
+  { name:"Nikola Jokic",            team:"Nuggets",   sal:{ '2025-26':55224526,'2026-27':59406478 } },
+  { name:"Damian Lillard",          team:"Bucks",     sal:{ '2025-26':48788888,'2026-27':58458931 } },
+  { name:"Anthony Davis",           team:"Lakers",    sal:{ '2025-26':43219440,'2026-27':57558000 } },
+  { name:"Tyrese Haliburton",       team:"Pacers",    sal:{ '2025-26':30268027,'2026-27':32350000 } },
+  { name:"Shai Gilgeous-Alexander", team:"Thunder",   sal:{ '2025-26':33933525,'2026-27':36315000 } },
+  { name:"Jalen Brunson",           team:"Knicks",    sal:{ '2025-26':30268027,'2026-27':32350000 } },
+  { name:"Victor Wembanyama",       team:"Spurs",     sal:{ '2025-26':10950300,'2026-27':13731975,'2027-28':17104560 } },
+  { name:"Paolo Banchero",          team:"Magic",     sal:{ '2025-26':10950300,'2026-27':13731975,'2027-28':17104560 } },
+  { name:"Chet Holmgren",           team:"Thunder",   sal:{ '2025-26':10950300,'2026-27':13731975,'2027-28':17104560 } },
+  { name:"Bam Adebayo",             team:"Heat",      sal:{ '2025-26':36450000,'2026-27':39000000 } },
+  { name:"Kawhi Leonard",           team:"Clippers",  sal:{ '2025-26':48787676,'2026-27':51935806 } },
+  { name:"Kyrie Irving",            team:"Mavericks", sal:{ '2025-26':46083810,'2026-27':49239780 } },
+  { name:"Trae Young",              team:"Hawks",     sal:{ '2025-26':46083810,'2026-27':49239780 } },
+  { name:"De'Andre Hunter",         team:"Hawks",     sal:{ '2025-26':24157303,'2026-27':25868224 } },
+  { name:"Scottie Barnes",          team:"Raptors",   sal:{ '2025-26':32590260,'2026-27':34831578 } },
+  { name:"Donovan Mitchell",        team:"Cavaliers", sal:{ '2025-26':36450000,'2026-27':39000000 } },
+  { name:"Jalen Green",             team:"Grizzlies", sal:{ '2025-26':33933525,'2026-27':36315000 } },
+  { name:"Jonathan Kuminga",        team:"Warriors",  sal:{ '2025-26':22500000,'2026-27':24300000 } },
+  { name:"Buddy Hield",             team:"Free Agent",sal:{ '2025-26':9219512, '2026-27':3000000, '2027-28':3000000 } },
+  { name:"Al Horford",              team:"Celtics",   sal:{ '2025-26':5685000, '2026-27':5969250 } },
+  { name:"Draymond Green",          team:"Warriors",  sal:{ '2025-26':22325000,'2026-27':23858750 } }
+];
+
+// ═══ HELPERS ═══
+function fmt(n){ return n ? '$'+(n/1e6).toFixed(1)+'M' : '—'; }
+function pct(n,d){ return d ? (n/d*100).toFixed(1)+'%' : '—'; }
+function badgeClass(t){ return { gtd:'b-gtd',po:'b-po',to:'b-to',hold:'b-hold',dead:'b-dead' }[t]||'b-gtd'; }
+function badgeLabel(t){ return { gtd:'GTD',po:'PO',to:'TO',hold:'HOLD',dead:'DEAD' }[t]||'GTD'; }
+
+function totalFor(year, includeHolds=true){
+  let s = roster.reduce((a,p)=> a+(p.sal[year]||0), 0);
+  s += deadMoney.reduce((a,p)=> a+(p.sal[year]||0), 0);
+  if(includeHolds) s += capHolds.reduce((a,p)=> a+(p.sal[year]||0), 0);
+  return s;
+}
+
+function sorted(){
+  return [...roster].sort((a,b)=> (b.sal[SORT_YEAR]||0)-(a.sal[SORT_YEAR]||0));
+}
+
+// first PO or TO year for a player (used to show action buttons)
+function firstOption(player){
+  for(const y of YEARS){
+    const t = player.typ[y];
+    if(t==='po'||t==='to') return { year:y, type:t };
+  }
+  return null;
+}
+
+// ═══ RENDER ═══
+function render(){
+  renderCards();
+  renderRoster();
+  renderHolds();
+  renderDead();
+  renderStatus();
+}
+
+function renderCards(){
+  let h = '';
+  YEARS.forEach(y=>{
+    const ci  = CAP[y];
+    const tot = totalFor(y);
+    const capSp = ci.cap - tot;
+    const taxSp = ci.tax - tot;
+    const a1Sp  = ci.a1  - tot;
+
+    let cls = 'c-ok';
+    if(tot > ci.a2)  cls = 'c-bad';
+    else if(tot > ci.a1)  cls = 'c-bad';
+    else if(tot > ci.tax) cls = 'c-warn';
+    else if(tot > ci.cap) cls = 'c-warn';
+
+    h += `<div class="card ${cls}">
+      <div class="c-lbl">${y}</div>
+      <div class="c-val">${fmt(tot)}</div>
+      <div class="c-sub">${pct(tot,ci.cap)} of cap</div>
+      <div class="c-row"><span>Cap</span><strong class="${capSp>=0?'pos':'neg'}">${capSp<0?'−':''}${fmt(Math.abs(capSp))}</strong></div>
+      <div class="c-row"><span>Tax</span><strong class="${taxSp>=0?'pos':'neg'}">${taxSp<0?'−':''}${fmt(Math.abs(taxSp))}</strong></div>
+      <div class="c-row"><span>1st Apron</span><strong class="${a1Sp>=0?'pos':'neg'}">${a1Sp<0?'−':''}${fmt(Math.abs(a1Sp))}</strong></div>
+    </div>`;
+  });
+  document.getElementById('cards').innerHTML = h;
+}
+
+function renderRoster(){
+  const s = sorted();
+  document.getElementById('activeCount').textContent = s.length;
+  let h = '';
+
+  s.forEach((p, i)=>{
+    h += `<div class="tbl-row" data-id="${p.id}">
+      <div class="r-num">${i+1}</div>
+      <div class="r-name">${p.name}</div>`;
+
+    YEARS.forEach(y=>{
+      const sal = p.sal[y]||0;
+      const t   = p.typ[y]||'gtd';
+      if(sal){
+        h += `<div class="sal-cell" onclick="openTypeEdit(event,${p.id},'${y}')" title="Click to change contract type">
+          <span class="s-amt">${fmt(sal)}</span>
+          <span class="s-pct">${pct(sal,CAP[y].cap)} <span class="badge ${badgeClass(t)}">${badgeLabel(t)}</span></span>
+        </div>`;
+      } else {
+        h += `<div class="sal-cell-empty" onclick="openSalEdit(event,${p.id},'${y}')" title="Click to enter a salary">+ Add</div>`;
+      }
+    });
+
+    // actions
+    let actions = '';
+    const opt = firstOption(p);
+    if(opt){
+      const lbl = opt.type==='to' ? 'TO' : 'PO';
+      actions += `<button class="act-btn pickup"  onclick="pickUpOption(${p.id},'${opt.year}')" title="Exercise the ${lbl}">✓ ${lbl}</button>`;
+      actions += `<button class="act-btn decline" onclick="declineOption(${p.id},'${opt.year}')" title="Decline the ${lbl}">✕ ${lbl}</button>`;
+    }
+    actions += `<button class="act-btn" onclick="waivePlayer(${p.id})" title="Waive">💀</button>`;
+    actions += `<button class="act-btn" onclick="removePlayer(${p.id})" title="Remove">🗑️</button>`;
+
+    h += `<div class="act">${actions}</div></div>`;
+  });
+
+  // empty rows
+  emptyRows.forEach((er, i)=>{
+    h += `<div class="tbl-row empty">
+      <div class="r-num">${s.length+i+1}</div>
+      <div><input class="empty-input" placeholder="Type a player name…" oninput="emptySearch(this,'${er.id}')" autocomplete="off"></div>
+      ${YEARS.map(()=>'<div class="sal-cell-empty" style="opacity:.3">—</div>').join('')}
+      <div class="act"><button class="act-btn" onclick="removeEmpty('${er.id}')">✕</button></div>
+    </div>`;
+  });
+
+  document.getElementById('rosterBody').innerHTML = h;
+
+  // totals row
+  let tr = '<div class="r-num"></div><div class="r-name" style="font-weight:700;font-size:13px;">TEAM TOTAL</div>';
+  YEARS.forEach(y=>{
+    const t = totalFor(y);
+    tr += `<div class="sal-cell"><span class="s-amt">${fmt(t)}</span><span class="s-pct">${pct(t,CAP[y].cap)}</span></div>`;
+  });
+  tr += '<div></div>';
+  document.getElementById('totalsRow').innerHTML = tr;
+}
+
+function renderHolds(){
+  const sec = document.getElementById('holdsSection');
+  if(!capHolds.length){ sec.style.display='none'; return; }
+  sec.style.display='block';
+  let h = '';
+  capHolds.forEach(p=>{
+    h += `<div class="tbl-row hold-row">
+      <div class="r-num">—</div>
+      <div class="r-name">${p.name}</div>`;
+    YEARS.forEach(y=>{
+      const sal = p.sal[y]||0;
+      h += sal
+        ? `<div class="sal-cell"><span class="s-amt">${fmt(sal)}</span><span class="s-pct">${pct(sal,CAP[y].cap)} <span class="badge b-hold">HOLD</span></span></div>`
+        : `<div class="sal-cell-empty" style="opacity:.2">—</div>`;
+    });
+    h += `<div class="act"><button class="act-btn renounce" onclick="renounce(${p.id})" title="Renounce cap hold">Renounce</button></div></div>`;
+  });
+  document.getElementById('holdsBody').innerHTML = h;
+}
+
+function renderDead(){
+  const sec = document.getElementById('deadSection');
+  if(!deadMoney.length){ sec.style.display='none'; return; }
+  sec.style.display='block';
+  let h = '';
+  deadMoney.forEach(p=>{
+    h += `<div class="tbl-row dead-row">
+      <div class="r-num">—</div>
+      <div class="r-name">${p.name}</div>`;
+    YEARS.forEach(y=>{
+      const sal = p.sal[y]||0;
+      h += sal
+        ? `<div class="sal-cell"><span class="s-amt">${fmt(sal)}</span><span class="s-pct">${pct(sal,CAP[y].cap)} <span class="badge b-dead">DEAD</span></span></div>`
+        : `<div class="sal-cell-empty" style="opacity:.2">—</div>`;
+    });
+    h += `<div class="act"><button class="act-btn" onclick="removeDead(${p.id})" title="Remove">🗑️</button></div></div>`;
+  });
+  document.getElementById('deadBody').innerHTML = h;
+}
+
+function renderStatus(){
+  const rows = [
+    { label:'Cap Space', fn:ci=>ci.cap },
+    { label:'Tax Space', fn:ci=>ci.tax },
+    { label:'1st Apron', fn:ci=>ci.a1  },
+    { label:'2nd Apron', fn:ci=>ci.a2  }
+  ];
+  let h = '';
+  rows.forEach(row=>{
+    h += `<div class="tbl-row status">
+      <div class="r-num"></div>
+      <div class="r-name">${row.label}</div>`;
+    YEARS.forEach(y=>{
+      const space = row.fn(CAP[y]) - totalFor(y);
+      h += `<div class="status-val ${space>=0?'pos':'neg'}">${space<0?'−':''}${fmt(Math.abs(space))}</div>`;
+    });
+    h += '<div></div></div>';
+  });
+  document.getElementById('statusRows').innerHTML = h;
+}
+
+// ═══ TYPE EDITOR (click a filled salary cell) ═══
+let popupTarget = null;
+
+function openTypeEdit(e, playerId, year){
+  e.stopPropagation();
+  closePopups();
+  const rect = e.currentTarget.getBoundingClientRect();
+  const popup = document.getElementById('typePopup');
+  popupTarget = { playerId, year };
+
+  const player = roster.find(p=> p.id===playerId);
+  const cur = player ? player.typ[year] : 'gtd';
+
+  const options = [
+    { key:'gtd',  label:'Guaranteed' },
+    { key:'po',   label:'Player Option' },
+    { key:'to',   label:'Team Option' },
+    { key:'hold', label:'Cap Hold' }
+  ];
+
+  popup.innerHTML = options.map(o=>
+    `<button onclick="applyType('${o.key}')" class="${o.key===cur?'active':''}">
+      <span class="badge ${badgeClass(o.key)}" style="margin-right:8px">${badgeLabel(o.key)}</span>${o.label}
+    </button>`
+  ).join('') +
+  `<div style="border-top:1px solid var(--bg3);margin:4px 0 2px"></div>
+   <button onclick="applyType('clear')" style="color:var(--danger);opacity:.7;">
+     <span style="margin-right:8px;font-size:11px">✕</span>Remove ${year}
+   </button>`;
+
+  popup.style.left = rect.left + window.scrollX + 'px';
+  popup.style.top  = rect.bottom + window.scrollY + 4 + 'px';
+  popup.classList.add('show');
+}
+
+function applyType(type){
+  if(!popupTarget) return;
+  const player = roster.find(p=> p.id===popupTarget.playerId);
+  if(player){
+    if(type==='clear'){
+      delete player.sal[popupTarget.year];
+      delete player.typ[popupTarget.year];
+    } else {
+      player.typ[popupTarget.year] = type;
+    }
+  }
+  closePopups();
+  render();
+}
+
+// ═══ SALARY EDITOR (click an empty cell) ═══
+function openSalEdit(e, playerId, year){
+  e.stopPropagation();
+  closePopups();
+  const rect = e.currentTarget.getBoundingClientRect();
+  const popup = document.getElementById('salPopup');
+  popupTarget = { playerId, year };
+
+  popup.innerHTML = `
+    <div style="font-size:11px;color:var(--txt2);font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em">${year} Salary</div>
+    <div class="sal-input-wrap">
+      <input type="number" class="sal-input" id="salInput" placeholder="e.g. 15000000"
+             onkeydown="if(event.key==='Enter')applySalary()">
+      <button class="popup-btn" onclick="applySalary()">Set</button>
+    </div>`;
+
+  popup.style.left = rect.left + window.scrollX + 'px';
+  popup.style.top  = rect.bottom + window.scrollY + 4 + 'px';
+  popup.classList.add('show');
+
+  requestAnimationFrame(()=>{
+    const inp = document.getElementById('salInput');
+    if(inp) inp.focus();
+  });
+}
+
+function applySalary(){
+  if(!popupTarget) return;
+  const raw = document.getElementById('salInput').value.replace(/[^0-9]/g,'');
+  const val = parseInt(raw, 10);
+  if(!val || val<=0){ closePopups(); return; }
+
+  const player = roster.find(p=> p.id===popupTarget.playerId);
+  if(player){
+    player.sal[popupTarget.year] = val;
+    if(!player.typ[popupTarget.year]) player.typ[popupTarget.year] = 'gtd';
+  }
+  closePopups();
+  render();
+}
+
+// ═══ CLOSE ALL POPUPS ═══
+function closePopups(){
+  document.getElementById('typePopup').classList.remove('show');
+  document.getElementById('salPopup').classList.remove('show');
+  popupTarget = null;
+}
+document.addEventListener('click', e=>{
+  if(!e.target.closest('.popup') && !e.target.closest('.sal-cell') && !e.target.closest('.sal-cell-empty'))
+    closePopups();
+});
+
+// ═══ PICK UP / DECLINE OPTIONS ═══
+function pickUpOption(id, optYear){
+  const p = roster.find(r=> r.id===id);
+  if(!p) return;
+  const lbl = p.typ[optYear]==='to' ? 'TO' : 'PO';
+  if(!confirm(`Pick up the ${lbl} for ${p.name} in ${optYear}?\nThe salary stays and the year becomes guaranteed.`)) return;
+  p.typ[optYear] = 'gtd';
+  render();
+}
+
+function declineOption(id, optYear){
+  const p = roster.find(r=> r.id===id);
+  if(!p) return;
+  const lbl = p.typ[optYear]==='to' ? 'TO' : 'PO';
+  if(!confirm(`Decline the ${lbl} for ${p.name}?\nThis removes ${optYear} and all subsequent contract years.`)) return;
+  const idx = YEARS.indexOf(optYear);
+  for(let i=idx; i<YEARS.length; i++){
+    delete p.sal[YEARS[i]];
+    delete p.typ[YEARS[i]];
+  }
+  render();
+}
+
+// ═══ PLAYER ACTIONS ═══
+function removePlayer(id){
+  const p = roster.find(r=> r.id===id);
+  if(!p) return;
+  if(!confirm(`Remove ${p.name} from the roster?`)) return;
+  roster = roster.filter(r=> r.id!==id);
+  render();
+}
+
+function waivePlayer(id){
+  const p = roster.find(r=> r.id===id);
+  if(!p) return;
+  if(!confirm(`Waive ${p.name}? Their remaining salary becomes dead money.`)) return;
+  const deadSal={}, deadTyp={};
+  YEARS.forEach(y=>{ if(p.sal[y]){ deadSal[y]=p.sal[y]; deadTyp[y]='dead'; } });
+  deadMoney.push({ id:p.id, name:p.name+' (waived)', sal:deadSal, typ:deadTyp });
+  roster = roster.filter(r=> r.id!==id);
+  render();
+}
+
+function renounce(id){
+  if(!confirm('Renounce this cap hold? The space will be freed.')) return;
+  capHolds = capHolds.filter(h=> h.id!==id);
+  render();
+}
+
+function removeDead(id){
+  if(!confirm('Remove this dead money entry?')) return;
+  deadMoney = deadMoney.filter(d=> d.id!==id);
+  render();
+}
+
+// ═══ EMPTY ROW + SEARCH ═══
+function addEmptyRow(){
+  emptyRows.push({ id:String(nextId++) });
+  render();
+}
+function removeEmpty(id){
+  emptyRows = emptyRows.filter(r=> r.id!==id);
+  render();
+}
+
+function emptySearch(input, rowId){
+  const q = input.value.trim().toLowerCase();
+  const drop = document.getElementById('searchDrop');
+  if(q.length<2){ drop.classList.remove('show'); return; }
+  const hits = NBA_DB.filter(p=> p.name.toLowerCase().includes(q));
+  if(!hits.length){ drop.classList.remove('show'); return; }
+
+  const rect = input.getBoundingClientRect();
+  drop.style.position='absolute';
+  drop.style.left=rect.left+window.scrollX+'px';
+  drop.style.top=rect.bottom+window.scrollY+4+'px';
+  drop.style.width=rect.width+'px';
+
+  drop.innerHTML = hits.map(p=>
+    `<div class="dropdown-item" onmousedown="addFromEmpty('${p.name.replace(/'/g,"\\'")}','${rowId}',${JSON.stringify(p.sal).replace(/"/g,'&quot;')})">
+      <div class="d-name">${p.name}</div>
+      <div class="d-meta">${p.team} · ${fmt(p.sal[SORT_YEAR]||p.sal[Object.keys(p.sal)[0]])}</div>
+    </div>`
+  ).join('');
+  drop.classList.add('show');
+}
+
+function addFromEmpty(name, rowId, sal){
+  roster.push({ id:nextId++, name, sal, typ:Object.fromEntries(Object.keys(sal).map(y=>[y,'gtd'])) });
+  emptyRows = emptyRows.filter(r=> r.id!==rowId);
+  document.getElementById('searchDrop').classList.remove('show');
+  render();
+}
+
+// ═══ GLOBAL SEARCH ═══
+const gInput = document.getElementById('searchInput');
+const gDrop  = document.getElementById('searchDrop');
+
+gInput.addEventListener('input', function(){
+  const q = this.value.trim().toLowerCase();
+  if(q.length<2){ gDrop.classList.remove('show'); return; }
+  const hits = NBA_DB.filter(p=> p.name.toLowerCase().includes(q));
+  if(!hits.length){ gDrop.classList.remove('show'); return; }
+
+  gDrop.style.position=''; gDrop.style.left=''; gDrop.style.top=''; gDrop.style.width='';
+  gDrop.innerHTML = hits.map(p=>
+    `<div class="dropdown-item" onmousedown="addFromGlobal('${p.name.replace(/'/g,"\\'")}',${JSON.stringify(p.sal).replace(/"/g,'&quot;')})">
+      <div class="d-name">${p.name}</div>
+      <div class="d-meta">${p.team} · ${fmt(p.sal[SORT_YEAR]||p.sal[Object.keys(p.sal)[0]])}</div>
+    </div>`
+  ).join('');
+  gDrop.classList.add('show');
+});
+gInput.addEventListener('blur', ()=> setTimeout(()=> gDrop.classList.remove('show'),150));
+
+function addFromGlobal(name, sal){
+  roster.push({ id:nextId++, name, sal, typ:Object.fromEntries(Object.keys(sal).map(y=>[y,'gtd'])) });
+  gInput.value='';
+  gDrop.classList.remove('show');
+  render();
+}
+
+// ═══ EXPORT ═══
+function exportCSV(){
+  let csv = 'Status,Ros.,Player,'+YEARS.join(',')+','+YEARS.map(y=>y+' Type').join(',')+'\n';
+  sorted().forEach((p,i)=>{
+    csv += ['Active',i+1,p.name,...YEARS.map(y=>p.sal[y]||0),...YEARS.map(y=>(p.typ[y]||'').toUpperCase())].join(',')+'\n';
+  });
+  capHolds.forEach(p=>{
+    csv += ['Cap Hold','—',p.name,...YEARS.map(y=>p.sal[y]||0),...YEARS.map(()=>'HOLD')].join(',')+'\n';
+  });
+  deadMoney.forEach(p=>{
+    csv += ['Dead Money','—',p.name,...YEARS.map(y=>p.sal[y]||0),...YEARS.map(()=>'DEAD')].join(',')+'\n';
+  });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download = 'bulls_cap_sheet.csv';
+  a.click();
+}
+
+render();
+</script>
+</body>
+</html>
