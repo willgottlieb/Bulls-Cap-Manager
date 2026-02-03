@@ -205,10 +205,10 @@ body {
 .status-val.neg { color:var(--danger); }
 
 /* ─── ACTION COLUMN ─── */
-.act { display:flex; gap:3px; flex-wrap:wrap; justify-content:center; }
+.act { display:grid; grid-template-columns:1fr 1fr; gap:3px; justify-items:stretch; }
 .act-btn {
   background:var(--bg2); border:1px solid var(--bg3); color:var(--txt);
-  width:26px; height:26px; border-radius:5px; cursor:pointer; font-size:11px;
+  width:100%; height:26px; border-radius:5px; cursor:pointer; font-size:10px;
   display:flex; align-items:center; justify-content:center; transition:.15s;
 }
 .act-btn:hover { background:var(--red); border-color:var(--red); }
@@ -243,10 +243,58 @@ body {
     <div class="dropdown" id="searchDrop"></div>
   </div>
   <button class="btn btn-red" onclick="addEmptyRow()">➕ Add Row</button>
+  <button class="btn" onclick="undo()">◀ Undo</button>
+  <button class="btn" onclick="resetAll()">🔄 Reset</button>
   <button class="btn" onclick="exportCSV()">📊 Export CSV</button>
 </div>
 
 <div class="cards" id="cards"></div>
+
+<!-- CAP THRESHOLDS TABLE -->
+<div class="section" style="margin-bottom:22px;">
+  <div class="section-hdr">📊 Cap Thresholds</div>
+  <table style="width:100%; border-collapse:collapse;">
+    <thead>
+      <tr style="background:var(--bg2); text-align:left;">
+        <th style="padding:12px 18px; font-size:12px; font-weight:700; color:var(--txt2);">THRESHOLD</th>
+        <th style="padding:12px 18px; font-size:12px; font-weight:700; color:var(--txt2);">2025-26</th>
+        <th style="padding:12px 18px; font-size:12px; font-weight:700; color:var(--txt2);">2026-27</th>
+        <th style="padding:12px 18px; font-size:12px; font-weight:700; color:var(--txt2);">2027-28</th>
+        <th style="padding:12px 18px; font-size:12px; font-weight:700; color:var(--txt2);">2028-29</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid var(--bg3);">
+        <td style="padding:12px 18px; font-weight:600;">Salary Cap</td>
+        <td style="padding:12px 18px;">$154.6M</td>
+        <td style="padding:12px 18px;">$165.5M</td>
+        <td style="padding:12px 18px;">$173.7M</td>
+        <td style="padding:12px 18px;">$182.4M</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--bg3);">
+        <td style="padding:12px 18px; font-weight:600;">Luxury Tax</td>
+        <td style="padding:12px 18px;">$187.9M</td>
+        <td style="padding:12px 18px;">$201.0M</td>
+        <td style="padding:12px 18px;">$215.1M</td>
+        <td style="padding:12px 18px;">$230.2M</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--bg3);">
+        <td style="padding:12px 18px; font-weight:600;">1st Apron</td>
+        <td style="padding:12px 18px;">$195.9M</td>
+        <td style="padding:12px 18px;">$209.7M</td>
+        <td style="padding:12px 18px;">$224.3M</td>
+        <td style="padding:12px 18px;">$240.0M</td>
+      </tr>
+      <tr>
+        <td style="padding:12px 18px; font-weight:600;">2nd Apron</td>
+        <td style="padding:12px 18px;">$207.8M</td>
+        <td style="padding:12px 18px;">$222.4M</td>
+        <td style="padding:12px 18px;">$237.9M</td>
+        <td style="padding:12px 18px;">$254.6M</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 <div class="legend">
   <span class="lbl">Legend</span>
@@ -261,7 +309,7 @@ body {
 </div>
 
 <div class="section" id="activeSection">
-  <div class="section-hdr">👥 Active Roster · <span id="activeCount">0</span> / 15</div>
+  <div class="section-hdr">👥 Active Roster · <span id="activeCount">0</span> / 15 (<span id="gtdCount">0</span> GTD)</div>
   <div class="tbl-head">
     <div style="text-align:center">Ros.</div>
     <div>Player</div>
@@ -283,6 +331,12 @@ body {
 <div class="section" id="deadSection" style="display:none">
   <div class="section-hdr">💀 Dead Money</div>
   <div id="deadBody"></div>
+</div>
+
+<!-- TRADE BLOCK -->
+<div class="section" id="tradeSection" style="display:none">
+  <div class="section-hdr">🔄 Trade Block · <span id="tradeTotal">$0.0M</span> Outgoing</div>
+  <div id="tradeBody"></div>
 </div>
 
 <div class="section">
@@ -307,15 +361,15 @@ const CAP = {
 
 let roster = [
   { id:1,  name:"Josh Giddey",      sal:{ '2025-26':25000000,'2026-27':25000000,'2027-28':25000000,'2028-29':25000000 }, typ:{ '2025-26':'gtd','2026-27':'gtd','2027-28':'gtd','2028-29':'gtd' } },
-  { id:2,  name:"Nikola Vučević",   sal:{ '2025-26':21481481,'2026-27':32222222 },                                     typ:{ '2025-26':'gtd','2026-27':'po'  } },
-  { id:3,  name:"Zach Collins",     sal:{ '2025-26':18080496,'2026-27':27120744 },                                     typ:{ '2025-26':'gtd','2026-27':'po'  } },
+  { id:2,  name:"Nikola Vučević",   sal:{ '2025-26':21481481,'2026-27':32222222 },                                     typ:{ '2025-26':'gtd','2026-27':'hold'  } },
+  { id:3,  name:"Zach Collins",     sal:{ '2025-26':18080496,'2026-27':27120744 },                                     typ:{ '2025-26':'gtd','2026-27':'hold'  } },
   { id:4,  name:"Patrick Williams", sal:{ '2025-26':18000000,'2026-27':18000000,'2027-28':18000000,'2028-29':18000000 }, typ:{ '2025-26':'gtd','2026-27':'gtd','2027-28':'gtd','2028-29':'po'  } },
-  { id:5,  name:"Kevin Huerter",    sal:{ '2025-26':17991071,'2026-27':26986607 },                                     typ:{ '2025-26':'gtd','2026-27':'po'  } },
-  { id:6,  name:"Coby White",       sal:{ '2025-26':12888889,'2026-27':24488889 },                                     typ:{ '2025-26':'gtd','2026-27':'po'  } },
+  { id:5,  name:"Kevin Huerter",    sal:{ '2025-26':17991071,'2026-27':26986607 },                                     typ:{ '2025-26':'gtd','2026-27':'hold'  } },
+  { id:6,  name:"Coby White",       sal:{ '2025-26':12888889,'2026-27':24488889 },                                     typ:{ '2025-26':'gtd','2026-27':'hold'  } },
   { id:7,  name:"Isaac Okoro",      sal:{ '2025-26':11000000,'2026-27':11814814,'2027-28':22448147 },                  typ:{ '2025-26':'gtd','2026-27':'gtd','2027-28':'po'  } },
   { id:8,  name:"Jalen Smith",      sal:{ '2025-26':9000000, '2026-27':9428571, '2027-28':17914285 },                  typ:{ '2025-26':'gtd','2026-27':'gtd','2027-28':'po'  } },
   { id:9,  name:"Tre Jones",        sal:{ '2025-26':8000000, '2026-27':8000000, '2027-28':8000000, '2028-29':15200000 }, typ:{ '2025-26':'gtd','2026-27':'gtd','2027-28':'gtd','2028-29':'po'  } },
-  { id:10, name:"Ayo Dosunmu",      sal:{ '2025-26':7518518, '2026-27':14285184 },                                     typ:{ '2025-26':'gtd','2026-27':'po'  } },
+  { id:10, name:"Ayo Dosunmu",      sal:{ '2025-26':7518518, '2026-27':14285184 },                                     typ:{ '2025-26':'gtd','2026-27':'hold'  } },
   { id:16, name:"Dario Šarić",      sal:{ '2025-26':5426400 },                                                         typ:{ '2025-26':'gtd'  } },
   { id:12, name:"Matas Buzelis",    sal:{ '2025-26':5455560, '2026-27':5715360, '2027-28':7584283, '2028-29':10689716 }, typ:{ '2025-26':'gtd','2026-27':'gtd','2027-28':'gtd','2028-29':'to'  } },
   { id:13, name:"Noa Essengue",     sal:{ '2025-26':5429520, '2026-27':5701200, '2027-28':5972760, '2028-29':8230464  }, typ:{ '2025-26':'gtd','2026-27':'gtd','2027-28':'gtd','2028-29':'to'  } },
@@ -328,37 +382,485 @@ let deadMoney = [
   { id:11, name:"Jevon Carter (waived)", sal:{ '2025-26':6809524 }, typ:{ '2025-26':'dead' } }
 ];
 let emptyRows = [];
+let tradeBlock = [];
+let history = [];
+let historyIndex = -1;
+const MAX_HISTORY = 20;
 let nextId    = 200;
 
+// COMPLETE NBA DATABASE - 468 Players
+// Generated from Bulls_Salary_Cap_Sheets CSV
+// All active NBA players with current contract data through 2030-31
+
 const NBA_DB = [
-  { name:"LeBron James",            team:"Lakers",     sal:{ '2025-26':51415938,'2026-27':55528704 } },
-  { name:"Stephen Curry",           team:"Warriors",  sal:{ '2025-26':55761216,'2026-27':59606817 } },
-  { name:"Kevin Durant",            team:"Suns",      sal:{ '2025-26':51915938,'2026-27':54669528 } },
-  { name:"Giannis Antetokounmpo",   team:"Bucks",     sal:{ '2025-26':48787676,'2026-27':51935806 } },
-  { name:"Luka Doncic",             team:"Mavericks", sal:{ '2025-26':43031940,'2026-27':46021476 } },
-  { name:"Jayson Tatum",            team:"Celtics",   sal:{ '2025-26':34848340,'2026-27':37096500 } },
-  { name:"Joel Embiid",             team:"76ers",     sal:{ '2025-26':51415938,'2026-27':55528704 } },
-  { name:"Nikola Jokic",            team:"Nuggets",   sal:{ '2025-26':55224526,'2026-27':59406478 } },
-  { name:"Damian Lillard",          team:"Bucks",     sal:{ '2025-26':48788888,'2026-27':58458931 } },
-  { name:"Anthony Davis",           team:"Lakers",    sal:{ '2025-26':43219440,'2026-27':57558000 } },
-  { name:"Tyrese Haliburton",       team:"Pacers",    sal:{ '2025-26':30268027,'2026-27':32350000 } },
-  { name:"Shai Gilgeous-Alexander", team:"Thunder",   sal:{ '2025-26':33933525,'2026-27':36315000 } },
-  { name:"Jalen Brunson",           team:"Knicks",    sal:{ '2025-26':30268027,'2026-27':32350000 } },
-  { name:"Victor Wembanyama",       team:"Spurs",     sal:{ '2025-26':10950300,'2026-27':13731975,'2027-28':17104560 } },
-  { name:"Paolo Banchero",          team:"Magic",     sal:{ '2025-26':10950300,'2026-27':13731975,'2027-28':17104560 } },
-  { name:"Chet Holmgren",           team:"Thunder",   sal:{ '2025-26':10950300,'2026-27':13731975,'2027-28':17104560 } },
-  { name:"Bam Adebayo",             team:"Heat",      sal:{ '2025-26':36450000,'2026-27':39000000 } },
-  { name:"Kawhi Leonard",           team:"Clippers",  sal:{ '2025-26':48787676,'2026-27':51935806 } },
-  { name:"Kyrie Irving",            team:"Mavericks", sal:{ '2025-26':46083810,'2026-27':49239780 } },
-  { name:"Trae Young",              team:"Hawks",     sal:{ '2025-26':46083810,'2026-27':49239780 } },
-  { name:"De'Andre Hunter",         team:"Hawks",     sal:{ '2025-26':24157303,'2026-27':25868224 } },
-  { name:"Scottie Barnes",          team:"Raptors",   sal:{ '2025-26':32590260,'2026-27':34831578 } },
-  { name:"Donovan Mitchell",        team:"Cavaliers", sal:{ '2025-26':36450000,'2026-27':39000000 } },
-  { name:"Jalen Green",             team:"Grizzlies", sal:{ '2025-26':33933525,'2026-27':36315000 } },
-  { name:"Jonathan Kuminga",        team:"Warriors",  sal:{ '2025-26':22500000,'2026-27':24300000 } },
-  { name:"Buddy Hield",             team:"Free Agent",sal:{ '2025-26':9219512, '2026-27':3000000, '2027-28':3000000 } },
-  { name:"Al Horford",              team:"Celtics",   sal:{ '2025-26':5685000, '2026-27':5969250 } },
-  { name:"Draymond Green",          team:"Warriors",  sal:{ '2025-26':22325000,'2026-27':23858750 } }
+  { name:"Stephen Curry", team:"GSW", sal:{'2025-26':59606817,'2026-27':62587158} },
+  { name:"Joel Embiid", team:"PHI", sal:{'2025-26':55224526,'2026-27':58100000,'2027-28':62748000,'2028-29':67396000} },
+  { name:"Nikola Jokić", team:"DEN", sal:{'2025-26':55224526,'2026-27':59033114,'2027-28':62841702} },
+  { name:"Kevin Durant", team:"HOU", sal:{'2025-26':54708609,'2026-27':43902439,'2027-28':46097561} },
+  { name:"Jayson Tatum", team:"BOS", sal:{'2025-26':54126450,'2026-27':58456566,'2027-28':62786682,'2028-29':67116798,'2029-30':71446914} },
+  { name:"Giannis Antetokounmpo", team:"MIL", sal:{'2025-26':54126450,'2026-27':58456566,'2027-28':62786682} },
+  { name:"Anthony Davis", team:"DAL", sal:{'2025-26':54126450,'2026-27':58456566,'2027-28':62786682} },
+  { name:"Jimmy Butler", team:"GSW", sal:{'2025-26':54126450,'2026-27':56832773} },
+  { name:"Damian Lillard", team:"MIL", sal:{'2025-26':68230450,'2026-27':13398800,'2027-28':14104000} },
+  { name:"Bradley Beal", team:"PHO", sal:{'2025-26':59020270,'2026-27':5621700} },
+  { name:"Jaylen Brown", team:"BOS", sal:{'2025-26':53142264,'2026-27':57078728,'2027-28':61015192,'2028-29':64951656} },
+  { name:"Devin Booker", team:"PHO", sal:{'2025-26':53142264,'2026-27':57078728,'2027-28':61015192,'2028-29':64065952,'2029-30':69191228} },
+  { name:"Karl-Anthony Towns", team:"NYK", sal:{'2025-26':53142264,'2026-27':57078728,'2027-28':61015192} },
+  { name:"LeBron James", team:"LAL", sal:{'2025-26':52627153} },
+  { name:"Paul George", team:"PHI", sal:{'2025-26':51666090,'2026-27':54126380,'2027-28':56586670} },
+  { name:"Kawhi Leonard", team:"LAC", sal:{'2025-26':50000000,'2026-27':50300000} },
+  { name:"Zach LaVine", team:"SAC", sal:{'2025-26':47499660,'2026-27':48967380} },
+  { name:"Cade Cunningham", team:"DET", sal:{'2025-26':46394100,'2026-27':50105628,'2027-28':53817156,'2028-29':57528684,'2029-30':61240212} },
+  { name:"Evan Mobley", team:"CLE", sal:{'2025-26':46394100,'2026-27':50105628,'2027-28':53817156,'2028-29':57528684,'2029-30':61240212} },
+  { name:"Jamal Murray", team:"DEN", sal:{'2025-26':46394100,'2026-27':50105628,'2027-28':53817156,'2028-29':57528684} },
+  { name:"Lauri Markkanen", team:"UTA", sal:{'2025-26':46394100,'2026-27':46113154,'2027-28':49824681,'2028-29':53536209} },
+  { name:"Donovan Mitchell", team:"CLE", sal:{'2025-26':46394100,'2026-27':50105628,'2027-28':53817156} },
+  { name:"Luka Dončić", team:"LAL", sal:{'2025-26':45999660,'2026-27':49800000,'2027-28':53784000,'2028-29':57768000} },
+  { name:"Trae Young", team:"WAS", sal:{'2025-26':45999660,'2026-27':48967380} },
+  { name:"Anthony Edwards", team:"MIN", sal:{'2025-26':45550512,'2026-27':48924624,'2027-28':52298736,'2028-29':55672848} },
+  { name:"Tyrese Haliburton", team:"IND", sal:{'2025-26':45550512,'2026-27':48924624,'2027-28':52298736,'2028-29':55672848} },
+  { name:"Pascal Siakam", team:"IND", sal:{'2025-26':45550512,'2026-27':48924624,'2027-28':52298736} },
+  { name:"Domantas Sabonis", team:"SAC", sal:{'2025-26':42336000,'2026-27':45472000,'2027-28':48608000} },
+  { name:"OG Anunoby", team:"NYK", sal:{'2025-26':39568966,'2026-27':42500000,'2027-28':45431034,'2028-29':48362068} },
+  { name:"Zion Williamson", team:"NOP", sal:{'2025-26':39446090,'2026-27':42166510,'2027-28':44886930} },
+  { name:"Ja Morant", team:"MEM", sal:{'2025-26':39446090,'2026-27':42166510,'2027-28':44886930} },
+  { name:"Darius Garland", team:"CLE", sal:{'2025-26':39446090,'2026-27':42166510,'2027-28':44886930} },
+  { name:"James Harden", team:"LAC", sal:{'2025-26':39182693,'2026-27':42317307} },
+  { name:"Scottie Barnes", team:"TOR", sal:{'2025-26':38661750,'2026-27':41754690,'2027-28':44847630,'2028-29':47940570,'2029-30':51033510} },
+  { name:"Franz Wagner", team:"ORL", sal:{'2025-26':38661750,'2026-27':41754690,'2027-28':44847630,'2028-29':47940570,'2029-30':51033510} },
+  { name:"Shai Gilgeous-Alexander", team:"OKC", sal:{'2025-26':38333050,'2026-27':40806150,'2027-28':61005000,'2028-29':65885400,'2029-30':70765800,'2030-31':75646200} },
+  { name:"Michael Porter Jr.", team:"BRK", sal:{'2025-26':38333050,'2026-27':40806150} },
+  { name:"Brandon Ingram", team:"TOR", sal:{'2025-26':38095238,'2026-27':40000000,'2027-28':41904762} },
+  { name:"Tyrese Maxey", team:"PHI", sal:{'2025-26':37958760,'2026-27':40770520,'2027-28':43582280,'2028-29':46394040} },
+  { name:"LaMelo Ball", team:"CHO", sal:{'2025-26':37958760,'2026-27':40770520,'2027-28':43582280,'2028-29':46394040} },
+  { name:"De\'Aaron Fox", team:"SAS", sal:{'2025-26':37096620,'2026-27':49800000,'2027-28':53784000,'2028-29':57768000,'2029-30':61752000} },
+  { name:"Bam Adebayo", team:"MIA", sal:{'2025-26':37096620,'2026-27':49800000,'2027-28':53784000,'2028-29':57768000} },
+  { name:"Desmond Bane", team:"ORL", sal:{'2025-26':36725670,'2026-27':39446090,'2027-28':42166510,'2028-29':44886930} },
+  { name:"Kyrie Irving", team:"DAL", sal:{'2025-26':36566002,'2026-27':39491282,'2027-28':42416562} },
+  { name:"Deandre Ayton", team:"POR", sal:{'2025-26':43654814,'2026-27':8104000} },
+  { name:"Jaren Jackson Jr.", team:"MEM", sal:{'2025-26':35000000,'2026-27':49000000,'2027-28':50500000,'2028-29':52000000,'2029-30':53500000} },
+  { name:"Jalen Suggs", team:"ORL", sal:{'2025-26':35000000,'2026-27':32400000,'2027-28':29600000,'2028-29':26800000,'2029-30':26700000} },
+  { name:"Rudy Gobert", team:"MIN", sal:{'2025-26':35000000,'2026-27':36500000,'2027-28':38000000} },
+  { name:"Jalen Brunson", team:"NYK", sal:{'2025-26':34944001,'2026-27':37739521,'2027-28':40535041,'2028-29':43330561} },
+  { name:"Alperen Şengün", team:"HOU", sal:{'2025-26':33944954,'2026-27':35642202,'2027-28':37339450,'2028-29':39036697,'2029-30':39036697} },
+  { name:"Jalen Green", team:"PHO", sal:{'2025-26':33584499,'2026-27':36251166,'2027-28':36000000} },
+  { name:"Khris Middleton", team:"WAS", sal:{'2025-26':33296296} },
+  { name:"Immanuel Quickley", team:"TOR", sal:{'2025-26':32500000,'2026-27':32500000,'2027-28':32500000,'2028-29':32500000} },
+  { name:"Jrue Holiday", team:"POR", sal:{'2025-26':32400000,'2026-27':34800000,'2027-28':37200000} },
+  { name:"Jerami Grant", team:"POR", sal:{'2025-26':32000001,'2026-27':34206898,'2027-28':36413790} },
+  { name:"Jordan Poole", team:"NOP", sal:{'2025-26':31848215,'2026-27':34044642} },
+  { name:"Tyler Herro", team:"MIA", sal:{'2025-26':31000000,'2026-27':33000000} },
+  { name:"Julius Randle", team:"MIN", sal:{'2025-26':30864198,'2026-27':33333334,'2027-28':35802468} },
+  { name:"Dejounte Murray", team:"NOP", sal:{'2025-26':30801103,'2026-27':32785071,'2027-28':30751504} },
+  { name:"Kristaps Porziņģis", team:"ATL", sal:{'2025-26':30731707} },
+  { name:"CJ McCollum", team:"ATL", sal:{'2025-26':30666666} },
+  { name:"Jalen Johnson", team:"ATL", sal:{'2025-26':30000000,'2026-27':30000000,'2027-28':30000000,'2028-29':30000000,'2029-30':30000000} },
+  { name:"Isaiah Hartenstein", team:"OKC", sal:{'2025-26':28500000,'2026-27':28500000} },
+  { name:"Andrew Wiggins", team:"MIA", sal:{'2025-26':28223215,'2026-27':30169644} },
+  { name:"Derrick White", team:"BOS", sal:{'2025-26':28100000,'2026-27':30348000,'2027-28':32596000,'2028-29':34844000} },
+  { name:"RJ Barrett", team:"TOR", sal:{'2025-26':27705357,'2026-27':29616071} },
+  { name:"Anfernee Simons", team:"BOS", sal:{'2025-26':27678571} },
+  { name:"Devin Vassell", team:"SAS", sal:{'2025-26':27000000,'2026-27':27000000,'2027-28':24652174,'2028-29':27000000} },
+  { name:"Terry Rozier", team:"MIA", sal:{'2025-26':26643031} },
+  { name:"Tobias Harris", team:"DET", sal:{'2025-26':26634146} },
+  { name:"John Collins", team:"LAC", sal:{'2025-26':26580000} },
+  { name:"Draymond Green", team:"GSW", sal:{'2025-26':25892857,'2026-27':27678571} },
+  { name:"Nic Claxton", team:"BRK", sal:{'2025-26':25352272,'2026-27':23147727,'2027-28':20943184} },
+  { name:"Myles Turner", team:"MIL", sal:{'2025-26':25318251,'2026-27':26584164,'2027-28':27850077,'2028-29':29115990} },
+  { name:"Trey Murphy III", team:"NOP", sal:{'2025-26':25000000,'2026-27':27000000,'2027-28':29000000,'2028-29':31000000} },
+  { name:"Josh Giddey", team:"CHI", sal:{'2025-26':25000000,'2026-27':25000000,'2027-28':25000000,'2028-29':25000000} },
+  { name:"Miles Bridges", team:"CHO", sal:{'2025-26':25000000,'2026-27':22826087} },
+  { name:"Fred VanVleet", team:"HOU", sal:{'2025-26':25000000,'2026-27':25000000} },
+  { name:"Mikal Bridges", team:"NYK", sal:{'2025-26':24900000,'2026-27':33482145,'2027-28':36160714,'2028-29':38839285,'2029-30':41517856} },
+  { name:"DeMar DeRozan", team:"SAC", sal:{'2025-26':24570000,'2026-27':25740000} },
+  { name:"Jaden McDaniels", team:"MIN", sal:{'2025-26':24393104,'2026-27':26200001,'2027-28':28006898,'2028-29':29813790} },
+  { name:"De\'Andre Hunter", team:"CLE", sal:{'2025-26':23303571,'2026-27':24910714} },
+  { name:"Aaron Gordon", team:"DEN", sal:{'2025-26':22841455,'2026-27':33658037,'2027-28':36350680,'2028-29':39043323} },
+  { name:"Jonathan Kuminga", team:"GSW", sal:{'2025-26':22500000,'2026-27':24300000} },
+  { name:"Kyle Kuzma", team:"MIL", sal:{'2025-26':22410605,'2026-27':20345152} },
+  { name:"Kentavious Caldwell-Pope", team:"MEM", sal:{'2025-26':21621500,'2026-27':21621500} },
+  { name:"Marcus Smart", team:"WAS", sal:{'2025-26':26720855,'2026-27':5390700} },
+  { name:"Naz Reid", team:"MIN", sal:{'2025-26':21551724,'2026-27':23275862,'2027-28':25000000,'2028-29':26724138,'2029-30':28448276} },
+  { name:"Nikola Vučević", team:"CHI", sal:{'2025-26':21481481} },
+  { name:"Dillon Brooks", team:"PHO", sal:{'2025-26':21124110,'2026-27':19992727} },
+  { name:"Cameron Johnson", team:"DEN", sal:{'2025-26':21057065,'2026-27':23062500} },
+  { name:"Norman Powell", team:"MIA", sal:{'2025-26':20482758} },
+  { name:"Jarrett Allen", team:"CLE", sal:{'2025-26':20000000,'2026-27':28000000,'2027-28':30240000,'2028-29':32480000} },
+  { name:"Jakob Poeltl", team:"TOR", sal:{'2025-26':19500000,'2026-27':19500000,'2027-28':27300000,'2028-29':29484000,'2029-30':27300000} },
+  { name:"Josh Hart", team:"NYK", sal:{'2025-26':19472240,'2026-27':20923760,'2027-28':22375280} },
+  { name:"Jusuf Nurkić", team:"UTA", sal:{'2025-26':19375000} },
+  { name:"Harrison Barnes", team:"SAS", sal:{'2025-26':19000000} },
+  { name:"Collin Sexton", team:"CHO", sal:{'2025-26':18975000} },
+  { name:"Malik Monk", team:"SAC", sal:{'2025-26':18797619,'2026-27':20190035,'2027-28':21582451} },
+  { name:"Santi Aldama", team:"MEM", sal:{'2025-26':18485916,'2026-27':17007043,'2027-28':17007043} },
+  { name:"Rui Hachimura", team:"LAL", sal:{'2025-26':18259259} },
+  { name:"Luguentz Dort", team:"OKC", sal:{'2025-26':18222222,'2026-27':18222222} },
+  { name:"Alex Caruso", team:"OKC", sal:{'2025-26':18102000,'2026-27':19550160,'2027-28':20998320,'2028-29':22446480} },
+  { name:"Ivica Zubac", team:"LAC", sal:{'2025-26':18102000,'2026-27':19550160,'2027-28':20998320} },
+  { name:"Andrew Nembhard", team:"IND", sal:{'2025-26':18102000,'2026-27':19550160,'2027-28':20998320} },
+  { name:"Zach Collins", team:"CHI", sal:{'2025-26':18080496} },
+  { name:"Patrick Williams", team:"CHI", sal:{'2025-26':18000000,'2026-27':18000000,'2027-28':18000000,'2028-29':18000000} },
+  { name:"Kevin Huerter", team:"CHI", sal:{'2025-26':17991071} },
+  { name:"Keldon Johnson", team:"SAS", sal:{'2025-26':17500000,'2026-27':17500000} },
+  { name:"Grayson Allen", team:"PHO", sal:{'2025-26':16875000,'2026-27':18125000,'2027-28':19375000} },
+  { name:"Duncan Robinson", team:"DET", sal:{'2025-26':26722692,'2026-27':15992957,'2027-28':15151222} },
+  { name:"Klay Thompson", team:"DAL", sal:{'2025-26':16666667,'2026-27':17460317} },
+  { name:"Bogdan Bogdanović", team:"LAC", sal:{'2025-26':16020000,'2026-27':16020000} },
+  { name:"Max Strus", team:"CLE", sal:{'2025-26':15936452,'2026-27':16660836} },
+  { name:"Terance Mann", team:"BRK", sal:{'2025-26':15500000,'2026-27':15500000,'2027-28':16000000} },
+  { name:"Paolo Banchero", team:"ORL", sal:{'2025-26':15334769,'2026-27':41500000,'2027-28':44820000,'2028-29':48140000,'2029-30':51460000,'2030-31':54780000} },
+  { name:"Nickeil Alexander-Walker", team:"ATL", sal:{'2025-26':15161800,'2026-27':14403710,'2027-28':15161800,'2028-29':15919890} },
+  { name:"Onyeka Okongwu", team:"ATL", sal:{'2025-26':15000000,'2026-27':16120000,'2027-28':16880000} },
+  { name:"Jonathan Isaac", team:"ORL", sal:{'2025-26':15000000,'2026-27':14500000,'2027-28':14500000,'2028-29':15000000} },
+  { name:"Isaiah Stewart", team:"DET", sal:{'2025-26':15000000,'2026-27':15000000,'2027-28':15000000} },
+  { name:"Daniel Gafford", team:"DAL", sal:{'2025-26':14386320,'2026-27':17263584,'2027-28':18126763,'2028-29':18989942} },
+  { name:"Deni Avdija", team:"POR", sal:{'2025-26':14375000,'2026-27':13125000,'2027-28':11875000} },
+  { name:"Jordan Clarkson", team:"UTA", sal:{'2025-26':16581988} },
+  { name:"P.J. Washington", team:"DAL", sal:{'2025-26':14152174,'2026-27':19813044,'2027-28':21398088,'2028-29':22983132,'2029-30':24568176} },
+  { name:"Steven Adams", team:"HOU", sal:{'2025-26':14130434,'2026-27':13000000,'2027-28':11869566} },
+  { name:"Dennis Schröder", team:"SAC", sal:{'2025-26':14104000,'2026-27':14809200,'2027-28':15514400} },
+  { name:"Caris LeVert", team:"DET", sal:{'2025-26':14104000,'2026-27':14809200} },
+  { name:"Damian Lillard", team:"POR", sal:{'2025-26':68230450,'2026-27':13398800,'2027-28':14104000} },
+  { name:"Obi Toppin", team:"IND", sal:{'2025-26':14000000,'2026-27':15000000,'2027-28':16025000} },
+  { name:"Corey Kispert", team:"ATL", sal:{'2025-26':13975000,'2026-27':13975000,'2027-28':13050000,'2028-29':13050000} },
+  { name:"Herbert Jones", team:"NOP", sal:{'2025-26':13937574,'2026-27':14898786,'2027-28':20858300,'2028-29':22526964,'2029-30':24195628} },
+  { name:"Austin Reaves", team:"LAL", sal:{'2025-26':13937574,'2026-27':14898786} },
+  { name:"Cooper Flagg", team:"DAL", sal:{'2025-26':13825920,'2026-27':14517480,'2027-28':15208680,'2028-29':19178146} },
+  { name:"Chet Holmgren", team:"OKC", sal:{'2025-26':13731368,'2026-27':41500000,'2027-28':44820000,'2028-29':48140000,'2029-30':51460000,'2030-31':54780000} },
+  { name:"Josh Green", team:"CHO", sal:{'2025-26':13666667,'2026-27':14679012} },
+  { name:"Grant Williams", team:"CHO", sal:{'2025-26':13645500,'2026-27':14265750} },
+  { name:"Bobby Portis", team:"MIL", sal:{'2025-26':13445754,'2026-27':14521414,'2027-28':15597074} },
+  { name:"Kelly Olynyk", team:"SAS", sal:{'2025-26':13445122} },
+  { name:"Victor Wembanyama", team:"SAS", sal:{'2025-26':13376880,'2026-27':16868246} },
+  { name:"Robert Williams", team:"POR", sal:{'2025-26':13285713} },
+  { name:"Zaccharie Risacher", team:"ATL", sal:{'2025-26':13197720,'2026-27':13826040,'2027-28':17434637} },
+  { name:"Cole Anthony", team:"MEM", sal:{'2025-26':15396274} },
+  { name:"Mitchell Robinson", team:"NYK", sal:{'2025-26':12954546} },
+  { name:"Coby White", team:"CHI", sal:{'2025-26':12888889} },
+  { name:"Dorian Finney-Smith", team:"HOU", sal:{'2025-26':12700000,'2026-27':13335000,'2027-28':13335000,'2028-29':13335000} },
+  { name:"Brandon Clarke", team:"MEM", sal:{'2025-26':12500000,'2026-27':12500000} },
+  { name:"Dylan Harper", team:"SAS", sal:{'2025-26':12370320,'2026-27':12989040,'2027-28':13607760,'2028-29':17172994} },
+  { name:"Isaiah Joe", team:"OKC", sal:{'2025-26':12362338,'2026-27':11323006,'2027-28':11323006} },
+  { name:"Jabari Smith Jr.", team:"HOU", sal:{'2025-26':12350392,'2026-27':23643411,'2027-28':21751940,'2028-29':23643411,'2029-30':25534883,'2030-31':27426355} },
+  { name:"Donte DiVincenzo", team:"MIN", sal:{'2025-26':11990000,'2026-27':12535000} },
+  { name:"Brandon Miller", team:"CHO", sal:{'2025-26':11968800,'2026-27':15104626} },
+  { name:"Alex Sarr", team:"WAS", sal:{'2025-26':11808240,'2026-27':12370680,'2027-28':15611798} },
+  { name:"Davion Mitchell", team:"MIA", sal:{'2025-26':11600000,'2026-27':12400000} },
+  { name:"Moses Moody", team:"GSW", sal:{'2025-26':11574075,'2026-27':12500000,'2027-28':13425925} },
+  { name:"Jarred Vanderbilt", team:"LAL", sal:{'2025-26':11571429,'2026-27':12428571,'2027-28':13285714} },
+  { name:"Matisse Thybulle", team:"POR", sal:{'2025-26':11550000} },
+  { name:"Gabe Vincent", team:"LAL", sal:{'2025-26':11500000} },
+  { name:"Keegan Murray", team:"SAC", sal:{'2025-26':11144093,'2026-27':24137936,'2027-28':26068965,'2028-29':27999999,'2029-30':29931033,'2030-31':31862067} },
+  { name:"VJ Edgecombe", team:"PHI", sal:{'2025-26':11108880,'2026-27':11663880,'2027-28':12219720,'2028-29':15445727} },
+  { name:"Aaron Nesmith", team:"IND", sal:{'2025-26':11000000,'2026-27':11000000,'2027-28':19418000,'2028-29':20971440} },
+  { name:"Luke Kornet", team:"SAS", sal:{'2025-26':11000000,'2026-27':10450000,'2027-28':9900000,'2028-29':9350000} },
+  { name:"Isaac Okoro", team:"CHI", sal:{'2025-26':11000000,'2026-27':11814814} },
+  { name:"Maxi Kleber", team:"LAL", sal:{'2025-26':11000000} },
+  { name:"Luke Kennard", team:"ATL", sal:{'2025-26':11000000} },
+  { name:"Wendell Carter Jr.", team:"ORL", sal:{'2025-26':10850000,'2026-27':18102000,'2027-28':19550160,'2028-29':20998320} },
+  { name:"Mike Conley", team:"MIN", sal:{'2025-26':10774038} },
+  { name:"Scoot Henderson", team:"POR", sal:{'2025-26':10748040,'2026-27':13585523} },
+  { name:"Reed Sheppard", team:"HOU", sal:{'2025-26':10603560,'2026-27':11108880,'2027-28':14041625} },
+  { name:"Jonas Valančiūnas", team:"DEN", sal:{'2025-26':10395000,'2026-27':10000000} },
+  { name:"T.J. McConnell", team:"IND", sal:{'2025-26':10200000,'2026-27':11000000,'2027-28':11800000,'2028-29':11800000} },
+  { name:"Royce O\'Neale", team:"PHO", sal:{'2025-26':10125000,'2026-27':10875000,'2027-28':11625000} },
+  { name:"Jaden Ivey", team:"DET", sal:{'2025-26':10107163} },
+  { name:"Aaron Wiggins", team:"OKC", sal:{'2025-26':10102803,'2026-27':9224300,'2027-28':8345797,'2028-29':8345797} },
+  { name:"Sam Hauser", team:"BOS", sal:{'2025-26':10044644,'2026-27':10848215,'2027-28':11651785,'2028-29':12455356} },
+  { name:"Kon Knueppel", team:"CHO", sal:{'2025-26':10015680,'2026-27':10516560,'2027-28':11017560,'2028-29':13937214} },
+  { name:"Derrick Jones Jr.", team:"LAC", sal:{'2025-26':10000000,'2026-27':10476190} },
+  { name:"Lonzo Ball", team:"CLE", sal:{'2025-26':10000000,'2026-27':10000000} },
+  { name:"Duncan Robinson", team:"MIA", sal:{'2025-26':26722692,'2026-27':15992957,'2027-28':15151222} },
+  { name:"Amen Thompson", team:"HOU", sal:{'2025-26':9690600,'2026-27':12258609} },
+  { name:"Caleb Martin", team:"DAL", sal:{'2025-26':9594044,'2026-27':10001493,'2027-28':9371351} },
+  { name:"Stephon Castle", team:"SAS", sal:{'2025-26':9560520,'2026-27':10015920,'2027-28':12670139} },
+  { name:"Pat Connaughton", team:"CHO", sal:{'2025-26':9423869} },
+  { name:"Buddy Hield", team:"GSW", sal:{'2025-26':9219512,'2026-27':9658536,'2027-28':10097560} },
+  { name:"Kyle Anderson", team:"UTA", sal:{'2025-26':9219512,'2026-27':9658536} },
+  { name:"Bennedict Mathurin", team:"IND", sal:{'2025-26':9187573} },
+  { name:"Ace Bailey", team:"UTA", sal:{'2025-26':9069840,'2026-27':9523080,'2027-28':9976560,'2028-29':12640302} },
+  { name:"Naji Marshall", team:"DAL", sal:{'2025-26':9000000,'2026-27':9428571} },
+  { name:"Jalen Smith", team:"CHI", sal:{'2025-26':9000000,'2026-27':9428571} },
+  { name:"Ty Jerome", team:"MEM", sal:{'2025-26':8781000,'2026-27':9220050,'2027-28':9659100} },
+  { name:"Ausar Thompson", team:"DET", sal:{'2025-26':8775000,'2026-27':11117925} },
+  { name:"Brook Lopez", team:"LAC", sal:{'2025-26':8750000,'2026-27':9187500} },
+  { name:"Quentin Grimes", team:"PHI", sal:{'2025-26':8741209} },
+  { name:"Ron Holland", team:"DET", sal:{'2025-26':8657280,'2026-27':9069600,'2027-28':11491183} },
+  { name:"Sam Merrill", team:"CLE", sal:{'2025-26':8482144,'2026-27':9160715,'2027-28':9839285,'2028-29':10517856} },
+  { name:"Jaylin Williams", team:"OKC", sal:{'2025-26':8450704,'2026-27':7774648,'2027-28':7774648} },
+  { name:"Shaedon Sharpe", team:"POR", sal:{'2025-26':8399983,'2026-27':20089287,'2027-28':21696429,'2028-29':23303571,'2029-30':24910713} },
+  { name:"Kelly Oubre Jr.", team:"PHI", sal:{'2025-26':8382150} },
+  { name:"Goga Bitadze", team:"ORL", sal:{'2025-26':8333333,'2026-27':7608696} },
+  { name:"Simone Fontecchio", team:"MIA", sal:{'2025-26':8307692} },
+  { name:"Tre Johnson", team:"WAS", sal:{'2025-26':8237640,'2026-27':8649600,'2027-28':9061680,'2028-29':11490211} },
+  { name:"Georges Niang", team:"UTA", sal:{'2025-26':8200000} },
+  { name:"Zeke Nnaji", team:"DEN", sal:{'2025-26':8177778,'2026-27':7466667,'2027-28':7466667} },
+  { name:"Vasilije Micić", team:"MIL", sal:{'2025-26':8109150} },
+  { name:"Deandre Ayton", team:"LAL", sal:{'2025-26':43654814,'2026-27':8104000} },
+  { name:"Tre Mann", team:"CHO", sal:{'2025-26':8000000,'2026-27':8000000,'2027-28':8000000} },
+  { name:"Tre Jones", team:"CHI", sal:{'2025-26':8000000,'2026-27':8000000,'2027-28':8000000} },
+  { name:"Kevon Looney", team:"NOP", sal:{'2025-26':8000000,'2026-27':8000000} },
+  { name:"Jock Landale", team:"HOU", sal:{'2025-26':10296274} },
+  { name:"Anthony Black", team:"ORL", sal:{'2025-26':7970280,'2026-27':10106316} },
+  { name:"Tidjane Salaün", team:"CHO", sal:{'2025-26':7863240,'2026-27':8237880,'2027-28':10445633} },
+  { name:"Max Christie", team:"DAL", sal:{'2025-26':7714286,'2026-27':8285714,'2027-28':8857143} },
+  { name:"Dyson Daniels", team:"ATL", sal:{'2025-26':7707709,'2026-27':25000000,'2027-28':25000000,'2028-29':25000000,'2029-30':25000000} },
+  { name:"Isaiah Jackson", team:"IND", sal:{'2025-26':7600000,'2026-27':7000000,'2027-28':6400000} },
+  { name:"Jeremiah Fears", team:"NOP", sal:{'2025-26':7520040,'2026-27':7896240,'2027-28':8271960,'2028-29':10505389} },
+  { name:"Ayo Dosunmu", team:"CHI", sal:{'2025-26':7518518} },
+  { name:"Bilal Coulibaly", team:"WAS", sal:{'2025-26':7275600,'2026-27':9240012} },
+  { name:"Payton Pritchard", team:"BOS", sal:{'2025-26':7232143,'2026-27':7767857,'2027-28':8303571} },
+  { name:"Donovan Clingan", team:"POR", sal:{'2025-26':7178400,'2026-27':7519920,'2027-28':9550298} },
+  { name:"Kenrich Williams", team:"OKC", sal:{'2025-26':7163000,'2026-27':7163000} },
+  { name:"Jeremy Sochan", team:"SAS", sal:{'2025-26':7096231} },
+  { name:"Tyus Jones", team:"ORL", sal:{'2025-26':7000000} },
+  { name:"Egor Dёmin", team:"BRK", sal:{'2025-26':6889200,'2026-27':7233720,'2027-28':7578240,'2028-29':9639522} },
+  { name:"Jevon Carter", team:"CHI", sal:{'2025-26':6809524} },
+  { name:"Clint Capela", team:"HOU", sal:{'2025-26':6700000,'2026-27':7035000,'2027-28':7370000} },
+  { name:"Ousmane Dieng", team:"OKC", sal:{'2025-26':6670882} },
+  { name:"Jarace Walker", team:"IND", sal:{'2025-26':6665520,'2026-27':8478542} },
+  { name:"Dean Wade", team:"CLE", sal:{'2025-26':6623456} },
+  { name:"Jalen Williams", team:"OKC", sal:{'2025-26':6580997,'2026-27':41500000,'2027-28':44820000,'2028-29':48140000,'2029-30':51460000,'2030-31':54780000} },
+  { name:"Rob Dillingham", team:"MIN", sal:{'2025-26':6576120,'2026-27':6889320,'2027-28':8763216} },
+  { name:"Jalen Duren", team:"DET", sal:{'2025-26':6483144} },
+  { name:"Ochai Agbaji", team:"TOR", sal:{'2025-26':6383525} },
+  { name:"Collin Murray-Boyles", team:"TOR", sal:{'2025-26':6332520,'2026-27':6649560,'2027-28':6966000,'2028-29':8874684} },
+  { name:"Mark Williams", team:"PHO", sal:{'2025-26':6276531} },
+  { name:"Day\'Ron Sharpe", team:"BRK", sal:{'2025-26':6250000,'2026-27':6250000} },
+  { name:"Ziaire Williams", team:"BRK", sal:{'2025-26':6250000,'2026-27':6250000} },
+  { name:"John Konchar", team:"MEM", sal:{'2025-26':6165000,'2026-27':6165000} },
+  { name:"Taylor Hendricks", team:"UTA", sal:{'2025-26':6127080,'2026-27':7805900} },
+  { name:"Saddiq Bey", team:"NOP", sal:{'2025-26':6118644,'2026-27':6440678} },
+  { name:"Zach Edey", team:"MEM", sal:{'2025-26':6045000,'2026-27':6332760,'2027-28':8067937} },
+  { name:"Khaman Maluach", team:"PHO", sal:{'2025-26':6016080,'2026-27':6316680,'2027-28':6617160,'2028-29':8436880} },
+  { name:"Jake LaRavia", team:"LAL", sal:{'2025-26':6000000,'2026-27':6000000} },
+  { name:"Jaden Hardy", team:"DAL", sal:{'2025-26':6000000,'2026-27':6000000,'2027-28':6000000} },
+  { name:"Cam Thomas", team:"BRK", sal:{'2025-26':5993172} },
+  { name:"Cason Wallace", team:"OKC", sal:{'2025-26':5820240,'2026-27':7420806} },
+  { name:"Cody Williams", team:"UTA", sal:{'2025-26':5742480,'2026-27':6015600,'2027-28':7669890} },
+  { name:"Cedric Coward", team:"MEM", sal:{'2025-26':5715120,'2026-27':6001080,'2027-28':6286920,'2028-29':8342743} },
+  { name:"Al Horford", team:"GSW", sal:{'2025-26':5685000,'2026-27':5969250} },
+  { name:"D\'Angelo Russell", team:"DAL", sal:{'2025-26':5685000,'2026-27':5969250} },
+  { name:"Tari Eason", team:"HOU", sal:{'2025-26':5675766} },
+  { name:"Haywood Highsmith", team:"BRK", sal:{'2025-26':5616000} },
+  { name:"Nicolas Batum", team:"LAC", sal:{'2025-26':5601600,'2026-27':5881680} },
+  { name:"Jett Howard", team:"ORL", sal:{'2025-26':5529720,'2026-27':7337939} },
+  { name:"Guerschon Yabusele", team:"NYK", sal:{'2025-26':5500000,'2026-27':5775000} },
+  { name:"Matas Buzelis", team:"CHI", sal:{'2025-26':5455560,'2026-27':5715360,'2027-28':7584283} },
+  { name:"Noa Essengue", team:"CHI", sal:{'2025-26':5429520,'2026-27':5701200,'2027-28':5972760,'2028-29':8230464} },
+  { name:"Dario Šarić", team:"SAC", sal:{'2025-26':5426400} },
+  { name:"Kris Dunn", team:"LAC", sal:{'2025-26':5426400,'2026-27':5684800} },
+  { name:"Dalen Terry", team:"CHI", sal:{'2025-26':5399118} },
+  { name:"Bradley Beal", team:"LAC", sal:{'2025-26':59020270,'2026-27':5621700} },
+  { name:"Paul Reed", team:"DET", sal:{'2025-26':5335894,'2026-27':5602689} },
+  { name:"Dereck Lively II", team:"DAL", sal:{'2025-26':5253360,'2026-27':7239131} },
+  { name:"Nikola Topić", team:"OKC", sal:{'2025-26':5182920,'2026-27':5429760,'2027-28':7482210} },
+  { name:"Derik Queen", team:"NOP", sal:{'2025-26':5157960,'2026-27':5416080,'2027-28':5673840,'2028-29':8107918} },
+  { name:"Kevin Porter Jr.", team:"MIL", sal:{'2025-26':5134000,'2026-27':5390700} },
+  { name:"Marcus Smart", team:"LAL", sal:{'2025-26':26720855,'2026-27':5390700} },
+  { name:"Andre Drummond", team:"PHI", sal:{'2025-26':5000000} },
+  { name:"Moritz Wagner", team:"ORL", sal:{'2025-26':5000000} },
+  { name:"Nick Richards", team:"PHO", sal:{'2025-26':5000000} },
+  { name:"Gradey Dick", team:"TOR", sal:{'2025-26':4990560,'2026-27':7131511} },
+  { name:"Malaki Branham", team:"WAS", sal:{'2025-26':4962033} },
+  { name:"Devin Carter", team:"SAC", sal:{'2025-26':4923720,'2026-27':5158080,'2027-28':7370897} },
+  { name:"Christian Braun", team:"DEN", sal:{'2025-26':4921797,'2026-27':21551726,'2027-28':23275863,'2028-29':25000000,'2029-30':26724137,'2030-31':28448274} },
+  { name:"Carter Bryant", team:"SAS", sal:{'2025-26':4900320,'2026-27':5145360,'2027-28':5390640,'2028-29':7983539} },
+  { name:"Walker Kessler", team:"UTA", sal:{'2025-26':4878938} },
+  { name:"Jordan Hawkins", team:"NOP", sal:{'2025-26':4741320,'2026-27':7021895} },
+  { name:"Blake Wesley", team:"WAS", sal:{'2025-26':7022602} },
+  { name:"Bub Carrington", team:"WAS", sal:{'2025-26':4677600,'2026-27':4900560,'2027-28':7257730} },
+  { name:"Thomas Sorber", team:"OKC", sal:{'2025-26':4655040,'2026-27':4887720,'2027-28':5120400,'2028-29':7849573} },
+  { name:"Kobe Bufkin", team:"BRK", sal:{'2025-26':4503720} },
+  { name:"Jose Alvarado", team:"NOP", sal:{'2025-26':4500000,'2026-27':4500000} },
+  { name:"Nikola Jović", team:"MIA", sal:{'2025-26':4445417,'2026-27':16200000,'2027-28':14904000,'2028-29':15096000,'2029-30':16200000} },
+  { name:"Kel\'el Ware", team:"MIA", sal:{'2025-26':4443360,'2026-27':4654920,'2027-28':7135992} },
+  { name:"Yang Hansen", team:"POR", sal:{'2025-26':4422360,'2026-27':4643520,'2027-28':4864920,'2028-29':7462788} },
+  { name:"Peyton Watson", team:"DEN", sal:{'2025-26':4356476} },
+  { name:"Miles McBride", team:"NYK", sal:{'2025-26':4333333,'2026-27':3956523} },
+  { name:"Keyonte George", team:"UTA", sal:{'2025-26':4278960,'2026-27':6563925} },
+  { name:"Jared McCain", team:"PHI", sal:{'2025-26':4221360,'2026-27':4422600,'2027-28':6784268} },
+  { name:"Joan Beringer", team:"MIN", sal:{'2025-26':4201080,'2026-27':4411200,'2027-28':4621200,'2028-29':7098163} },
+  { name:"Kevin Love", team:"UTA", sal:{'2025-26':4150000} },
+  { name:"Dalton Knecht", team:"LAL", sal:{'2025-26':4010160,'2026-27':4201080,'2027-28':6452860} },
+  { name:"Ryan Rollins", team:"MIL", sal:{'2025-26':4000000,'2026-27':4000000,'2027-28':4000000} },
+  { name:"Dwight Powell", team:"DAL", sal:{'2025-26':4000000} },
+  { name:"Walter Clayton", team:"UTA", sal:{'2025-26':3991320,'2026-27':4190520,'2027-28':4390320,'2028-29':6752312} },
+  { name:"Jaime Jaquez Jr.", team:"MIA", sal:{'2025-26':3861600,'2026-27':5939141} },
+  { name:"Nolan Traoré", team:"BRK", sal:{'2025-26':3811560,'2026-27':4002000,'2027-28':4193040,'2028-29':6457282} },
+  { name:"Tristan Da Silva", team:"ORL", sal:{'2025-26':3809520,'2026-27':3991200,'2027-28':6138466} },
+  { name:"Gary Trent Jr.", team:"MIL", sal:{'2025-26':3697105,'2026-27':3881960} },
+  { name:"Brandin Podziemski", team:"GSW", sal:{'2025-26':3687960,'2026-27':5679459} },
+  { name:"Svi Mykhailiuk", team:"UTA", sal:{'2025-26':3675000,'2026-27':3850000,'2027-28':4025000} },
+  { name:"Kasparas Jakučionis", team:"MIA", sal:{'2025-26':3658800,'2026-27':3841680,'2027-28':4024440,'2028-29':6205687} },
+  { name:"Ja\'Kobe Walter", team:"TOR", sal:{'2025-26':3638160,'2026-27':3811800,'2027-28':5870172} },
+  { name:"Gary Harris", team:"MIL", sal:{'2025-26':3634153,'2026-27':3815861} },
+  { name:"Cam Whitmore", team:"WAS", sal:{'2025-26':3539760,'2026-27':5458310} },
+  { name:"Will Riley", team:"WAS", sal:{'2025-26':3512520,'2026-27':3688320,'2027-28':3864000,'2028-29':6155352} },
+  { name:"Jaylon Tyson", team:"CLE", sal:{'2025-26':3492480,'2026-27':3658560,'2027-28':5641500} },
+  { name:"P.J. Tucker", team:"NYK", sal:{'2025-26':3468960} },
+  { name:"Jaxson Hayes", team:"LAL", sal:{'2025-26':3449323} },
+  { name:"Noah Clowney", team:"BRK", sal:{'2025-26':3398640,'2026-27':5414034} },
+  { name:"Drake Powell", team:"BRK", sal:{'2025-26':3372240,'2026-27':3540600,'2027-28':3709320,'2028-29':6101832} },
+  { name:"Yves Missi", team:"NOP", sal:{'2025-26':3353040,'2026-27':3512760,'2027-28':5595827} },
+  { name:"Taurean Prince", team:"MIL", sal:{'2025-26':3303774,'2026-27':3815861} },
+  { name:"Dariq Whitehead", team:"BRK", sal:{'2025-26':3262560} },
+  { name:"Asa Newell", team:"ATL", sal:{'2025-26':3237480,'2026-27':3399480,'2027-28':3560880,'2028-29':6042814} },
+  { name:"DaRon Holmes", team:"DEN", sal:{'2025-26':3218760,'2026-27':3372120,'2027-28':5547138} },
+  { name:"Kris Murray", team:"POR", sal:{'2025-26':3132000,'2026-27':5315004} },
+  { name:"Nique Clifford", team:"SAC", sal:{'2025-26':3108120,'2026-27':3263400,'2027-28':3418800,'2028-29':5979481} },
+  { name:"Nassir Little", team:"PHO", sal:{'2025-26':3107143,'2026-27':3107143,'2027-28':3107143,'2028-29':3107143} },
+  { name:"AJ Johnson", team:"WAS", sal:{'2025-26':3090480,'2026-27':3237120,'2027-28':5493394} },
+  { name:"De\'Anthony Melton", team:"GSW", sal:{'2025-26':3080921,'2026-27':3451779} },
+  { name:"Shake Milton", team:"LAL", sal:{'2025-26':3000000,'2026-27':3287406} },
+  { name:"Kyle Filipowski", team:"UTA", sal:{'2025-26':3000000,'2026-27':3000000,'2027-28':3000000} },
+  { name:"Ajay Mitchell", team:"OKC", sal:{'2025-26':3000000,'2026-27':2850000,'2027-28':2850000} },
+  { name:"Julian Champagnie", team:"SAS", sal:{'2025-26':3000000,'2026-27':3000000} },
+  { name:"Jase Richardson", team:"ORL", sal:{'2025-26':2983320,'2026-27':3132360,'2027-28':3282000,'2028-29':5910882} },
+  { name:"Kyshawn George", team:"WAS", sal:{'2025-26':2966760,'2026-27':3108000,'2027-28':5435892} },
+  { name:"Tony Bradley", team:"IND", sal:{'2025-26':2940876} },
+  { name:"Marcus Sasser", team:"DET", sal:{'2025-26':2886720,'2026-27':5198983} },
+  { name:"Ben Saraf", team:"BRK", sal:{'2025-26':2884560,'2026-27':3028560,'2027-28':3172920,'2028-29':5720776} },
+  { name:"Pacome Dadiet", team:"NYK", sal:{'2025-26':2847600,'2026-27':2983680,'2027-28':5373608} },
+  { name:"Danny Wolf", team:"BRK", sal:{'2025-26':2801280,'2026-27':2941440,'2027-28':3081840,'2028-29':5559640} },
+  { name:"Ben Sheppard", team:"IND", sal:{'2025-26':2790720,'2026-27':5031669} },
+  { name:"Hugo González", team:"BOS", sal:{'2025-26':2783880,'2026-27':2923560,'2027-28':3062640,'2028-29':5528065} },
+  { name:"Liam McNeeley", team:"CHO", sal:{'2025-26':2763960,'2026-27':2902080,'2027-28':3040320,'2028-29':5487778} },
+  { name:"Dillon Jones", team:"WAS", sal:{'2025-26':2753280} },
+  { name:"Yanic Konan Niederhäuser", team:"LAC", sal:{'2025-26':2743800,'2026-27':2880960,'2027-28':3018480,'2028-29':5448356} },
+  { name:"Nick Smith Jr.", team:"CHO", sal:{'2025-26':2710680} },
+  { name:"Brice Sensabaugh", team:"UTA", sal:{'2025-26':2693760,'2026-27':4862237} },
+  { name:"Julian Strawther", team:"DEN", sal:{'2025-26':2674200,'2026-27':4826931} },
+  { name:"Terrence Shannon Jr.", team:"MIN", sal:{'2025-26':2674080,'2026-27':2801640,'2027-28':5054159} },
+  { name:"Ryan Dunn", team:"PHO", sal:{'2025-26':2657760,'2026-27':2784240,'2027-28':5025553} },
+  { name:"Kobe Brown", team:"LAC", sal:{'2025-26':2654880,'2026-27':4792059} },
+  { name:"Isaiah Collier", team:"UTA", sal:{'2025-26':2638200,'2026-27':2763960,'2027-28':4988948} },
+  { name:"Baylor Scheierman", team:"BOS", sal:{'2025-26':2619000,'2026-27':2744040,'2027-28':4952993} },
+  { name:"Xavier Tillman Sr.", team:"BOS", sal:{'2025-26':2546675} },
+  { name:"Chuma Okeke", team:"CLE", sal:{'2025-26':2546675} },
+  { name:"Cam Spencer", team:"MEM", sal:{'2025-26':2537989,'2026-27':2411090,'2027-28':2616754,'2028-29':2830685} },
+  { name:"Luka Garza", team:"BOS", sal:{'2025-26':2461463,'2026-27':2801346} },
+  { name:"Sandro Mamukelashvili", team:"TOR", sal:{'2025-26':2461463,'2026-27':2801346} },
+  { name:"Trendon Watford", team:"PHI", sal:{'2025-26':2461463,'2026-27':2801346} },
+  { name:"Jericho Sims", team:"MIL", sal:{'2025-26':2461463,'2026-27':2801346} },
+  { name:"Dru Smith", team:"MIA", sal:{'2025-26':2378870,'2026-27':2584539,'2027-28':2934742} },
+  { name:"Josh Minott", team:"BOS", sal:{'2025-26':2378870,'2026-27':2584539} },
+  { name:"Justin Champagnie", team:"WAS", sal:{'2025-26':2349578,'2026-27':2667944,'2027-28':3005085} },
+  { name:"Jordan Goodwin", team:"PHO", sal:{'2025-26':2349578} },
+  { name:"Jay Huff", team:"IND", sal:{'2025-26':2349578,'2026-27':2667944,'2027-28':3005085} },
+  { name:"Keon Johnson", team:"BRK", sal:{'2025-26':2349578} },
+  { name:"Neemias Queta", team:"BOS", sal:{'2025-26':2349578,'2026-27':2667944} },
+  { name:"Vit Krejci", team:"ATL", sal:{'2025-26':2349578,'2026-27':2667944,'2027-28':3005085} },
+  { name:"A.J. Green", team:"MIL", sal:{'2025-26':2301587,'2026-27':10044644,'2027-28':10848215,'2028-29':11651786,'2029-30':12455355} },
+  { name:"Keon Ellis", team:"SAC", sal:{'2025-26':2301587} },
+  { name:"Vince Williams Jr.", team:"MEM", sal:{'2025-26':2301587,'2026-27':2489752} },
+  { name:"Sion James", team:"CHO", sal:{'2025-26':2296274,'2026-27':2411090,'2027-28':2525901,'2028-29':2735698} },
+  { name:"Ryan Kalkbrenner", team:"CHO", sal:{'2025-26':2296274,'2026-27':2411090,'2027-28':2525901,'2028-29':2735698} },
+  { name:"Marvin Bagley III", team:"WAS", sal:{'2025-26':2296274} },
+  { name:"Anthony Gill", team:"WAS", sal:{'2025-26':2296274} },
+  { name:"Garrett Temple", team:"TOR", sal:{'2025-26':2296274} },
+  { name:"Bismack Biyombo", team:"SAS", sal:{'2025-26':2296274} },
+  { name:"Lindy Waters III", team:"SAS", sal:{'2025-26':2296274} },
+  { name:"Jordan McLaughlin", team:"SAS", sal:{'2025-26':2296274} },
+  { name:"Russell Westbrook", team:"SAC", sal:{'2025-26':2296274} },
+  { name:"Doug McDermott", team:"SAC", sal:{'2025-26':2296274} },
+  { name:"Drew Eubanks", team:"SAC", sal:{'2025-26':2296274} },
+  { name:"Blake Wesley", team:"POR", sal:{'2025-26':7022602} },
+  { name:"Collin Gillespie", team:"PHO", sal:{'2025-26':2296274} },
+  { name:"Kyle Lowry", team:"PHI", sal:{'2025-26':2296274} },
+  { name:"Eric Gordon", team:"PHI", sal:{'2025-26':2296274} },
+  { name:"Landry Shamet", team:"NYK", sal:{'2025-26':2296274} },
+  { name:"Jordan Clarkson", team:"NYK", sal:{'2025-26':16581988} },
+  { name:"Bones Hyland", team:"MIN", sal:{'2025-26':2296274} },
+  { name:"Joe Ingles", team:"MIN", sal:{'2025-26':2296274} },
+  { name:"Thanasis Antetokounmpo", team:"MIL", sal:{'2025-26':2296274} },
+  { name:"Amir Coffey", team:"MIL", sal:{'2025-26':2296274} },
+  { name:"Cole Anthony", team:"MIL", sal:{'2025-26':15396274} },
+  { name:"Jock Landale", team:"MEM", sal:{'2025-26':10296274} },
+  { name:"Chris Paul", team:"LAC", sal:{'2025-26':2296274} },
+  { name:"Josh Okogie", team:"HOU", sal:{'2025-26':2296274} },
+  { name:"Jeff Green", team:"HOU", sal:{'2025-26':2296274} },
+  { name:"Aaron Holiday", team:"HOU", sal:{'2025-26':2296274} },
+  { name:"Jae\'Sean Tate", team:"HOU", sal:{'2025-26':2296274} },
+  { name:"Gary Payton II", team:"GSW", sal:{'2025-26':2296274} },
+  { name:"Javonte Green", team:"DET", sal:{'2025-26':2296274} },
+  { name:"Tim Hardaway Jr.", team:"DEN", sal:{'2025-26':2296274} },
+  { name:"Bruce Brown", team:"DEN", sal:{'2025-26':2296274} },
+  { name:"Dante Exum", team:"DAL", sal:{'2025-26':2296274} },
+  { name:"Thomas Bryant", team:"CLE", sal:{'2025-26':2296274} },
+  { name:"Larry Nance Jr.", team:"CLE", sal:{'2025-26':2296274} },
+  { name:"Mason Plumlee", team:"CHO", sal:{'2025-26':2296274} },
+  { name:"Chris Boucher", team:"BOS", sal:{'2025-26':2296274} },
+  { name:"Scotty Pippen Jr.", team:"MEM", sal:{'2025-26':2270735,'2026-27':2461462,'2027-28':2789215} },
+  { name:"JD Davison", team:"BOS", sal:{'2025-26':2270735} },
+  { name:"Brandon Williams", team:"DAL", sal:{'2025-26':2270735} },
+  { name:"Moussa Diabaté", team:"CHO", sal:{'2025-26':2270735,'2026-27':2461462} },
+  { name:"DeAndre Jordan", team:"NOP", sal:{'2025-26':2269880} },
+  { name:"Toumani Camara", team:"POR", sal:{'2025-26':2221677,'2026-27':18080358,'2027-28':19526786,'2028-29':20973214,'2029-30':22419642} },
+  { name:"Rayan Rupert", team:"POR", sal:{'2025-26':2221677} },
+  { name:"Ricky Council IV", team:"PHI", sal:{'2025-26':2221677} },
+  { name:"GG Jackson II", team:"MEM", sal:{'2025-26':2221677,'2026-27':2406205} },
+  { name:"Gui Santos", team:"GSW", sal:{'2025-26':2221677} },
+  { name:"Jalen Pickett", team:"DEN", sal:{'2025-26':2221677,'2026-27':2406205} },
+  { name:"Hunter Tyson", team:"DEN", sal:{'2025-26':2221677,'2026-27':2406205} },
+  { name:"Julian Phillips", team:"CHI", sal:{'2025-26':2221677,'2026-27':2406205} },
+  { name:"Jalen Wilson", team:"BRK", sal:{'2025-26':2221677} },
+  { name:"Jordan Walsh", team:"BOS", sal:{'2025-26':2221677,'2026-27':2406205} },
+  { name:"Duop Reath", team:"POR", sal:{'2025-26':2221677} },
+  { name:"Leonard Miller", team:"MIN", sal:{'2025-26':2221677,'2026-27':2406205} },
+  { name:"Andre Jackson Jr.", team:"MIL", sal:{'2025-26':2221677,'2026-27':2406205} },
+  { name:"Trayce Jackson-Davis", team:"GSW", sal:{'2025-26':2221677,'2026-27':2406205} },
+  { name:"Craig Porter Jr.", team:"CLE", sal:{'2025-26':2221677,'2026-27':2406205} },
+  { name:"Mouhamed Gueye", team:"ATL", sal:{'2025-26':2221677,'2026-27':2406205} },
+  { name:"JaVale McGee", team:"DAL", sal:{'2025-26':2208856,'2026-27':2208856,'2027-28':2208856} },
+  { name:"Tyler Kolek", team:"NYK", sal:{'2025-26':2191897,'2026-27':2296271,'2027-28':2486995} },
+  { name:"Jaylen Clark", team:"MIN", sal:{'2025-26':2191897} },
+  { name:"Tyrese Martin", team:"BRK", sal:{'2025-26':2191897} },
+  { name:"Precious Achiuwa", team:"SAC", sal:{'2025-26':2111516} },
+  { name:"Justin Edwards", team:"PHI", sal:{'2025-26':2048494,'2026-27':2411090,'2027-28':2616754} },
+  { name:"Nigel Hayes-Davis", team:"PHO", sal:{'2025-26':2048494} },
+  { name:"N\'Faly Dante", team:"ATL", sal:{'2025-26':2048494,'2026-27':2411090} },
+  { name:"Tyler Smith", team:"MIL", sal:{'2025-26':1955377,'2026-27':2296271} },
+  { name:"Johnny Furphy", team:"IND", sal:{'2025-26':1955377,'2026-27':2296271,'2027-28':2486995} },
+  { name:"Jonathan Mogbo", team:"TOR", sal:{'2025-26':1955377,'2026-27':2296271} },
+  { name:"Jamal Shead", team:"TOR", sal:{'2025-26':1955377,'2026-27':2296271} },
+  { name:"Oso Ighodaro", team:"PHO", sal:{'2025-26':1955377,'2026-27':2296271,'2027-28':2486995} },
+  { name:"Ariel Hukporti", team:"NYK", sal:{'2025-26':1955377} },
+  { name:"Karlo Matković", team:"NOP", sal:{'2025-26':1955377,'2026-27':2296271} },
+  { name:"Keshad Johnson", team:"MIA", sal:{'2025-26':1955377} },
+  { name:"Jaylen Wells", team:"MEM", sal:{'2025-26':1955377,'2026-27':2296271,'2027-28':2486995} },
+  { name:"Bronny James", team:"LAL", sal:{'2025-26':1955377,'2026-27':2296271,'2027-28':2486995} },
+  { name:"Cam Christie", team:"LAC", sal:{'2025-26':1955377,'2026-27':2296271,'2027-28':2486995} },
+  { name:"Quinten Post", team:"GSW", sal:{'2025-26':1955377} },
+  { name:"Isaac Jones", team:"DET", sal:{'2025-26':1955377} },
+  { name:"Bobi Klintman", team:"DET", sal:{'2025-26':1955377,'2026-27':2296271,'2027-28':2486995} },
+  { name:"Drew Timme", team:"BRK", sal:{'2025-26':1955377} },
+  { name:"Jamison Battle", team:"TOR", sal:{'2025-26':1955377,'2026-27':2296271} },
+  { name:"Adem Bona", team:"PHI", sal:{'2025-26':1955377,'2026-27':2296271,'2027-28':2486995} },
+  { name:"Pelle Larsson", team:"MIA", sal:{'2025-26':1955377,'2026-27':2296271} },
+  { name:"Chaz Lanier", team:"DET", sal:{'2025-26':1372870,'2026-27':2150917,'2027-28':2525901,'2028-29':2735698} },
+  { name:"Rasheer Fleming", team:"PHO", sal:{'2025-26':1272870,'2026-27':2150917,'2027-28':2525901,'2028-29':2735698} },
+  { name:"Maxime Raynaud", team:"SAC", sal:{'2025-26':1272870,'2026-27':2150917,'2027-28':2525901} },
+  { name:"Johni Broome", team:"PHI", sal:{'2025-26':1272870,'2026-27':2150917,'2027-28':2525901,'2028-29':2735698} },
+  { name:"Noah Penda", team:"ORL", sal:{'2025-26':1272870,'2026-27':2150917,'2027-28':2525901,'2028-29':2735698} },
+  { name:"Micah Peavy", team:"NOP", sal:{'2025-26':1272870,'2026-27':2150917,'2027-28':2525901,'2028-29':2735698} },
+  { name:"Adou Thiero", team:"LAL", sal:{'2025-26':1272870,'2026-27':2150917,'2027-28':2525901} },
+  { name:"Will Richard", team:"GSW", sal:{'2025-26':1272870,'2026-27':2150917,'2027-28':2525901,'2028-29':2735698} },
+  { name:"Tyrese Proctor", team:"CLE", sal:{'2025-26':1272870,'2026-27':2150917,'2027-28':2525901,'2028-29':2735698} },
+  { name:"Mohamed Diawara", team:"NYK", sal:{'2025-26':1272870} },
+  { name:"Kam Jones", team:"IND", sal:{'2025-26':1272870,'2026-27':2150917,'2027-28':2525901,'2028-29':2735698} },
+  { name:"Nikola Djurisic", team:"ATL", sal:{'2025-26':1272870,'2026-27':2150917,'2027-28':2525901} },
+  { name:"Olivier-Maxence Prosper", team:"DAL", sal:{'2025-26':1002360,'2026-27':1002360,'2027-28':1002360} },
+  { name:"James Wiseman", team:"IND", sal:{'2025-26':1000000} },
+  { name:"E.J. Liddell", team:"PHO", sal:{'2025-26':706898,'2026-27':706898} },
+  { name:"Mamadi Diakite", team:"MEM", sal:{'2025-26':464050,'2026-27':464050} },
+  { name:"Ricky Rubio", team:"CLE", sal:{'2025-26':424672,'2026-27':424672} },
+  { name:"Monte Morris", team:"IND", sal:{'2025-26':321184} },
+  { name:"Didi Louzada", team:"POR", sal:{'2025-26':268032,'2026-27':268032,'2027-28':268032,'2028-29':268032} },
+  { name:"Mac McClung", team:"IND", sal:{'2025-26':164060} },
+  { name:"Garrison Mathews", team:"IND", sal:{'2025-26':131970} },
+  { name:"Garrison Mathews", team:"IND", sal:{'2025-26':131970} },
+  { name:"Jaden Springer", team:"NOP", sal:{'2025-26':70732} }
 ];
 
 // ═══ HELPERS ═══
@@ -393,6 +895,7 @@ function render(){
   renderRoster();
   renderHolds();
   renderDead();
+  renderTrade();
   renderStatus();
 }
 
@@ -412,7 +915,7 @@ function renderCards(){
     else if(tot > ci.cap) cls = 'c-warn';
 
     h += `<div class="card ${cls}">
-      <div class="c-lbl">${y}</div>
+      <div class="c-lbl">Team Salary · ${y}</div>
       <div class="c-val">${fmt(tot)}</div>
       <div class="c-sub">${pct(tot,ci.cap)} of cap</div>
       <div class="c-row"><span>Cap</span><strong class="${capSp>=0?'pos':'neg'}">${capSp<0?'−':''}${fmt(Math.abs(capSp))}</strong></div>
@@ -426,6 +929,11 @@ function renderCards(){
 function renderRoster(){
   const s = sorted();
   document.getElementById('activeCount').textContent = s.length;
+  
+  // Calculate guaranteed roster spots (GTD contracts in current year)
+  const gtdCount = s.filter(p => p.typ['2025-26'] === 'gtd' && p.sal['2025-26']).length;
+  document.getElementById('gtdCount').textContent = gtdCount;
+  
   let h = '';
 
   s.forEach((p, i)=>{
@@ -446,16 +954,18 @@ function renderRoster(){
       }
     });
 
-    // actions
+    // actions - now in 2x2 grid with trade button
     let actions = '';
     const opt = firstOption(p);
+    const inTrade = tradeBlock.some(t => t.id === p.id);
+    
     if(opt){
-      const lbl = opt.type==='to' ? 'TO' : 'PO';
-      actions += `<button class="act-btn pickup"  onclick="pickUpOption(${p.id},'${opt.year}')" title="Exercise the ${lbl}">✓ ${lbl}</button>`;
-      actions += `<button class="act-btn decline" onclick="declineOption(${p.id},'${opt.year}')" title="Decline the ${lbl}">✕ ${lbl}</button>`;
+      actions += `<button class="act-btn pickup"  onclick="pickUpOption(${p.id},'${opt.year}')" title="Exercise option">✓ Opt</button>`;
+      actions += `<button class="act-btn decline" onclick="declineOption(${p.id},'${opt.year}')" title="Decline option">✕ Opt</button>`;
     }
+    actions += `<button class="act-btn" onclick="toggleTrade(${p.id})" title="Add to trade" style="background:${inTrade?'var(--blue)':'var(--bg2)'}">🔄</button>`;
     actions += `<button class="act-btn" onclick="waivePlayer(${p.id})" title="Waive">💀</button>`;
-    actions += `<button class="act-btn" onclick="removePlayer(${p.id})" title="Remove">🗑️</button>`;
+    if(!opt) actions += `<button class="act-btn" onclick="removePlayer(${p.id})" title="Remove">🗑️</button>`;
 
     h += `<div class="act">${actions}</div></div>`;
   });
@@ -580,6 +1090,7 @@ function openTypeEdit(e, playerId, year){
 
 function applyType(type){
   if(!popupTarget) return;
+  saveHistory();
   const player = roster.find(p=> p.id===popupTarget.playerId);
   if(player){
     if(type==='clear'){
@@ -591,6 +1102,7 @@ function applyType(type){
   }
   closePopups();
   render();
+  saveState();
 }
 
 // ═══ SALARY EDITOR (click an empty cell) ═══
@@ -625,6 +1137,7 @@ function applySalary(){
   const val = parseInt(raw, 10);
   if(!val || val<=0){ closePopups(); return; }
 
+  saveHistory();
   const player = roster.find(p=> p.id===popupTarget.playerId);
   if(player){
     player.sal[popupTarget.year] = val;
@@ -632,6 +1145,7 @@ function applySalary(){
   }
   closePopups();
   render();
+  saveState();
 }
 
 // ═══ CLOSE ALL POPUPS ═══
@@ -651,8 +1165,10 @@ function pickUpOption(id, optYear){
   if(!p) return;
   const lbl = p.typ[optYear]==='to' ? 'TO' : 'PO';
   if(!confirm(`Pick up the ${lbl} for ${p.name} in ${optYear}?\nThe salary stays and the year becomes guaranteed.`)) return;
+  saveHistory();
   p.typ[optYear] = 'gtd';
   render();
+  saveState();
 }
 
 function declineOption(id, optYear){
@@ -660,12 +1176,14 @@ function declineOption(id, optYear){
   if(!p) return;
   const lbl = p.typ[optYear]==='to' ? 'TO' : 'PO';
   if(!confirm(`Decline the ${lbl} for ${p.name}?\nThis removes ${optYear} and all subsequent contract years.`)) return;
+  saveHistory();
   const idx = YEARS.indexOf(optYear);
   for(let i=idx; i<YEARS.length; i++){
     delete p.sal[YEARS[i]];
     delete p.typ[YEARS[i]];
   }
   render();
+  saveState();
 }
 
 // ═══ PLAYER ACTIONS ═══
@@ -673,31 +1191,39 @@ function removePlayer(id){
   const p = roster.find(r=> r.id===id);
   if(!p) return;
   if(!confirm(`Remove ${p.name} from the roster?`)) return;
+  saveHistory();
   roster = roster.filter(r=> r.id!==id);
   render();
+  saveState();
 }
 
 function waivePlayer(id){
   const p = roster.find(r=> r.id===id);
   if(!p) return;
   if(!confirm(`Waive ${p.name}? Their remaining salary becomes dead money.`)) return;
+  saveHistory();
   const deadSal={}, deadTyp={};
   YEARS.forEach(y=>{ if(p.sal[y]){ deadSal[y]=p.sal[y]; deadTyp[y]='dead'; } });
   deadMoney.push({ id:p.id, name:p.name+' (waived)', sal:deadSal, typ:deadTyp });
   roster = roster.filter(r=> r.id!==id);
   render();
+  saveState();
 }
 
 function renounce(id){
   if(!confirm('Renounce this cap hold? The space will be freed.')) return;
+  saveHistory();
   capHolds = capHolds.filter(h=> h.id!==id);
   render();
+  saveState();
 }
 
 function removeDead(id){
   if(!confirm('Remove this dead money entry?')) return;
+  saveHistory();
   deadMoney = deadMoney.filter(d=> d.id!==id);
   render();
+  saveState();
 }
 
 // ═══ EMPTY ROW + SEARCH ═══
@@ -733,10 +1259,12 @@ function emptySearch(input, rowId){
 }
 
 function addFromEmpty(name, rowId, sal){
+  saveHistory();
   roster.push({ id:nextId++, name, sal, typ:Object.fromEntries(Object.keys(sal).map(y=>[y,'gtd'])) });
   emptyRows = emptyRows.filter(r=> r.id!==rowId);
   document.getElementById('searchDrop').classList.remove('show');
   render();
+  saveState();
 }
 
 // ═══ GLOBAL SEARCH ═══
@@ -761,10 +1289,12 @@ gInput.addEventListener('input', function(){
 gInput.addEventListener('blur', ()=> setTimeout(()=> gDrop.classList.remove('show'),150));
 
 function addFromGlobal(name, sal){
+  saveHistory();
   roster.push({ id:nextId++, name, sal, typ:Object.fromEntries(Object.keys(sal).map(y=>[y,'gtd'])) });
   gInput.value='';
   gDrop.classList.remove('show');
   render();
+  saveState();
 }
 
 // ═══ EXPORT ═══
@@ -784,6 +1314,124 @@ function exportCSV(){
   a.download = 'bulls_cap_sheet.csv';
   a.click();
 }
+
+// ═══════════════════════════════════════════════════════
+// HISTORY & UNDO SYSTEM
+// ═══════════════════════════════════════════════════════
+function saveHistory() {
+  if (historyIndex < history.length - 1) {
+    history = history.slice(0, historyIndex + 1);
+  }
+  
+  history.push({
+    roster: JSON.parse(JSON.stringify(roster)),
+    capHolds: JSON.parse(JSON.stringify(capHolds)),
+    deadMoney: JSON.parse(JSON.stringify(deadMoney)),
+    emptyRows: JSON.parse(JSON.stringify(emptyRows)),
+    tradeBlock: JSON.parse(JSON.stringify(tradeBlock))
+  });
+  
+  if (history.length > MAX_HISTORY) {
+    history.shift();
+  } else {
+    historyIndex++;
+  }
+}
+
+function undo() {
+  if (historyIndex <= 0) {
+    alert('Nothing to undo');
+    return;
+  }
+  
+  historyIndex--;
+  const state = history[historyIndex];
+  roster = JSON.parse(JSON.stringify(state.roster));
+  capHolds = JSON.parse(JSON.stringify(state.capHolds));
+  deadMoney = JSON.parse(JSON.stringify(state.deadMoney));
+  emptyRows = JSON.parse(JSON.stringify(state.emptyRows));
+  tradeBlock = JSON.parse(JSON.stringify(state.tradeBlock));
+  render();
+  saveState();
+}
+
+function resetAll() {
+  if (!confirm('Reset to original roster? This will clear all changes and cannot be undone.')) return;
+  localStorage.removeItem('bullsCapState');
+  location.reload();
+}
+
+// ═══════════════════════════════════════════════════════
+// TRADE BLOCK
+// ═══════════════════════════════════════════════════════
+function toggleTrade(id) {
+  saveHistory();
+  const idx = tradeBlock.findIndex(p => p.id === id);
+  if (idx >= 0) {
+    tradeBlock.splice(idx, 1);
+  } else {
+    const player = roster.find(p => p.id === id);
+    if (player) tradeBlock.push(player);
+  }
+  render();
+  saveState();
+}
+
+function renderTrade() {
+  const sec = document.getElementById('tradeSection');
+  if (!tradeBlock.length) { sec.style.display = 'none'; return; }
+  sec.style.display = 'block';
+  
+  let total = 0;
+  let h = '';
+  
+  tradeBlock.forEach(p => {
+    const sal = p.sal['2025-26'] || 0;
+    total += sal;
+    h += `<div class="tbl-row" style="background:rgba(59,130,246,.1); border-left:3px solid var(--blue) !important;">
+      <div class="r-num">—</div>
+      <div class="r-name">${p.name}</div>
+      <div class="sal-cell"><span class="s-amt">${fmt(sal)}</span></div>
+      <div></div><div></div><div></div>
+      <div class="act"><button class="act-btn" onclick="toggleTrade(${p.id})" style="width:100%">Remove</button></div>
+    </div>`;
+  });
+  
+  document.getElementById('tradeTotal').textContent = fmt(total);
+  document.getElementById('tradeBody').innerHTML = h;
+}
+
+// ═══════════════════════════════════════════════════════
+// LOCALSTORAGE PERSISTENCE
+// ═══════════════════════════════════════════════════════
+function loadState() {
+  try {
+    const saved = localStorage.getItem('bullsCapState');
+    if (saved) {
+      const state = JSON.parse(saved);
+      if (state.roster) roster = state.roster;
+      if (state.capHolds) capHolds = state.capHolds;
+      if (state.deadMoney) deadMoney = state.deadMoney;
+      if (state.tradeBlock) tradeBlock = state.tradeBlock;
+      if (state.emptyRows) emptyRows = state.emptyRows;
+    }
+  } catch(e) {
+    console.error('Failed to load state:', e);
+  }
+}
+
+function saveState() {
+  try {
+    localStorage.setItem('bullsCapState', JSON.stringify({
+      roster, capHolds, deadMoney, tradeBlock, emptyRows
+    }));
+  } catch(e) {
+    console.error('Failed to save state:', e);
+  }
+}
+
+// Load saved state on init
+loadState();
 
 render();
 </script>
