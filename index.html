@@ -232,8 +232,8 @@ body {
 <div class="container">
 
 <div class="header">
-  <h1>🏀 Chicago Bulls Salary Cap Sheet</h1>
-  <p class="sub">2025-26 through 2028-29 · Luxury Tax &amp; Apron Tracking</p>
+  <h1>🏀 Multi-Year Salary Cap Manager</h1>
+  <p class="sub">Created by <a href="https://x.com/Will_Gottlieb" target="_blank" style="color:#fff;text-decoration:underline;font-weight:600;">Will Gottlieb</a></p>
 </div>
 
 <div class="controls">
@@ -241,61 +241,26 @@ body {
     <span class="icon">🔍</span>
     <input type="text" class="search-input" id="searchInput" placeholder="Search NBA players to add…" autocomplete="off">
     <div class="dropdown" id="searchDrop"></div>
+  <div style="display:flex;gap:6px;margin-left:auto;">
+    <button class="btn" id="tradeModeBtn" onclick="setAcquisitionMode('trade')" style="background:var(--red);border-color:var(--red);">
+      🔄 Trade Mode
+    </button>
+    <button class="btn" id="faModeBtn" onclick="setAcquisitionMode('fa')" style="background:var(--bg2);border-color:var(--bg3);">
+      ✍️ FA Mode
+    </button>
+  </div>
   </div>
   <button class="btn btn-red" onclick="addEmptyRow()">➕ Add Row</button>
   <button class="btn" onclick="undo()">◀ Undo</button>
+  <button class="btn" onclick="redo()">▶ Redo</button>
   <button class="btn" onclick="resetAll()">🔄 Reset</button>
   <button class="btn" onclick="exportCSV()">📊 Export CSV</button>
+
+
+<div style="background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);border-radius:8px;padding:12px 16px;margin-bottom:20px;font-size:13px;color:var(--txt2);">
+  💾 <strong style="color:var(--txt)">Your changes are saved locally</strong> in your browser only. Other users won't see your modifications.
 </div>
-
-<div class="cards" id="cards"></div>
-
-<!-- CAP THRESHOLDS TABLE -->
-<div class="section" style="margin-bottom:22px;">
-  <div class="section-hdr">📊 Cap Thresholds</div>
-  <table style="width:100%; border-collapse:collapse;">
-    <thead>
-      <tr style="background:var(--bg2); text-align:left;">
-        <th style="padding:12px 18px; font-size:12px; font-weight:700; color:var(--txt2);">THRESHOLD</th>
-        <th style="padding:12px 18px; font-size:12px; font-weight:700; color:var(--txt2);">2025-26</th>
-        <th style="padding:12px 18px; font-size:12px; font-weight:700; color:var(--txt2);">2026-27</th>
-        <th style="padding:12px 18px; font-size:12px; font-weight:700; color:var(--txt2);">2027-28</th>
-        <th style="padding:12px 18px; font-size:12px; font-weight:700; color:var(--txt2);">2028-29</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr style="border-bottom:1px solid var(--bg3);">
-        <td style="padding:12px 18px; font-weight:600;">Salary Cap</td>
-        <td style="padding:12px 18px;">$154.6M</td>
-        <td style="padding:12px 18px;">$165.5M</td>
-        <td style="padding:12px 18px;">$173.7M</td>
-        <td style="padding:12px 18px;">$182.4M</td>
-      </tr>
-      <tr style="border-bottom:1px solid var(--bg3);">
-        <td style="padding:12px 18px; font-weight:600;">Luxury Tax</td>
-        <td style="padding:12px 18px;">$187.9M</td>
-        <td style="padding:12px 18px;">$201.0M</td>
-        <td style="padding:12px 18px;">$215.1M</td>
-        <td style="padding:12px 18px;">$230.2M</td>
-      </tr>
-      <tr style="border-bottom:1px solid var(--bg3);">
-        <td style="padding:12px 18px; font-weight:600;">1st Apron</td>
-        <td style="padding:12px 18px;">$195.9M</td>
-        <td style="padding:12px 18px;">$209.7M</td>
-        <td style="padding:12px 18px;">$224.3M</td>
-        <td style="padding:12px 18px;">$240.0M</td>
-      </tr>
-      <tr>
-        <td style="padding:12px 18px; font-weight:600;">2nd Apron</td>
-        <td style="padding:12px 18px;">$207.8M</td>
-        <td style="padding:12px 18px;">$222.4M</td>
-        <td style="padding:12px 18px;">$237.9M</td>
-        <td style="padding:12px 18px;">$254.6M</td>
-      </tr>
-    </tbody>
-  </table>
 </div>
-
 <div class="legend">
   <span class="lbl">Legend</span>
   <div class="legend-items">
@@ -305,8 +270,13 @@ body {
     <div class="legend-item"><span class="badge b-hold">HOLD</span> Cap Hold</div>
     <div class="legend-item"><span class="badge b-dead">DEAD</span> Dead Money</div>
   </div>
-  <span style="margin-left:auto;color:var(--txt2);font-size:11px;">💡 Click any salary to edit type · Click <strong style="color:var(--red)">+ Add</strong> to enter a new amount</span>
+
+<!-- TRADE BLOCK -->
+<div class="section" id="tradeSection" style="display:none">
+  <div class="section-hdr">🔄 Trade Block · <span id="tradeTotal">$0.0M</span> Outgoing</div>
+  <div id="tradeBody"></div>
 </div>
+
 
 <div class="section" id="activeSection">
   <div class="section-hdr">👥 Active Roster · <span id="activeCount">0</span> / 15 (<span id="gtdCount">0</span> GTD)</div>
@@ -328,16 +298,15 @@ body {
   <div id="holdsBody"></div>
 </div>
 
+
 <div class="section" id="deadSection" style="display:none">
   <div class="section-hdr">💀 Dead Money</div>
   <div id="deadBody"></div>
 </div>
 
-<!-- TRADE BLOCK -->
-<div class="section" id="tradeSection" style="display:none">
-  <div class="section-hdr">🔄 Trade Block · <span id="tradeTotal">$0.0M</span> Outgoing</div>
-  <div id="tradeBody"></div>
-</div>
+
+<div class="cards" id="cards"></div>
+
 
 <div class="section">
   <div id="statusRows"></div>
@@ -383,9 +352,12 @@ let deadMoney = [
 ];
 let emptyRows = [];
 let tradeBlock = [];
+let acquisitionMode = 'trade'; // 'trade' or 'fa'
+let sortYear = '2025-26'; // Current sort column
 let history = [];
 let historyIndex = -1;
 const MAX_HISTORY = 20;
+let redoStack = []; // For redo functionality
 let nextId    = 200;
 
 // COMPLETE NBA DATABASE - 468 Players
@@ -880,6 +852,54 @@ function sorted(){
   return [...roster].sort((a,b)=> (b.sal[SORT_YEAR]||0)-(a.sal[SORT_YEAR]||0));
 }
 
+function setSortYear(year) {
+  sortYear = year;
+  render();
+}
+
+function redo() {
+  if (redoStack.length === 0) {
+    alert('Nothing to redo');
+    return;
+  }
+  
+  const state = redoStack.pop();
+  historyIndex++;
+  
+  if (historyIndex >= history.length) {
+    history.push(state);
+  } else {
+    history[historyIndex] = state;
+  }
+  
+  roster = JSON.parse(JSON.stringify(state.roster));
+  capHolds = JSON.parse(JSON.stringify(state.capHolds));
+  deadMoney = JSON.parse(JSON.stringify(state.deadMoney));
+  emptyRows = JSON.parse(JSON.stringify(state.emptyRows));
+  tradeBlock = JSON.parse(JSON.stringify(state.tradeBlock));
+  render();
+  saveState();
+}
+
+function setAcquisitionMode(mode) {
+  acquisitionMode = mode;
+  const tradeBtn = document.getElementById('tradeModeBtn');
+  const faBtn = document.getElementById('faModeBtn');
+  if (mode === 'trade') {
+    tradeBtn.style.background = 'var(--red)';
+    tradeBtn.style.borderColor = 'var(--red)';
+    faBtn.style.background = 'var(--bg2)';
+    faBtn.style.borderColor = 'var(--bg3)';
+  } else {
+    tradeBtn.style.background = 'var(--bg2)';
+    tradeBtn.style.borderColor = 'var(--bg3)';
+    faBtn.style.background = 'var(--green)';
+    faBtn.style.borderColor = 'var(--green)';
+  }
+  renderTrade();
+}
+
+
 // first PO or TO year for a player (used to show action buttons)
 function firstOption(player){
   for(const y of YEARS){
@@ -897,6 +917,11 @@ function render(){
   renderDead();
   renderTrade();
   renderStatus();
+  // Update sort indicators
+  ['2025-26','2026-27','2027-28','2028-29'].forEach(y => {
+    const el = document.getElementById(`sort-${y}`);
+    if (el) el.style.display = (y === sortYear) ? 'inline' : 'none';
+  });
 }
 
 function renderCards(){
@@ -928,15 +953,16 @@ function renderCards(){
 
 function renderRoster(){
   const s = sorted();
-  document.getElementById('activeCount').textContent = s.length;
+  const activeRoster = s.filter(p => !tradeBlock.some(t => t.id === p.id));
+  document.getElementById('activeCount').textContent = activeRoster.length;
   
   // Calculate guaranteed roster spots (GTD contracts in current year)
-  const gtdCount = s.filter(p => p.typ['2025-26'] === 'gtd' && p.sal['2025-26']).length;
+  const gtdCount = activeRoster.filter(p => p.typ['2025-26'] === 'gtd' && p.sal['2025-26']).length;
   document.getElementById('gtdCount').textContent = gtdCount;
   
   let h = '';
 
-  s.forEach((p, i)=>{
+  activeRoster.forEach((p, i)=>{
     h += `<div class="tbl-row" data-id="${p.id}">
       <div class="r-num">${i+1}</div>
       <div class="r-name">${p.name}</div>`;
@@ -1319,6 +1345,7 @@ function exportCSV(){
 // HISTORY & UNDO SYSTEM
 // ═══════════════════════════════════════════════════════
 function saveHistory() {
+  redoStack = []; // Clear redo stack
   if (historyIndex < history.length - 1) {
     history = history.slice(0, historyIndex + 1);
   }
@@ -1343,7 +1370,13 @@ function undo() {
     alert('Nothing to undo');
     return;
   }
-  
+  redoStack.push({
+    roster: JSON.parse(JSON.stringify(roster)),
+    capHolds: JSON.parse(JSON.stringify(capHolds)),
+    deadMoney: JSON.parse(JSON.stringify(deadMoney)),
+    emptyRows: JSON.parse(JSON.stringify(emptyRows)),
+    tradeBlock: JSON.parse(JSON.stringify(tradeBlock))
+  });
   historyIndex--;
   const state = history[historyIndex];
   roster = JSON.parse(JSON.stringify(state.roster));
@@ -1381,10 +1414,8 @@ function renderTrade() {
   const sec = document.getElementById('tradeSection');
   if (!tradeBlock.length) { sec.style.display = 'none'; return; }
   sec.style.display = 'block';
-  
   let total = 0;
   let h = '';
-  
   tradeBlock.forEach(p => {
     const sal = p.sal['2025-26'] || 0;
     total += sal;
@@ -1392,13 +1423,22 @@ function renderTrade() {
       <div class="r-num">—</div>
       <div class="r-name">${p.name}</div>
       <div class="sal-cell"><span class="s-amt">${fmt(sal)}</span></div>
-      <div></div><div></div><div></div>
+      <div class="sal-cell"><span class="s-amt">${fmt(p.sal['2026-27']||0)}</span></div>
+      <div class="sal-cell"><span class="s-amt">${fmt(p.sal['2027-28']||0)}</span></div>
+      <div class="sal-cell"><span class="s-amt">${fmt(p.sal['2028-29']||0)}</span></div>
       <div class="act"><button class="act-btn" onclick="toggleTrade(${p.id})" style="width:100%">Remove</button></div>
     </div>`;
   });
-  
+  let matchingInfo = '';
+  if (acquisitionMode === 'trade') {
+    const min = Math.floor(total * 0.75);
+    const max = Math.ceil(total * 1.25 + 250000);
+    matchingInfo = `<div style="margin-top:12px;padding:12px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:6px;font-size:13px;">
+      <strong style="color:var(--amber);">⚖️ Trade Matching:</strong> Incoming salary must be between <strong>${fmt(min)}</strong> and <strong>${fmt(max)}</strong>
+    </div>`;
+  }
   document.getElementById('tradeTotal').textContent = fmt(total);
-  document.getElementById('tradeBody').innerHTML = h;
+  document.getElementById('tradeBody').innerHTML = h + matchingInfo;
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1437,3 +1477,49 @@ render();
 </script>
 </body>
 </html>
+
+<!-- CAP THRESHOLDS TABLE -->
+<div class="section" style="margin-bottom:22px;">
+  <div class="section-hdr">📊 Cap Thresholds</div>
+  <table style="width:100%; border-collapse:collapse;">
+    <thead>
+      <tr style="background:var(--bg2); text-align:left;">
+        <th style="padding:12px 18px; font-size:12px; font-weight:700; color:var(--txt2);">THRESHOLD</th>
+        <th style="padding:12px 18px; font-size:12px; font-weight:700; color:var(--txt2);">2025-26</th>
+        <th style="padding:12px 18px; font-size:12px; font-weight:700; color:var(--txt2);">2026-27</th>
+        <th style="padding:12px 18px; font-size:12px; font-weight:700; color:var(--txt2);">2027-28</th>
+        <th style="padding:12px 18px; font-size:12px; font-weight:700; color:var(--txt2);">2028-29</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid var(--bg3);">
+        <td style="padding:12px 18px; font-weight:600;">Salary Cap</td>
+        <td style="padding:12px 18px;">$154.6M</td>
+        <td style="padding:12px 18px;">$165.5M</td>
+        <td style="padding:12px 18px;">$173.7M</td>
+        <td style="padding:12px 18px;">$182.4M</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--bg3);">
+        <td style="padding:12px 18px; font-weight:600;">Luxury Tax</td>
+        <td style="padding:12px 18px;">$187.9M</td>
+        <td style="padding:12px 18px;">$201.0M</td>
+        <td style="padding:12px 18px;">$215.1M</td>
+        <td style="padding:12px 18px;">$230.2M</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--bg3);">
+        <td style="padding:12px 18px; font-weight:600;">1st Apron</td>
+        <td style="padding:12px 18px;">$195.9M</td>
+        <td style="padding:12px 18px;">$209.7M</td>
+        <td style="padding:12px 18px;">$224.3M</td>
+        <td style="padding:12px 18px;">$240.0M</td>
+      </tr>
+      <tr>
+        <td style="padding:12px 18px; font-weight:600;">2nd Apron</td>
+        <td style="padding:12px 18px;">$207.8M</td>
+        <td style="padding:12px 18px;">$222.4M</td>
+        <td style="padding:12px 18px;">$237.9M</td>
+        <td style="padding:12px 18px;">$254.6M</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
