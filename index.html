@@ -114,10 +114,10 @@ body {
 
 .tbl-wrap { overflow-x:auto; }
 
-/* Perfect alignment: 50px + 220px + (5 × 150px) + 220px = 1240px */
+/* Perfect alignment: 60px + 240px + (5 × 160px) + 280px = 1380px */
 .tbl-head, .tbl-row {
   display:grid;
-  grid-template-columns: 50px 220px repeat(5, 150px) 220px;
+  grid-template-columns: 60px 240px repeat(5, 160px) 280px;
   gap:0; padding:0 20px; align-items:center;
 }
 
@@ -128,15 +128,15 @@ body {
 }
 
 .tbl-row {
-  padding:14px 20px; border-bottom:1px solid rgba(51,51,51,.5);
+  padding:16px 20px; border-bottom:1px solid rgba(51,51,51,.5);
   transition:background .15s;
 }
 .tbl-row:hover { background:rgba(255,255,255,.02); }
 .tbl-row:last-child { border-bottom:none; }
 
 .r-num { color:var(--txt2); font-size:13px; font-weight:600; text-align:center; }
-.r-name { font-weight:600; font-size:14px; padding-right:10px; }
-.sal-cell { text-align:right; padding-right:10px; }
+.r-name { font-weight:600; font-size:14px; padding-right:15px; }
+.sal-cell { text-align:right; padding-right:15px; }
 .s-amt { font-size:13px; font-weight:600; display:block; }
 .s-pct { font-size:10px; color:var(--txt2); margin-top:2px; display:block; }
 .s-badge { 
@@ -149,10 +149,10 @@ body {
 .s-qo { background:rgba(168,85,247,.15); color:var(--purple); border:1px solid rgba(168,85,247,.3); }
 .s-ch { background:rgba(245,158,11,.15); color:var(--amber); border:1px solid rgba(245,158,11,.3); }
 
-.act { display:grid; grid-template-columns:1fr 1fr; gap:4px; }
+.act { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
 .act-btn {
   background:var(--bg2); border:1px solid var(--bg3); color:var(--txt);
-  padding:6px 10px; border-radius:5px; font-size:11px; font-weight:600;
+  padding:7px 12px; border-radius:5px; font-size:11px; font-weight:600;
   cursor:pointer; transition:.15s; text-align:center;
 }
 .act-btn:hover { background:var(--bg3); transform:translateY(-1px); }
@@ -188,12 +188,12 @@ body {
 /* Trade block with year headers */
 .trade-year-headers {
   display:grid;
-  grid-template-columns: 50px 220px repeat(5, 150px) 220px;
+  grid-template-columns: 60px 240px repeat(5, 160px) 280px;
   gap:0; padding:0 20px 8px 20px;
   font-size:10px; font-weight:700; text-transform:uppercase;
   letter-spacing:.06em; color:var(--blue);
 }
-.trade-year-headers div { text-align:right; padding-right:10px; }
+.trade-year-headers div { text-align:right; padding-right:15px; }
 .trade-year-headers div:first-child,
 .trade-year-headers div:nth-child(2) { text-align:left; padding-right:0; }
 .trade-year-headers div:nth-child(2) { visibility:hidden; }
@@ -201,10 +201,10 @@ body {
 .trade-total {
   background:rgba(59,130,246,.1); padding:12px 20px; font-size:13px; font-weight:600;
   border-top:2px solid var(--blue); display:grid;
-  grid-template-columns: 50px 220px repeat(5, 150px) 220px;
+  grid-template-columns: 60px 240px repeat(5, 160px) 280px;
   gap:0; align-items:center;
 }
-.trade-total div { text-align:right; padding-right:10px; font-weight:700; color:var(--blue); }
+.trade-total div { text-align:right; padding-right:15px; font-weight:700; color:var(--blue); }
 .trade-total div:first-child { text-align:center; }
 .trade-total div:nth-child(2) { text-align:left; padding-right:0; }
 
@@ -373,13 +373,8 @@ body {
 <!-- DEAD MONEY -->
 <div class="section" id="deadSection" style="display:none">
   <div class="section-hdr">💀 Dead Money</div>
-  <div class="tbl-wrap">
-    <div class="trade-year-headers">
-      <div></div><div></div>
-      <div>2025-26</div><div>2026-27</div><div>2027-28</div><div>2028-29</div><div>2029-30</div>
-      <div></div>
-    </div>
-    <div id="deadBody"></div>
+  <div style="padding:20px">
+    <table class="flip-table" id="deadMoneyTable"></table>
   </div>
 </div>
 
@@ -658,15 +653,36 @@ function renderCards() {
     const room = th.cap - total;
     
     let cls = 'card';
-    if (total > th.apron2) cls += ' c-bad';
-    else if (total > th.tax) cls += ' c-warn';
-    else cls += ' c-ok';
+    let nextThreshold = '';
+    
+    if (total > th.apron2) {
+      cls += ' c-bad';
+      const over = total - th.apron2;
+      nextThreshold = `2nd Apron: ${fmt(over)} over`;
+    } else if (total > th.apron1) {
+      cls += ' c-bad';
+      const away = th.apron2 - total;
+      nextThreshold = `2nd Apron: ${fmt(away)} away`;
+    } else if (total > th.tax) {
+      cls += ' c-warn';
+      const away = th.apron1 - total;
+      nextThreshold = `1st Apron: ${fmt(away)} away`;
+    } else if (total > th.cap) {
+      cls += ' c-warn';
+      const away = th.tax - total;
+      nextThreshold = `Tax: ${fmt(away)} away`;
+    } else {
+      cls += ' c-ok';
+      const away = th.tax - total;
+      nextThreshold = `Tax: ${fmt(away)} away`;
+    }
     
     return `
       <div class="${cls}">
         <div class="c-lbl">Team Salary · ${year}</div>
         <div class="c-val">${fmt(total)}</div>
         <div class="c-sub">${room > 0 ? fmt(room) + ' under cap' : fmt(Math.abs(room)) + ' over cap'}</div>
+        <div class="c-sub" style="margin-top:4px; color:var(--txt); font-weight:600">${nextThreshold}</div>
       </div>
     `;
   }).join('');
@@ -730,28 +746,36 @@ function renderRoster() {
 
 function renderDead() {
   const sec = document.getElementById('deadSection');
-  if (!deadMoney.length) { sec.style.display = 'none'; return; }
+  if (!deadMoney.length) { 
+    sec.style.display = 'none'; 
+    return; 
+  }
   sec.style.display = 'block';
   
-  const html = deadMoney.map(p => {
-    const salCells = YEARS.map(year => {
+  // Create table with years as columns
+  const headerRow = YEARS.map(year => `<th>${year}</th>`).join('');
+  
+  const bodyRows = deadMoney.map(p => {
+    const stretchLabel = p.stretched ? ' (STR)' : '';
+    const cells = YEARS.map(year => {
       const sal = p.sal[year] || 0;
-      return `<div class="sal-cell"><span class="s-amt">${fmt(sal)}</span></div>`;
+      return `<td>${fmt(sal)}</td>`;
     }).join('');
     
-    const stretchLabel = p.stretched ? ' (STR)' : '';
-    
-    return `
-      <div class="tbl-row">
-        <div class="r-num">—</div>
-        <div class="r-name">${p.name}${stretchLabel}</div>
-        ${salCells}
-        <div></div>
-      </div>
-    `;
+    return `<tr><td>${p.name}${stretchLabel}</td>${cells}</tr>`;
   }).join('');
   
-  document.getElementById('deadBody').innerHTML = html;
+  document.getElementById('deadMoneyTable').innerHTML = `
+    <thead>
+      <tr>
+        <th>Player</th>
+        ${headerRow}
+      </tr>
+    </thead>
+    <tbody>
+      ${bodyRows}
+    </tbody>
+  `;
 }
 
 function renderTrade() {
