@@ -487,10 +487,12 @@ const CAP_THRESHOLDS = {
   '2029-30': { cap: 191554860, tax: 246294638, apron1: 256845235, apron2: 272416181 }
 };
 
-// ROSTER - TRADE EXECUTED: Šarić & Huerter OUT, Ivey & Conley IN
+// ROSTER - TRADES EXECUTED: 
+// Trade 1: Šarić & Huerter OUT, Ivey & Conley IN
+// Trade 2: Vučević OUT, Simons IN
 let roster = [
   { id:1, name:"Josh Giddey", sal:{'2025-26':25000000, '2026-27':25000000, '2027-28':25000000, '2028-29':25000000, '2029-30':37500000}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'gtd', '2028-29':'gtd', '2029-30':'ch'} },
-  { id:2, name:"Nikola Vučević", sal:{'2025-26':21481481, '2026-27':32222222, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''} },
+  { id:18, name:"Anfernee Simons", sal:{'2025-26':27678571, '2026-27':41517857, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''} },
   { id:3, name:"Zach Collins", sal:{'2025-26':18080496, '2026-27':27120744, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''} },
   { id:4, name:"Patrick Williams", sal:{'2025-26':18000000, '2026-27':18000000, '2027-28':18000000, '2028-29':18000000, '2029-30':34200000}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'gtd', '2028-29':'po', '2029-30':'ch'} },
   { id:6, name:"Coby White", sal:{'2025-26':12888889, '2026-27':24488889, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''} },
@@ -518,10 +520,11 @@ const NBA_DB = [
   {name:"Stephen Curry",team:"GSW",sal:{'2025-26':59606817,'2026-27':62619668,'2027-28':0,'2028-29':0,'2029-30':0}},
   {name:"Giannis Antetokounmpo",team:"MIL",sal:{'2025-26':54169127,'2026-27':58570690,'2027-28':63055395,'2028-29':0,'2029-30':0}},
   {name:"OG Anunoby",team:"NYK",sal:{'2025-26':37117812,'2026-27':40127857,'2027-28':43137903,'2028-29':46147948,'2029-30':49757143}},
-  {name:"Peyton Watson",team:"DEN",sal:{'2025-26':4431720,'2026-27':4431720,'2027-28':12514350,'2028-29':0,'2029-30':0}},
-  {name:"Walker Kessler",team:"UTA",sal:{'2025-26':4891920,'2026-27':4891920,'2027-28':0,'2028-29':0,'2029-30':0}},
+  {name:"Anfernee Simons",team:"CHI",sal:{'2025-26':27678571,'2026-27':41517857,'2027-28':0,'2028-29':0,'2029-30':0}},
   {name:"Jaden Ivey",team:"CHI",sal:{'2025-26':10107163,'2026-27':8774590,'2027-28':0,'2028-29':0,'2029-30':0}},
-  {name:"Mike Conley",team:"CHI",sal:{'2025-26':10774038,'2026-27':20470672,'2027-28':0,'2028-29':0,'2029-30':0}}
+  {name:"Mike Conley",team:"CHI",sal:{'2025-26':10774038,'2026-27':20470672,'2027-28':0,'2028-29':0,'2029-30':0}},
+  {name:"Peyton Watson",team:"DEN",sal:{'2025-26':4431720,'2026-27':4431720,'2027-28':12514350,'2028-29':0,'2029-30':0}},
+  {name:"Walker Kessler",team:"UTA",sal:{'2025-26':4891920,'2026-27':4891920,'2027-28':0,'2028-29':0,'2029-30':0}}
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -715,7 +718,7 @@ function renderRoster() {
     return `
       <div class="tbl-row" id="player-${p.id}">
         <div class="r-num">${i + 1}</div>
-        <div class="r-name">${p.name}</div>
+        <div class="r-name" onclick="editContract(${p.id})" style="cursor:pointer; text-decoration:underline" title="Click to edit contract">${p.name}</div>
         ${salCells}
         ${actions}
       </div>
@@ -1240,6 +1243,70 @@ function showSalaryModal(id) {
       </div>
     </div>
   `);
+}
+
+function editContract(id) {
+  const player = roster.find(p => p.id === id);
+  if (!player) return;
+  
+  const inputs = YEARS.map(year => {
+    const val = (player.sal[year] || 0) / 1000000;
+    const currentType = player.typ[year] || '';
+    const typeLabel = currentType ? ` (${currentType.toUpperCase()})` : '';
+    
+    return `
+      <div class="modal-row">
+        <div class="modal-lbl">${year}${typeLabel}</div>
+        <div class="modal-input-group">
+          <input type="number" step="0.1" class="modal-input" id="sal-${year}" value="${val}" />
+          <span>M</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  showModal(`
+    <div class="modal-hdr">Edit Contract - ${player.name}</div>
+    <div class="modal-body">
+      <div class="modal-row">
+        <p style="color:var(--txt2); font-size:12px; line-height:1.5; margin-bottom:12px">
+          Edit any year's salary to model re-signing scenarios. When you change a CH, QO, PO, or TO, it will become GTD.
+        </p>
+      </div>
+      ${inputs}
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Cancel</button>
+        <button class="modal-btn modal-btn-primary" onclick="saveContractEdit(${id})">Save Changes</button>
+      </div>
+    </div>
+  `);
+}
+
+function saveContractEdit(id) {
+  const player = roster.find(p => p.id === id);
+  if (!player) return;
+  
+  YEARS.forEach(year => {
+    const input = document.getElementById(`sal-${year}`);
+    if (input) {
+      const val = parseFloat(input.value) || 0;
+      const newSal = Math.floor(val * 1000000);
+      
+      // If salary changed and was previously CH/QO/PO/TO, change to GTD
+      if (newSal !== player.sal[year] && ['ch', 'qo', 'po', 'to'].includes(player.typ[year])) {
+        player.typ[year] = newSal > 0 ? 'gtd' : '';
+      } else if (newSal !== player.sal[year]) {
+        // If changing any other salary, set type appropriately
+        player.typ[year] = newSal > 0 ? 'gtd' : '';
+      }
+      
+      player.sal[year] = newSal;
+    }
+  });
+  
+  saveHistory();
+  render();
+  closeModal();
 }
 
 function saveSalary(id) {
