@@ -114,10 +114,10 @@ body {
 
 .tbl-wrap { overflow-x:auto; }
 
-/* Perfect alignment: 60px + 240px + (5 × 160px) + 280px = 1380px */
+/* Perfect alignment: 60px + 240px + (5 × 160px) + 320px = 1420px */
 .tbl-head, .tbl-row {
   display:grid;
-  grid-template-columns: 60px 240px repeat(5, 160px) 280px;
+  grid-template-columns: 60px 240px repeat(5, 160px) 320px;
   gap:0; padding:0 20px; align-items:center;
 }
 
@@ -126,6 +126,7 @@ body {
   text-transform:uppercase; letter-spacing:.06em; color:var(--txt2);
   border-bottom:1px solid var(--bg3);
 }
+.h-sal { text-align:center; }
 
 .tbl-row {
   padding:16px 20px; border-bottom:1px solid rgba(51,51,51,.5);
@@ -136,7 +137,7 @@ body {
 
 .r-num { color:var(--txt2); font-size:13px; font-weight:600; text-align:center; }
 .r-name { font-weight:600; font-size:14px; padding-right:15px; }
-.sal-cell { text-align:right; padding-right:15px; }
+.sal-cell { text-align:center; padding:0 5px; }
 .s-amt { font-size:13px; font-weight:600; display:block; }
 .s-pct { font-size:10px; color:var(--txt2); margin-top:2px; display:block; }
 .s-badge { 
@@ -149,11 +150,12 @@ body {
 .s-qo { background:rgba(168,85,247,.15); color:var(--purple); border:1px solid rgba(168,85,247,.3); }
 .s-ch { background:rgba(245,158,11,.15); color:var(--amber); border:1px solid rgba(245,158,11,.3); }
 
-.act { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.act { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding-left:20px; }
 .act-btn {
   background:var(--bg2); border:1px solid var(--bg3); color:var(--txt);
-  padding:7px 12px; border-radius:5px; font-size:11px; font-weight:600;
-  cursor:pointer; transition:.15s; text-align:center;
+  padding:8px 14px; border-radius:6px; font-size:11px; font-weight:600;
+  cursor:pointer; transition:.15s; text-align:center; display:flex;
+  align-items:center; justify-content:center; gap:5px;
 }
 .act-btn:hover { background:var(--bg3); transform:translateY(-1px); }
 .act-btn.disabled { opacity:.3; cursor:not-allowed; }
@@ -188,12 +190,12 @@ body {
 /* Trade block with year headers */
 .trade-year-headers {
   display:grid;
-  grid-template-columns: 60px 240px repeat(5, 160px) 280px;
+  grid-template-columns: 60px 240px repeat(5, 160px) 320px;
   gap:0; padding:0 20px 8px 20px;
   font-size:10px; font-weight:700; text-transform:uppercase;
   letter-spacing:.06em; color:var(--blue);
 }
-.trade-year-headers div { text-align:right; padding-right:15px; }
+.trade-year-headers div { text-align:center; }
 .trade-year-headers div:first-child,
 .trade-year-headers div:nth-child(2) { text-align:left; padding-right:0; }
 .trade-year-headers div:nth-child(2) { visibility:hidden; }
@@ -201,10 +203,10 @@ body {
 .trade-total {
   background:rgba(59,130,246,.1); padding:12px 20px; font-size:13px; font-weight:600;
   border-top:2px solid var(--blue); display:grid;
-  grid-template-columns: 60px 240px repeat(5, 160px) 280px;
+  grid-template-columns: 60px 240px repeat(5, 160px) 320px;
   gap:0; align-items:center;
 }
-.trade-total div { text-align:right; padding-right:15px; font-weight:700; color:var(--blue); }
+.trade-total div { text-align:center; font-weight:700; color:var(--blue); }
 .trade-total div:first-child { text-align:center; }
 .trade-total div:nth-child(2) { text-align:left; padding-right:0; }
 
@@ -724,10 +726,18 @@ function renderRoster() {
     
     const actions = `
       <div class="act">
-        <button class="act-btn ${hasOption ? '' : 'disabled'}" onclick="handleOption(${p.id})" ${!hasOption ? 'disabled' : ''}>Option</button>
-        <button class="act-btn ${isCapHold ? '' : 'disabled'}" onclick="waiveCapHold(${p.id})" ${!isCapHold ? 'disabled' : ''}>Cap Hold</button>
-        <button class="act-btn" onclick="toggleTrade(${p.id})">Trade</button>
-        <button class="act-btn" onclick="handleWaive(${p.id})">Waive</button>
+        <button class="act-btn ${hasOption ? '' : 'disabled'}" onclick="handleOption(${p.id})" ${!hasOption ? 'disabled' : ''}>
+          <span>⚙️</span><span>Option</span>
+        </button>
+        <button class="act-btn ${isCapHold ? '' : 'disabled'}" onclick="waiveCapHold(${p.id})" ${!isCapHold ? 'disabled' : ''}>
+          <span>🧢</span><span>Cap Hold</span>
+        </button>
+        <button class="act-btn" onclick="toggleTrade(${p.id})">
+          <span>🔄</span><span>Trade</span>
+        </button>
+        <button class="act-btn" onclick="handleWaive(${p.id})">
+          <span>✂️</span><span>Waive</span>
+        </button>
       </div>
     `;
     
