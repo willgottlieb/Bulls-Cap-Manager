@@ -285,6 +285,7 @@ body {
     <div class="dropdown" id="searchDropdown"></div>
   </div>
   <button class="btn" onclick="addRow()">➕ Add Row</button>
+  <button class="btn" onclick="openManageRoster()">👥 Manage Roster</button>
   <button class="btn" onclick="undo()">◀ Undo</button>
   <button class="btn" onclick="redo()">▶ Redo</button>
   <button class="btn" onclick="resetAll()">🔄 Reset</button>
@@ -488,18 +489,19 @@ const CAP_THRESHOLDS = {
 // ROSTER - TRADES EXECUTED: 
 // Trade 1: Šarić & Huerter OUT, Ivey & Conley IN
 // Trade 2: Vučević OUT, Simons IN
+// Trade 3: White & Conley OUT, Sexton & Dieng IN
 let roster = [
   { id:1, name:"Josh Giddey", sal:{'2025-26':25000000, '2026-27':25000000, '2027-28':25000000, '2028-29':25000000, '2029-30':37500000}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'gtd', '2028-29':'gtd', '2029-30':'ch'} },
   { id:18, name:"Anfernee Simons", sal:{'2025-26':27678571, '2026-27':41517857, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''} },
+  { id:19, name:"Collin Sexton", sal:{'2025-26':18975000, '2026-27':28762500, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''} },
   { id:3, name:"Zach Collins", sal:{'2025-26':18080496, '2026-27':27120744, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''} },
   { id:4, name:"Patrick Williams", sal:{'2025-26':18000000, '2026-27':18000000, '2027-28':18000000, '2028-29':18000000, '2029-30':34200000}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'gtd', '2028-29':'po', '2029-30':'ch'} },
-  { id:6, name:"Coby White", sal:{'2025-26':12888889, '2026-27':24488889, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''} },
   { id:7, name:"Isaac Okoro", sal:{'2025-26':11000000, '2026-27':11814814, '2027-28':22448147, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'ch', '2028-29':'', '2029-30':''} },
-  { id:17, name:"Mike Conley", sal:{'2025-26':10774038, '2026-27':20470672, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''} },
   { id:16, name:"Jaden Ivey", sal:{'2025-26':10107163, '2026-27':8774590, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'qo', '2027-28':'', '2028-29':'', '2029-30':''} },
   { id:8, name:"Jalen Smith", sal:{'2025-26':9000000, '2026-27':9428571, '2027-28':17914285, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'ch', '2028-29':'', '2029-30':''} },
   { id:9, name:"Tre Jones", sal:{'2025-26':8000000, '2026-27':8000000, '2027-28':8000000, '2028-29':15200000, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'gtd', '2028-29':'ch', '2029-30':''} },
   { id:10, name:"Ayo Dosunmu", sal:{'2025-26':7518518, '2026-27':14285184, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''} },
+  { id:20, name:"Ousmane Dieng", sal:{'2025-26':6670882, '2026-27':20012646, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''} },
   { id:11, name:"Matas Buzelis", sal:{'2025-26':5455560, '2026-27':5715360, '2027-28':7584283, '2028-29':10689716, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'gtd', '2028-29':'qo', '2029-30':''} },
   { id:12, name:"Noa Essengue", sal:{'2025-26':5429520, '2026-27':5701200, '2027-28':5972760, '2028-29':8230464, '2029-30':11758660}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'gtd', '2028-29':'gtd', '2029-30':'qo'} },
   { id:14, name:"Dalen Terry", sal:{'2025-26':5399118, '2026-27':7661087, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'qo', '2027-28':'', '2028-29':'', '2029-30':''} },
@@ -1751,14 +1753,21 @@ function editContract(id) {
   const inputs = YEARS.map(year => {
     const val = (player.sal[year] || 0) / 1000000;
     const currentType = player.typ[year] || '';
-    const typeLabel = currentType ? ` (${currentType.toUpperCase()})` : '';
     
     return `
       <div class="modal-row">
-        <div class="modal-lbl">${year}${typeLabel}</div>
+        <div class="modal-lbl">${year}</div>
         <div class="modal-input-group">
-          <input type="number" step="0.1" class="modal-input" id="sal-${year}" value="${val}" />
+          <input type="number" step="0.1" class="modal-input" id="sal-${year}" value="${val}" placeholder="0" />
           <span>M</span>
+          <select class="modal-select" id="typ-${year}" style="margin-left:8px; width:90px">
+            <option value="">Auto</option>
+            <option value="gtd" ${currentType === 'gtd' ? 'selected' : ''}>GTD</option>
+            <option value="po" ${currentType === 'po' ? 'selected' : ''}>PO</option>
+            <option value="to" ${currentType === 'to' ? 'selected' : ''}>TO</option>
+            <option value="qo" ${currentType === 'qo' ? 'selected' : ''}>QO</option>
+            <option value="ch" ${currentType === 'ch' ? 'selected' : ''}>CH</option>
+          </select>
         </div>
       </div>
     `;
@@ -1768,8 +1777,8 @@ function editContract(id) {
     <div class="modal-hdr">Edit Contract - ${player.name}</div>
     <div class="modal-body">
       <div class="modal-row">
-        <p style="color:var(--txt2); font-size:12px; line-height:1.5; margin-bottom:12px">
-          Edit any year's salary to model re-signing scenarios. When you change a CH, QO, PO, or TO, it will become GTD.
+        <p style="color:var(--txt2); font-size:12px; line-height:1.6; margin-bottom:12px">
+          Enter salary and select type. <strong>CH = Cap Hold</strong> for unrestricted free agents. Use dropdown to manually set any contract type.
         </p>
       </div>
       ${inputs}
@@ -1786,20 +1795,22 @@ function saveContractEdit(id) {
   if (!player) return;
   
   YEARS.forEach(year => {
-    const input = document.getElementById(`sal-${year}`);
-    if (input) {
-      const val = parseFloat(input.value) || 0;
+    const salInput = document.getElementById(`sal-${year}`);
+    const typSelect = document.getElementById(`typ-${year}`);
+    
+    if (salInput && typSelect) {
+      const val = parseFloat(salInput.value) || 0;
       const newSal = Math.floor(val * 1000000);
-      
-      // If salary changed and was previously CH/QO/PO/TO, change to GTD
-      if (newSal !== player.sal[year] && ['ch', 'qo', 'po', 'to'].includes(player.typ[year])) {
-        player.typ[year] = newSal > 0 ? 'gtd' : '';
-      } else if (newSal !== player.sal[year]) {
-        // If changing any other salary, set type appropriately
-        player.typ[year] = newSal > 0 ? 'gtd' : '';
-      }
+      const selectedType = typSelect.value;
       
       player.sal[year] = newSal;
+      
+      // Use manually selected type, or auto-set to gtd if not specified
+      if (selectedType) {
+        player.typ[year] = selectedType;
+      } else {
+        player.typ[year] = newSal > 0 ? 'gtd' : '';
+      }
     }
   });
   
@@ -1959,6 +1970,58 @@ function addRow() {
   roster.push(newRow);
   saveHistory();
   render();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ROSTER MANAGEMENT
+// ═══════════════════════════════════════════════════════════════════════════
+
+function openManageRoster() {
+  const playerRows = roster.map(p => {
+    const sal2025 = fmt(p.sal['2025-26']);
+    return `
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid var(--bg3)">
+        <div>
+          <div style="font-weight:600; font-size:14px">${p.name}</div>
+          <div style="font-size:12px; color:var(--txt2)">${sal2025} · 2025-26</div>
+        </div>
+        <button class="modal-btn modal-btn-danger" onclick="deletePlayer(${p.id})" style="padding:6px 12px">
+          🗑️ Remove
+        </button>
+      </div>
+    `;
+  }).join('');
+  
+  showModal(`
+    <div class="modal-hdr">👥 Manage Roster (${roster.length} players)</div>
+    <div class="modal-body">
+      <div style="margin-bottom:16px">
+        <p style="color:var(--txt2); font-size:13px; line-height:1.6">
+          Remove players from your roster or use the search bar above to add new players.
+        </p>
+      </div>
+      <div style="max-height:400px; overflow-y:auto">
+        ${playerRows}
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  `);
+}
+
+function deletePlayer(id) {
+  const player = roster.find(p => p.id === id);
+  if (!player) return;
+  
+  if (!confirm(`Remove ${player.name} from roster?`)) return;
+  
+  roster = roster.filter(p => p.id !== id);
+  saveHistory();
+  render();
+  
+  // Refresh the modal
+  openManageRoster();
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
