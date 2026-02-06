@@ -29,7 +29,7 @@ body {
   background:linear-gradient(135deg,var(--red),var(--red-dark));
   padding:28px 32px; border-radius:14px; margin-bottom:24px;
   box-shadow:0 16px 48px rgba(206,17,65,.3);
-  position:relative; overflow:hidden; max-width:1280px;
+  position:relative; overflow:hidden; max-width:1500px;
 }
 .header::before {
   content:''; position:absolute; inset:0;
@@ -89,7 +89,7 @@ body {
 .legend {
   background:var(--bg1); border:1px solid var(--bg3); border-radius:10px;
   padding:14px 18px; margin-bottom:20px; display:flex; align-items:center; gap:20px; flex-wrap:wrap;
-  max-width:1280px;
+  max-width:1500px;
 }
 .legend .lbl { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); }
 .legend-items { display:flex; gap:14px; flex-wrap:wrap; }
@@ -105,7 +105,7 @@ body {
 /* ─── TABLE - PERFECTLY ALIGNED ─── */
 .section {
   background:var(--bg1); border:1px solid var(--bg3); border-radius:10px;
-  padding:0; margin-bottom:20px; overflow:hidden; max-width:1280px;
+  padding:0; margin-bottom:20px; overflow:hidden; max-width:1500px;
 }
 .section-hdr {
   background:var(--bg2); padding:14px 20px; font-weight:700; font-size:14px;
@@ -115,10 +115,10 @@ body {
 
 .tbl-wrap { overflow-x:auto; }
 
-/* Perfect alignment: 50px + 200px + (5 × 145px) + 305px = 1280px */
+/* Perfect alignment: 50px + 200px + (5 × 165px) + 425px = 1500px */
 .tbl-head, .tbl-row {
   display:grid;
-  grid-template-columns: 50px 200px repeat(5, 145px) 305px;
+  grid-template-columns: 50px 200px repeat(5, 165px) 425px;
   gap:0; padding:0 20px; align-items:center;
 }
 
@@ -144,7 +144,7 @@ body {
 .s-pct { font-size:10px; color:var(--txt2); margin-top:2px; display:block; }
 .s-badge { 
   display:inline-block; padding:2px 6px; border-radius:3px; 
-  font-size:9px; font-weight:700; letter-spacing:.04em; margin-left:4px;
+  font-size:9px; font-weight:700; letter-spacing:.04em;
 }
 .s-gtd { background:rgba(16,185,129,.15); color:var(--green); border:1px solid rgba(16,185,129,.3); }
 .s-po { background:rgba(59,130,246,.15); color:var(--blue); border:1px solid rgba(59,130,246,.3); }
@@ -193,7 +193,7 @@ body {
 /* Trade block with year headers */
 .trade-year-headers {
   display:grid;
-  grid-template-columns: 50px 200px repeat(5, 145px) 305px;
+  grid-template-columns: 50px 200px repeat(5, 165px) 425px;
   gap:0; padding:0 20px 8px 20px;
   font-size:10px; font-weight:700; text-transform:uppercase;
   letter-spacing:.06em; color:var(--blue);
@@ -206,7 +206,7 @@ body {
 .trade-total {
   background:rgba(59,130,246,.1); padding:12px 20px; font-size:13px; font-weight:600;
   border-top:2px solid var(--blue); display:grid;
-  grid-template-columns: 50px 200px repeat(5, 145px) 305px;
+  grid-template-columns: 50px 200px repeat(5, 165px) 425px;
   gap:0; align-items:center;
 }
 .trade-total div { text-align:center; font-weight:700; color:var(--blue); }
@@ -282,7 +282,7 @@ body {
 </div>
 
 <!-- Search Bar + Mode Buttons -->
-<div style="display:flex; gap:12px; margin-bottom:12px; max-width:1280px">
+<div style="display:flex; gap:12px; margin-bottom:12px; max-width:1500px">
   <div class="search-wrap" style="flex:1">
     <input type="text" class="search-input" id="searchInput" placeholder="Search NBA players..." autocomplete="off">
     <div class="dropdown" id="searchDropdown"></div>
@@ -292,7 +292,7 @@ body {
 </div>
 
 <!-- Action Buttons Row -->
-<div style="display:flex; gap:12px; margin-bottom:20px; max-width:1280px">
+<div style="display:flex; gap:12px; margin-bottom:20px; max-width:1500px">
   <button class="btn" onclick="addRow()">➕ Add Row</button>
   <button class="btn" onclick="openManageRoster()">👥 Manage Roster</button>
   <button class="btn" onclick="undo()">◀ Undo</button>
@@ -381,7 +381,7 @@ body {
   <div class="section-hdr">📊 Cap Situation</div>
   <div style="padding:20px">
     <!-- Year Headers -->
-    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 145px) 305px; gap:0; padding:0 0 8px 0; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 425px; gap:0; padding:0 0 8px 0; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); border-bottom:1px solid var(--bg3)">
       <div></div>
       <div style="padding-left:0">Status</div>
       <div style="text-align:center">2025-26</div>
@@ -400,7 +400,7 @@ body {
 <div class="section" style="margin-top:22px">
   <div class="section-hdr">📋 Cap Figures</div>
   <div style="padding:20px 20px 20px 20px">
-    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 145px) 305px; gap:0; padding:0; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); margin-bottom:8px">
+    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 425px; gap:0; padding:0; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); margin-bottom:8px">
       <div></div>
       <div style="padding-left:0">Threshold</div>
       <div style="text-align:center">2025-26</div>
@@ -410,7 +410,7 @@ body {
       <div style="text-align:center">2029-30</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 145px) 305px; gap:0; padding:12px 0; border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 425px; gap:0; padding:12px 0; border-bottom:1px solid var(--bg3)">
       <div></div>
       <div style="font-weight:600; font-size:14px">Salary Cap</div>
       <div style="text-align:center; font-size:13px; font-weight:600">$154.6M</div>
@@ -420,7 +420,7 @@ body {
       <div style="text-align:center; font-size:13px; font-weight:600">$191.6M</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 145px) 305px; gap:0; padding:12px 0; border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 425px; gap:0; padding:12px 0; border-bottom:1px solid var(--bg3)">
       <div></div>
       <div style="font-weight:600; font-size:14px">Luxury Tax</div>
       <div style="text-align:center; font-size:13px; font-weight:600">$187.9M</div>
@@ -430,7 +430,7 @@ body {
       <div style="text-align:center; font-size:13px; font-weight:600">$246.3M</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 145px) 305px; gap:0; padding:12px 0; border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 425px; gap:0; padding:12px 0; border-bottom:1px solid var(--bg3)">
       <div></div>
       <div style="font-weight:600; font-size:14px">First Apron</div>
       <div style="text-align:center; font-size:13px; font-weight:600">$195.9M</div>
@@ -440,7 +440,7 @@ body {
       <div style="text-align:center; font-size:13px; font-weight:600">$256.8M</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 145px) 305px; gap:0; padding:12px 0">
+    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 425px; gap:0; padding:12px 0">
       <div></div>
       <div style="font-weight:600; font-size:14px">Second Apron</div>
       <div style="text-align:center; font-size:13px; font-weight:600">$207.8M</div>
@@ -1376,7 +1376,7 @@ function renderCapSituation() {
     }).join('');
     
     return `
-      <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 145px) 305px; gap:0; padding:12px 0; border-bottom:1px solid var(--bg3)">
+      <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 425px; gap:0; padding:12px 0; border-bottom:1px solid var(--bg3)">
         <div></div>
         <div style="font-weight:700; font-size:14px">${row.label}</div>
         ${cells}
@@ -1409,13 +1409,13 @@ function renderCapSituation() {
   }).join('');
   
   const fullHtml = html + 
-    `<div style="display:grid; grid-template-columns: 50px 200px repeat(5, 145px) 305px; gap:0; padding:16px 0 12px 0; border-top:2px solid var(--bg3)">
+    `<div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 425px; gap:0; padding:16px 0 12px 0; border-top:2px solid var(--bg3)">
       <div></div>
       <div style="font-weight:700; font-size:14px">Total Salary (Plus CHs)</div>
       ${capHoldsRow}
       <div></div>
     </div>` +
-    `<div style="display:grid; grid-template-columns: 50px 200px repeat(5, 145px) 305px; gap:0; padding:12px 0">
+    `<div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 425px; gap:0; padding:12px 0">
       <div></div>
       <div style="font-weight:700; font-size:14px">Max Space (no CHs)</div>
       ${maxCapRow}
