@@ -372,13 +372,51 @@ body {
     </div>
     <div id="rosterBody"></div>
   </div>
-</div>
-
-<!-- DEAD MONEY -->
-<div class="section" id="deadSection" style="display:none">
-  <div class="section-hdr">💀 Dead Money</div>
-  <div style="padding:20px">
-    <table class="flip-table" id="deadMoneyTable"></table>
+  
+  <!-- DRAFT PICK CAP HOLDS -->
+  <div style="background:rgba(59,130,246,.05); border-top:2px solid var(--blue); padding:16px 20px">
+    <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--blue); margin-bottom:12px">
+      🎯 Add Draft Pick Cap Hold
+    </div>
+    <div style="display:flex; gap:12px; align-items:center; margin-bottom:12px">
+      <select id="draftPickNumber" class="modal-select" style="width:140px">
+        <option value="">Select Pick #</option>
+        <option value="1">Pick #1</option>
+        <option value="2">Pick #2</option>
+        <option value="3">Pick #3</option>
+        <option value="4">Pick #4</option>
+        <option value="5">Pick #5</option>
+        <option value="6">Pick #6</option>
+        <option value="7">Pick #7</option>
+        <option value="8">Pick #8</option>
+        <option value="9">Pick #9</option>
+        <option value="10">Pick #10</option>
+        <option value="11">Pick #11</option>
+        <option value="12">Pick #12</option>
+        <option value="13">Pick #13</option>
+        <option value="14">Pick #14</option>
+        <option value="15">Pick #15</option>
+        <option value="16">Pick #16</option>
+        <option value="17">Pick #17</option>
+        <option value="18">Pick #18</option>
+        <option value="19">Pick #19</option>
+        <option value="20">Pick #20</option>
+        <option value="21">Pick #21</option>
+        <option value="22">Pick #22</option>
+        <option value="23">Pick #23</option>
+        <option value="24">Pick #24</option>
+        <option value="25">Pick #25</option>
+        <option value="26">Pick #26</option>
+        <option value="27">Pick #27</option>
+        <option value="28">Pick #28</option>
+        <option value="29">Pick #29</option>
+        <option value="30">Pick #30</option>
+      </select>
+      <button class="btn btn-red" onclick="addDraftPickCapHold()">
+        ➕ Add Draft Pick
+      </button>
+    </div>
+    <div id="draftPicksContainer"></div>
   </div>
 </div>
 
@@ -402,56 +440,68 @@ body {
   </div>
 </div>
 
-<!-- CAP FIGURES (Flipped) -->
+<!-- DEAD MONEY -->
+<div class="section" id="deadSection" style="display:none">
+  <div class="section-hdr">💀 Dead Money</div>
+  <div style="padding:20px">
+    <table class="flip-table" id="deadMoneyTable"></table>
+  </div>
+</div>
+
+<!-- CAP FIGURES (Aligned with Roster) -->
 <div class="section" style="margin-top:22px">
   <div class="section-hdr">📋 Cap Figures</div>
-  <div style="padding:20px">
-    <table class="flip-table">
-      <thead>
-        <tr>
-          <th>Threshold</th>
-          <th>2025-26</th>
-          <th>2026-27</th>
-          <th>2027-28</th>
-          <th>2028-29</th>
-          <th>2029-30</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Salary Cap</td>
-          <td>$154.6M</td>
-          <td>$165.5M</td>
-          <td>$173.7M</td>
-          <td>$182.4M</td>
-          <td>$191.6M</td>
-        </tr>
-        <tr>
-          <td>Luxury Tax</td>
-          <td>$187.9M</td>
-          <td>$201.0M</td>
-          <td>$215.1M</td>
-          <td>$230.2M</td>
-          <td>$246.3M</td>
-        </tr>
-        <tr>
-          <td>First Apron</td>
-          <td>$195.9M</td>
-          <td>$209.7M</td>
-          <td>$224.3M</td>
-          <td>$240.0M</td>
-          <td>$256.8M</td>
-        </tr>
-        <tr>
-          <td>Second Apron</td>
-          <td>$207.8M</td>
-          <td>$222.4M</td>
-          <td>$237.9M</td>
-          <td>$254.6M</td>
-          <td>$272.4M</td>
-        </tr>
-      </tbody>
-    </table>
+  <div style="padding:20px 20px 20px 20px">
+    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 145px) 305px; gap:0; padding:0; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); margin-bottom:8px">
+      <div></div>
+      <div style="padding-left:0">Threshold</div>
+      <div style="text-align:center">2025-26</div>
+      <div style="text-align:center">2026-27</div>
+      <div style="text-align:center">2027-28</div>
+      <div style="text-align:center">2028-29</div>
+      <div style="text-align:center">2029-30</div>
+      <div></div>
+    </div>
+    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 145px) 305px; gap:0; padding:12px 0; border-bottom:1px solid var(--bg3)">
+      <div></div>
+      <div style="font-weight:600; font-size:14px">Salary Cap</div>
+      <div style="text-align:center; font-size:13px; font-weight:600">$154.6M</div>
+      <div style="text-align:center; font-size:13px; font-weight:600">$165.5M</div>
+      <div style="text-align:center; font-size:13px; font-weight:600">$173.7M</div>
+      <div style="text-align:center; font-size:13px; font-weight:600">$182.4M</div>
+      <div style="text-align:center; font-size:13px; font-weight:600">$191.6M</div>
+      <div></div>
+    </div>
+    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 145px) 305px; gap:0; padding:12px 0; border-bottom:1px solid var(--bg3)">
+      <div></div>
+      <div style="font-weight:600; font-size:14px">Luxury Tax</div>
+      <div style="text-align:center; font-size:13px; font-weight:600">$187.9M</div>
+      <div style="text-align:center; font-size:13px; font-weight:600">$201.0M</div>
+      <div style="text-align:center; font-size:13px; font-weight:600">$215.1M</div>
+      <div style="text-align:center; font-size:13px; font-weight:600">$230.2M</div>
+      <div style="text-align:center; font-size:13px; font-weight:600">$246.3M</div>
+      <div></div>
+    </div>
+    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 145px) 305px; gap:0; padding:12px 0; border-bottom:1px solid var(--bg3)">
+      <div></div>
+      <div style="font-weight:600; font-size:14px">First Apron</div>
+      <div style="text-align:center; font-size:13px; font-weight:600">$195.9M</div>
+      <div style="text-align:center; font-size:13px; font-weight:600">$209.7M</div>
+      <div style="text-align:center; font-size:13px; font-weight:600">$224.3M</div>
+      <div style="text-align:center; font-size:13px; font-weight:600">$240.0M</div>
+      <div style="text-align:center; font-size:13px; font-weight:600">$256.8M</div>
+      <div></div>
+    </div>
+    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 145px) 305px; gap:0; padding:12px 0">
+      <div></div>
+      <div style="font-weight:600; font-size:14px">Second Apron</div>
+      <div style="text-align:center; font-size:13px; font-weight:600">$207.8M</div>
+      <div style="text-align:center; font-size:13px; font-weight:600">$222.4M</div>
+      <div style="text-align:center; font-size:13px; font-weight:600">$237.9M</div>
+      <div style="text-align:center; font-size:13px; font-weight:600">$254.6M</div>
+      <div style="text-align:center; font-size:13px; font-weight:600">$272.4M</div>
+      <div></div>
+    </div>
   </div>
 </div>
 
@@ -486,6 +536,24 @@ const CAP_THRESHOLDS = {
   '2029-30': { cap: 191554860, tax: 246294638, apron1: 256845235, apron2: 272416181 }
 };
 
+const ROOKIE_SCALE = {
+  1:{y1:12328100,y2:12944800,y3:13561000,y4:17100421},2:{y1:11030100,y2:11581900,y3:12133600,y4:15312603},
+  3:{y1:9905400,y2:10400300,y3:10896000,y4:13772544},4:{y1:8930600,y2:9377300,y3:9823900,y4:12427234},
+  5:{y1:8087300,y2:8491300,y3:8895800,y4:11270979},6:{y1:7345200,y2:7712500,y3:8080000,y4:10245440},
+  7:{y1:6705400,y2:7040800,y3:7375800,y4:9367266},8:{y1:6142900,y2:6450100,y3:6757300,y4:8595286},
+  9:{y1:5646500,y2:5929100,y3:6211400,y4:7913324},10:{y1:5364300,y2:5632400,y3:5900300,y4:7522882},
+  11:{y1:5095900,y2:5351000,y3:5605800,y4:7438897},12:{y1:4841400,y2:5083600,y3:5325700,y4:7338815},
+  13:{y1:4599100,y2:4829300,y3:5059200,y4:7229597},14:{y1:4369500,y2:4587900,y3:4806600,y4:7118575},
+  15:{y1:4150700,y2:4358200,y3:4565700,y4:6999218},16:{y1:3943300,y2:4140500,y3:4337800,y4:6654185},
+  17:{y1:3745900,y2:3933300,y3:4120600,y4:6329242},18:{y1:3558900,y2:3736500,y3:3914700,y4:6020809},
+  19:{y1:3398600,y2:3568400,y3:3738700,y4:5757598},20:{y1:3262400,y2:3425500,y3:3588400,y4:5533313},
+  21:{y1:3132000,y2:3288800,y3:3445400,y4:5488522},22:{y1:3006900,y2:3157100,y3:3307500,y4:5440838},
+  23:{y1:2886700,y2:3031200,y3:3175100,y4:5388145},24:{y1:2771400,y2:2909900,y3:3048400,y4:5331652},
+  25:{y1:2660100,y2:2793000,y3:2926500,y4:5270627},26:{y1:2572100,y2:2700500,y3:2829200,y4:5101048},
+  27:{y1:2497800,y2:2622800,y3:2747900,y4:4957212},28:{y1:2482300,y2:2606800,y3:2730900,y4:4929275},
+  29:{y1:2464500,y2:2587600,y3:2711000,y4:4893355},30:{y1:2446500,y2:2568800,y3:2691400,y4:4857977}
+};
+
 // ROSTER - TRADES EXECUTED: 
 // Trade 1: Šarić & Huerter OUT, Ivey & Conley IN
 // Trade 2: Vučević OUT, Simons IN
@@ -504,7 +572,7 @@ let roster = [
   { id:20, name:"Ousmane Dieng", sal:{'2025-26':6670882, '2026-27':20012646, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''} },
   { id:11, name:"Matas Buzelis", sal:{'2025-26':5455560, '2026-27':5715360, '2027-28':7584283, '2028-29':10689716, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'gtd', '2028-29':'qo', '2029-30':''} },
   { id:12, name:"Noa Essengue", sal:{'2025-26':5429520, '2026-27':5701200, '2027-28':5972760, '2028-29':8230464, '2029-30':11758660}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'gtd', '2028-29':'gtd', '2029-30':'qo'} },
-  { id:14, name:"Dalen Terry", sal:{'2025-26':5399118, '2026-27':7661087, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'qo', '2027-28':'', '2028-29':'', '2029-30':''} },
+  { id:21, name:"Guerschon Yabusele", sal:{'2025-26':2087519, '2026-27':2221402, '2027-28':3995924, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'qo', '2028-29':'', '2029-30':''} },
   { id:15, name:"Julian Phillips", sal:{'2025-26':2221677, '2026-27':2406205, '2027-28':2702711, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'ch', '2028-29':'', '2029-30':''} }
 ];
 
@@ -514,6 +582,13 @@ let deadMoney = [
 
 let capHolds = [];
 let emptyRows = [];
+let draftPicks = [];
+  6: 7345200, 7: 6705400, 8: 6142900, 9: 5646500, 10: 5364300,
+  11: 5095900, 12: 4841400, 13: 4599100, 14: 4369500, 15: 4150700,
+  16: 3943300, 17: 3745900, 18: 3558900, 19: 3398600, 20: 3262400,
+  21: 3132000, 22: 3006900, 23: 2886700, 24: 2771400, 25: 2660100,
+  26: 2572100, 27: 2497800, 28: 2482300, 29: 2464500, 30: 2446500
+};
 
 // Enhanced NBA_DB with new Bulls players
 const NBA_DB = [
@@ -991,6 +1066,40 @@ const NBA_DB = [
   {name:"Jaden Springer",team:"NOP",sal:{'2025-26':70732,'2026-27':0,'2027-28':0,'2028-29':0,'2029-30':0}},
 ];
 
+// Rookie Scale Salaries (2025-26 Draft)
+const ROOKIE_SCALE = [
+  {pick:1, y1:12328100, y2:12944800, y3:13561000, y4:17100421, qo:23940589},
+  {pick:2, y1:11030100, y2:11581900, y3:12133600, y4:15312603, qo:21514207},
+  {pick:3, y1:9905400, y2:10400300, y3:10896000, y4:13772544, qo:19446832},
+  {pick:4, y1:8930600, y2:9377300, y3:9823900, y4:12427234, qo:17634245},
+  {pick:5, y1:8087300, y2:8491300, y3:8895800, y4:11270979, qo:16072416},
+  {pick:6, y1:7345200, y2:7712500, y3:8080000, y4:10245440, qo:14691961},
+  {pick:7, y1:6705400, y2:7040800, y3:7375800, y4:9367266, qo:13498230},
+  {pick:8, y1:6142900, y2:6450100, y3:6757300, y4:8595286, qo:12445974},
+  {pick:9, y1:5646500, y2:5929100, y3:6211400, y4:7913324, qo:11513886},
+  {pick:10, y1:5364300, y2:5632400, y3:5900300, y4:7522882, qo:10998453},
+  {pick:11, y1:5095900, y2:5351000, y3:5605800, y4:7438897, qo:10927740},
+  {pick:12, y1:4841400, y2:5083600, y3:5325700, y4:7338815, qo:10832091},
+  {pick:13, y1:4599100, y2:4829300, y3:5059200, y4:7229597, qo:10721492},
+  {pick:14, y1:4369500, y2:4587900, y3:4806600, y4:7118575, qo:10613795},
+  {pick:15, y1:4150700, y2:4358200, y3:4565700, y4:6999218, qo:10484829},
+  {pick:16, y1:3943300, y2:4140500, y3:4337800, y4:6654185, qo:10014548},
+  {pick:17, y1:3745900, y2:3933300, y3:4120600, y4:6329242, qo:9569814},
+  {pick:18, y1:3558900, y2:3736500, y3:3914700, y4:6020809, qo:9145609},
+  {pick:19, y1:3398600, y2:3568400, y3:3738700, y4:5757598, qo:8786095},
+  {pick:20, y1:3262400, y2:3425500, y3:3588400, y4:5533313, qo:8482569},
+  {pick:21, y1:3132000, y2:3288800, y3:3445400, y4:5488522, qo:8457812},
+  {pick:22, y1:3006900, y2:3157100, y3:3307500, y4:5440838, qo:8422417},
+  {pick:23, y1:2886700, y2:3031200, y3:3175100, y4:5388145, qo:8378565},
+  {pick:24, y1:2771400, y2:2909900, y3:3048400, y4:5331652, qo:8328040},
+  {pick:25, y1:2660100, y2:2793000, y3:2926500, y4:5270627, qo:8269614},
+  {pick:26, y1:2572100, y2:2700500, y3:2829200, y4:5101048, qo:8039252},
+  {pick:27, y1:2497800, y2:2622800, y3:2747900, y4:4957212, qo:7847267},
+  {pick:28, y1:2482300, y2:2606800, y3:2730900, y4:4929275, qo:7837547},
+  {pick:29, y1:2464500, y2:2587600, y3:2711000, y4:4893355, qo:7829368},
+  {pick:30, y1:2446500, y2:2568800, y3:2691400, y4:4857977, qo:7772763}
+];
+
 // ═══════════════════════════════════════════════════════════════════════════
 // UTILITY FUNCTIONS
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1104,6 +1213,7 @@ function calculateTradeMatch(outgoing) {
 function render() {
   renderCards();
   renderRoster();
+  renderDraftPicks();
   renderDead();
   renderTrade();
   renderCapSituation();
@@ -1116,8 +1226,11 @@ function render() {
 
 function renderCards() {
   const cards = YEARS.map(year => {
-    const total = roster.reduce((sum, p) => sum + (p.sal[year] || 0), 0) +
-                  deadMoney.reduce((sum, p) => sum + (p.sal[year] || 0), 0);
+    const rosterTotal = roster.reduce((sum, p) => sum + (p.sal[year] || 0), 0);
+    const deadTotal = deadMoney.reduce((sum, p) => sum + (p.sal[year] || 0), 0);
+    const draftTotal = draftPicks.reduce((sum, p) => sum + (p.sal[year] || 0), 0);
+    const total = rosterTotal + deadTotal + draftTotal;
+    
     const th = CAP_THRESHOLDS[year];
     const room = th.cap - total;
     
@@ -1384,8 +1497,11 @@ function renderCapSituation() {
   const html = rows.map(row => {
     const cells = YEARS.map(year => {
       const th = CAP_THRESHOLDS[year];
-      const total = roster.reduce((sum, p) => sum + (p.sal[year] || 0), 0) +
-                    deadMoney.reduce((sum, p) => sum + (p.sal[year] || 0), 0);
+      const rosterTotal = roster.reduce((sum, p) => sum + (p.sal[year] || 0), 0);
+      const deadTotal = deadMoney.reduce((sum, p) => sum + (p.sal[year] || 0), 0);
+      const draftTotal = year === '2025-26' ? draftPicks.reduce((sum, p) => sum + p.capHold, 0) : 0;
+      const total = rosterTotal + deadTotal + draftTotal;
+      
       const room = th[row.key] - total;
       const cls = room > 0 ? 'pos' : 'neg';
       return `<td class="${cls}">${fmt(Math.abs(room))}</td>`;
@@ -1851,6 +1967,101 @@ function closeModal() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// DRAFT PICK CAP HOLDS
+// ═══════════════════════════════════════════════════════════════════════════
+
+function addDraftPickCapHold() {
+  const pickNum = parseInt(document.getElementById('draftPickNumber').value);
+  if (!pickNum) {
+    alert('Please select a pick number');
+    return;
+  }
+  
+  // Check if pick already exists
+  if (draftPicks.some(p => p.pick === pickNum)) {
+    alert(`Pick #${pickNum} is already added`);
+    return;
+  }
+  
+  const scale = ROOKIE_SCALE[pickNum - 1]; // Array is 0-indexed
+  const newId = Math.max(...roster.map(p => p.id), ...draftPicks.map(p => p.id), 0) + 1;
+  
+  const draftPick = {
+    id: newId,
+    pick: pickNum,
+    name: `2025 Pick #${pickNum}`,
+    sal: {
+      '2025-26': scale.y1,
+      '2026-27': scale.y2,
+      '2027-28': scale.y3,
+      '2028-29': scale.y4,
+      '2029-30': 0
+    },
+    typ: {
+      '2025-26': 'gtd',
+      '2026-27': 'gtd',
+      '2027-28': 'to',
+      '2028-29': 'to',
+      '2029-30': ''
+    }
+  };
+  
+  draftPicks.push(draftPick);
+  document.getElementById('draftPickNumber').value = '';
+  saveHistory();
+  renderDraftPicks();
+  render();
+}
+
+function removeDraftPick(id) {
+  draftPicks = draftPicks.filter(p => p.id !== id);
+  saveHistory();
+  renderDraftPicks();
+  render();
+}
+
+function renderDraftPicks() {
+  if (draftPicks.length === 0) {
+    document.getElementById('draftPicksContainer').innerHTML = '';
+    return;
+  }
+  
+  const html = draftPicks.map(p => {
+    const salCells = YEARS.map(year => {
+      const sal = p.sal[year] || 0;
+      const typ = p.typ[year] || '';
+      const percentage = pct(sal, year);
+      let badge = '';
+      if (typ === 'gtd') badge = '<span class="s-badge s-gtd">GTD</span>';
+      else if (typ === 'to') badge = '<span class="s-badge s-to">TO</span>';
+      
+      return `
+        <div class="sal-cell">
+          <span class="s-amt">${fmt(sal)}</span>
+          <span class="s-pct">${percentage}</span>
+          ${badge}
+        </div>
+      `;
+    }).join('');
+    
+    return `
+      <div class="tbl-row" style="background:rgba(59,130,246,.05)">
+        <div class="r-num">🎯</div>
+        <div class="r-name">${p.name}</div>
+        ${salCells}
+        <div class="act" style="justify-content:center">
+          <button class="act-btn" onclick="removeDraftPick(${p.id})" style="grid-column:1/-1">
+            <span>🗑️</span><span>Remove</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  document.getElementById('draftPicksContainer').innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // HISTORY & PERSISTENCE
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -1867,7 +2078,8 @@ function saveHistory() {
     deadMoney: JSON.parse(JSON.stringify(deadMoney)),
     emptyRows: JSON.parse(JSON.stringify(emptyRows)),
     tradeBlock: JSON.parse(JSON.stringify(tradeBlock)),
-    incomingPlayers: JSON.parse(JSON.stringify(incomingPlayers))
+    incomingPlayers: JSON.parse(JSON.stringify(incomingPlayers)),
+    draftPicks: JSON.parse(JSON.stringify(draftPicks))
   });
   
   if (history.length > MAX_HISTORY) history.shift();
@@ -1888,7 +2100,8 @@ function undo() {
     deadMoney: JSON.parse(JSON.stringify(deadMoney)),
     emptyRows: JSON.parse(JSON.stringify(emptyRows)),
     tradeBlock: JSON.parse(JSON.stringify(tradeBlock)),
-    incomingPlayers: JSON.parse(JSON.stringify(incomingPlayers))
+    incomingPlayers: JSON.parse(JSON.stringify(incomingPlayers)),
+    draftPicks: JSON.parse(JSON.stringify(draftPicks))
   });
   
   historyIndex--;
@@ -1899,7 +2112,9 @@ function undo() {
   emptyRows = JSON.parse(JSON.stringify(state.emptyRows));
   tradeBlock = JSON.parse(JSON.stringify(state.tradeBlock));
   incomingPlayers = JSON.parse(JSON.stringify(state.incomingPlayers));
+  draftPicks = JSON.parse(JSON.stringify(state.draftPicks || []));
   
+  renderDraftPicks();
   render();
   saveState();
 }
@@ -1925,14 +2140,16 @@ function redo() {
   emptyRows = JSON.parse(JSON.stringify(state.emptyRows));
   tradeBlock = JSON.parse(JSON.stringify(state.tradeBlock));
   incomingPlayers = JSON.parse(JSON.stringify(state.incomingPlayers));
+  draftPicks = JSON.parse(JSON.stringify(state.draftPicks || []));
   
+  renderDraftPicks();
   render();
   saveState();
 }
 
 function saveState() {
   localStorage.setItem('bullsCapManager_v5.1', JSON.stringify({
-    roster, capHolds, deadMoney, emptyRows, tradeBlock, incomingPlayers
+    roster, capHolds, deadMoney, emptyRows, tradeBlock, incomingPlayers, draftPicks
   }));
 }
 
@@ -1947,6 +2164,7 @@ function loadState() {
       emptyRows = state.emptyRows || [];
       tradeBlock = state.tradeBlock || [];
       incomingPlayers = state.incomingPlayers || [];
+      draftPicks = state.draftPicks || [];
     } catch (e) {
       console.error('Failed to load state:', e);
     }
@@ -1971,6 +2189,59 @@ function addRow() {
   saveHistory();
   render();
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DRAFT PICK CAP HOLDS
+// ═══════════════════════════════════════════════════════════════════════════
+
+function addDraftPick() {
+  showModal(`
+    <div class="modal-hdr">Add Draft Pick Cap Hold</div>
+    <div class="modal-body">
+      <div class="modal-row">
+        <div class="modal-lbl">Draft Pick Number (1-30)</div>
+        <select class="modal-select" id="pickNumber">
+          ${Array.from({length: 30}, (_, i) => i + 1).map(n => 
+            `<option value="${n}">Pick #${n} - ${fmt(DRAFT_SCALE[n])}</option>`
+          ).join('')}
+        </select>
+      </div>
+      <div class="modal-row">
+        <p style="color:var(--txt2); font-size:12px; line-height:1.6">
+          This will add the rookie scale cap hold for the 2025-26 season.
+        </p>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Cancel</button>
+        <button class="modal-btn modal-btn-primary" onclick="saveDraftPick()">Add Pick</button>
+      </div>
+    </div>
+  `);
+}
+
+function saveDraftPick() {
+  const pickNum = parseInt(document.getElementById('pickNumber').value);
+  const capHold = DRAFT_SCALE[pickNum];
+  
+  draftPicks.push({
+    id: Date.now(),
+    pickNumber: pickNum,
+    capHold: capHold
+  });
+  
+  saveHistory();
+  render();
+  closeModal();
+}
+
+function removeDraftPick(id) {
+  if (!confirm('Remove this draft pick cap hold?')) return;
+  
+  draftPicks = draftPicks.filter(p => p.id !== id);
+  saveHistory();
+  render();
+}
+
 
 // ═══════════════════════════════════════════════════════════════════════════
 // ROSTER MANAGEMENT
@@ -2022,6 +2293,69 @@ function deletePlayer(id) {
   
   // Refresh the modal
   openManageRoster();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DRAFT PICK CAP HOLDS
+// ═══════════════════════════════════════════════════════════════════════════
+
+
+function addDraftPick() {
+  const options = Array.from({length: 30}, (_, i) => {
+    const num = i + 1;
+    const amount = fmt(DRAFT_PICK_CAP_HOLDS[num]);
+    return `<option value="${num}">Pick #${num} - ${amount}</option>`;
+  }).join('');
+  
+  showModal(`
+    <div class="modal-hdr">Add Draft Pick Cap Hold</div>
+    <div class="modal-body">
+      <div class="modal-row">
+        <div class="modal-lbl">Select Draft Pick</div>
+        <select class="modal-select" id="draftPickNumber">
+          ${options}
+        </select>
+      </div>
+      <div class="modal-row">
+        <p style="color:var(--txt2); font-size:12px; line-height:1.6">
+          Cap holds for draft picks count against your 2025-26 cap until the pick is made and the player signs.
+        </p>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Cancel</button>
+        <button class="modal-btn modal-btn-primary" onclick="saveDraftPick()">Add Pick</button>
+      </div>
+    </div>
+  `);
+}
+
+function saveDraftPick() {
+  const pickNumber = parseInt(document.getElementById('draftPickNumber').value);
+  
+  // Check if this pick already exists
+  if (draftPicks.some(p => p.pickNumber === pickNumber)) {
+    alert(`Pick #${pickNumber} is already added to your cap holds.`);
+    return;
+  }
+  
+  const newPick = {
+    id: Date.now(),
+    pickNumber: pickNumber,
+    capHold: DRAFT_PICK_CAP_HOLDS[pickNumber]
+  };
+  
+  draftPicks.push(newPick);
+  saveHistory();
+  render();
+  closeModal();
+}
+
+function removeDraftPick(id) {
+  if (!confirm('Remove this draft pick cap hold?')) return;
+  
+  draftPicks = draftPicks.filter(p => p.id !== id);
+  saveHistory();
+  render();
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
