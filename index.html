@@ -29,7 +29,7 @@ body {
   background:linear-gradient(135deg,var(--red),var(--red-dark));
   padding:28px 32px; border-radius:14px; margin-bottom:24px;
   box-shadow:0 16px 48px rgba(206,17,65,.3);
-  position:relative; overflow:hidden; max-width:1500px;
+  position:relative; overflow:hidden; max-width:1650px;
 }
 .header::before {
   content:''; position:absolute; inset:0;
@@ -89,7 +89,7 @@ body {
 .legend {
   background:var(--bg1); border:1px solid var(--bg3); border-radius:10px;
   padding:14px 18px; margin-bottom:20px; display:flex; align-items:center; gap:20px; flex-wrap:wrap;
-  max-width:1500px;
+  max-width:1650px;
 }
 .legend .lbl { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); }
 .legend-items { display:flex; gap:14px; flex-wrap:wrap; }
@@ -105,7 +105,7 @@ body {
 /* ─── TABLE - PERFECTLY ALIGNED ─── */
 .section {
   background:var(--bg1); border:1px solid var(--bg3); border-radius:10px;
-  padding:0; margin-bottom:20px; overflow:hidden; max-width:1500px;
+  padding:0; margin-bottom:20px; overflow:hidden; max-width:1650px;
 }
 .section-hdr {
   background:var(--bg2); padding:14px 20px; font-weight:700; font-size:14px;
@@ -115,10 +115,10 @@ body {
 
 .tbl-wrap { overflow-x:auto; }
 
-/* Perfect alignment: 50px + 200px + (5 × 165px) + 425px = 1500px */
+/* Perfect alignment: 50px + 200px + (5 × 165px) + 475px = 1650px */
 .tbl-head, .tbl-row {
   display:grid;
-  grid-template-columns: 50px 200px repeat(5, 165px) 425px;
+  grid-template-columns: 50px 200px repeat(5, 165px) 475px;
   gap:0; padding:0 20px; align-items:center;
 }
 
@@ -193,7 +193,7 @@ body {
 /* Trade block with year headers */
 .trade-year-headers {
   display:grid;
-  grid-template-columns: 50px 200px repeat(5, 165px) 425px;
+  grid-template-columns: 50px 200px repeat(5, 165px) 475px;
   gap:0; padding:0 20px 8px 20px;
   font-size:10px; font-weight:700; text-transform:uppercase;
   letter-spacing:.06em; color:var(--blue);
@@ -206,7 +206,7 @@ body {
 .trade-total {
   background:rgba(59,130,246,.1); padding:12px 20px; font-size:13px; font-weight:600;
   border-top:2px solid var(--blue); display:grid;
-  grid-template-columns: 50px 200px repeat(5, 165px) 425px;
+  grid-template-columns: 50px 200px repeat(5, 165px) 475px;
   gap:0; align-items:center;
 }
 .trade-total div { text-align:center; font-weight:700; color:var(--blue); }
@@ -282,7 +282,7 @@ body {
 </div>
 
 <!-- Search Bar + Mode Buttons -->
-<div style="display:flex; gap:12px; margin-bottom:12px; max-width:1500px">
+<div style="display:flex; gap:12px; margin-bottom:12px; max-width:1650px">
   <div class="search-wrap" style="flex:1">
     <input type="text" class="search-input" id="searchInput" placeholder="Search NBA players..." autocomplete="off">
     <div class="dropdown" id="searchDropdown"></div>
@@ -292,7 +292,7 @@ body {
 </div>
 
 <!-- Action Buttons Row -->
-<div style="display:flex; gap:12px; margin-bottom:20px; max-width:1500px">
+<div style="display:flex; gap:12px; margin-bottom:20px; max-width:1650px">
   <button class="btn" onclick="addRow()">➕ Add Row</button>
   <button class="btn" onclick="openManageRoster()">👥 Manage Roster</button>
   <button class="btn" onclick="undo()">◀ Undo</button>
@@ -381,7 +381,7 @@ body {
   <div class="section-hdr">📊 Cap Situation</div>
   <div style="padding:20px">
     <!-- Year Headers -->
-    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 425px; gap:0; padding:0 0 8px 0; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 475px; gap:0; padding:0 0 8px 0; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); border-bottom:1px solid var(--bg3)">
       <div></div>
       <div style="padding-left:0">Status</div>
       <div style="text-align:center">2025-26</div>
@@ -400,7 +400,7 @@ body {
 <div class="section" style="margin-top:22px">
   <div class="section-hdr">📋 Cap Figures</div>
   <div style="padding:20px 20px 20px 20px">
-    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 425px; gap:0; padding:0; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); margin-bottom:8px">
+    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 475px; gap:0; padding:0; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); margin-bottom:8px">
       <div></div>
       <div style="padding-left:0">Threshold</div>
       <div style="text-align:center">2025-26</div>
@@ -410,7 +410,7 @@ body {
       <div style="text-align:center">2029-30</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 425px; gap:0; padding:12px 0; border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 475px; gap:0; padding:12px 0; border-bottom:1px solid var(--bg3)">
       <div></div>
       <div style="font-weight:600; font-size:14px">Salary Cap</div>
       <div style="text-align:center; font-size:13px; font-weight:600">$154.6M</div>
@@ -420,7 +420,7 @@ body {
       <div style="text-align:center; font-size:13px; font-weight:600">$191.6M</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 425px; gap:0; padding:12px 0; border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 475px; gap:0; padding:12px 0; border-bottom:1px solid var(--bg3)">
       <div></div>
       <div style="font-weight:600; font-size:14px">Luxury Tax</div>
       <div style="text-align:center; font-size:13px; font-weight:600">$187.9M</div>
@@ -430,7 +430,7 @@ body {
       <div style="text-align:center; font-size:13px; font-weight:600">$246.3M</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 425px; gap:0; padding:12px 0; border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 475px; gap:0; padding:12px 0; border-bottom:1px solid var(--bg3)">
       <div></div>
       <div style="font-weight:600; font-size:14px">First Apron</div>
       <div style="text-align:center; font-size:13px; font-weight:600">$195.9M</div>
@@ -440,7 +440,7 @@ body {
       <div style="text-align:center; font-size:13px; font-weight:600">$256.8M</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 425px; gap:0; padding:12px 0">
+    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 475px; gap:0; padding:12px 0">
       <div></div>
       <div style="font-weight:600; font-size:14px">Second Apron</div>
       <div style="text-align:center; font-size:13px; font-weight:600">$207.8M</div>
@@ -486,20 +486,20 @@ const CAP_THRESHOLDS = {
 
 // ROSTER - UPDATED POST-DEADLINE
 let roster = [
-  { id:1, name:"Anfernee Simons", sal:{'2025-26':27678571, '2026-27':41517857, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''}, qo:{'2025-26':0, '2026-27':29050886, '2027-28':0, '2028-29':0, '2029-30':0} },
+  { id:1, name:"Anfernee Simons", sal:{'2025-26':27678571, '2026-27':41517857, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''} },
   { id:2, name:"Josh Giddey", sal:{'2025-26':25000000, '2026-27':25000000, '2027-28':25000000, '2028-29':25000000, '2029-30':37500000}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'gtd', '2028-29':'gtd', '2029-30':'ch'} },
-  { id:3, name:"Collin Sexton", sal:{'2025-26':18975000, '2026-27':28762500, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''}, qo:{'2025-26':0, '2026-27':19922625, '2027-28':0, '2028-29':0, '2029-30':0} },
-  { id:4, name:"Zach Collins", sal:{'2025-26':18080496, '2026-27':27120744, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''}, qo:{'2025-26':0, '2026-27':18984521, '2027-28':0, '2028-29':0, '2029-30':0} },
+  { id:3, name:"Collin Sexton", sal:{'2025-26':18975000, '2026-27':28762500, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''} },
+  { id:4, name:"Zach Collins", sal:{'2025-26':18080496, '2026-27':27120744, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''} },
   { id:5, name:"Patrick Williams", sal:{'2025-26':18000000, '2026-27':18000000, '2027-28':18000000, '2028-29':18000000, '2029-30':34200000}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'gtd', '2028-29':'po', '2029-30':'ch'} },
   { id:6, name:"Isaac Okoro", sal:{'2025-26':11000000, '2026-27':11814814, '2027-28':22448147, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'ch', '2028-29':'', '2029-30':''} },
-  { id:7, name:"Jaden Ivey", sal:{'2025-26':10107163, '2026-27':30321489, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''}, qo:{'2025-26':0, '2026-27':8774590, '2027-28':0, '2028-29':0, '2029-30':0} },
+  { id:7, name:"Jaden Ivey", sal:{'2025-26':10107163, '2026-27':30321489, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''} },
   { id:8, name:"Jalen Smith", sal:{'2025-26':9000000, '2026-27':9428571, '2027-28':17914285, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'ch', '2028-29':'', '2029-30':''} },
   { id:9, name:"Tre Jones", sal:{'2025-26':8000000, '2026-27':8000000, '2027-28':8000000, '2028-29':15200000, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'gtd', '2028-29':'ch', '2029-30':''} },
-  { id:10, name:"Rob Dillingham", sal:{'2025-26':6576120, '2026-27':6889320, '2027-28':8763215, '2028-29':26289645, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'to', '2028-29':'ch', '2029-30':''}, qo:{'2025-26':0, '2026-27':0, '2027-28':0, '2028-29':7302233, '2029-30':0} },
-  { id:11, name:"Nick Richards", sal:{'2025-26':5000000, '2026-27':9500000, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''}, qo:{'2025-26':0, '2026-27':5250000, '2027-28':0, '2028-29':0, '2029-30':0} },
-  { id:12, name:"Matas Buzelis", sal:{'2025-26':5455560, '2026-27':5715360, '2027-28':7584283, '2028-29':22752849, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'to', '2028-29':'ch', '2029-30':''}, qo:{'2025-26':0, '2026-27':0, '2027-28':0, '2028-29':10689716, '2029-30':0} },
-  { id:13, name:"Noa Essengue", sal:{'2025-26':5429520, '2026-27':5701200, '2027-28':5972760, '2028-29':8230464, '2029-30':24691389}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'gtd', '2028-29':'to', '2029-30':'ch'}, qo:{'2025-26':0, '2026-27':0, '2027-28':0, '2028-29':0, '2029-30':11758660} },
-  { id:14, name:"Guerschon Yabusele", sal:{'2025-26':5500000, '2026-27':7507500, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''}, qo:{'2025-26':0, '2026-27':5775000, '2027-28':0, '2028-29':0, '2029-30':0} },
+  { id:10, name:"Rob Dillingham", sal:{'2025-26':6576120, '2026-27':6889320, '2027-28':8763215, '2028-29':26289645, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'to', '2028-29':'ch', '2029-30':''} },
+  { id:11, name:"Nick Richards", sal:{'2025-26':5000000, '2026-27':9500000, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''} },
+  { id:12, name:"Matas Buzelis", sal:{'2025-26':5455560, '2026-27':5715360, '2027-28':7584283, '2028-29':22752849, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'to', '2028-29':'ch', '2029-30':''} },
+  { id:13, name:"Noa Essengue", sal:{'2025-26':5429520, '2026-27':5701200, '2027-28':5972760, '2028-29':8230464, '2029-30':24691389}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'gtd', '2028-29':'to', '2029-30':'ch'} },
+  { id:14, name:"Guerschon Yabusele", sal:{'2025-26':5500000, '2026-27':7507500, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''} },
   { id:15, name:"Leonard Miller", sal:{'2025-26':2221677, '2026-27':2406205, '2027-28':2702711, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'to', '2027-28':'ch', '2028-29':'', '2029-30':''} },
   { id:100, name:"Jevon Carter", sal:{'2025-26':6809524, '2026-27':0, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'dead', '2026-27':'', '2027-28':'', '2028-29':'', '2029-30':''} }
 ];
@@ -1172,7 +1172,6 @@ function renderRoster() {
     const salCells = YEARS.map(year => {
       const sal = p.sal[year] || 0;
       const typ = p.typ[year] || '';
-      const qoAmt = p.qo ? (p.qo[year] || 0) : 0;
       const percentage = pct(sal, year);
       let badge = '';
       if (typ === 'gtd') badge = '<span class="s-badge s-gtd">GTD</span>';
@@ -1182,17 +1181,11 @@ function renderRoster() {
       else if (typ === 'ch') badge = '<span class="s-badge s-ch">CH</span>';
       else if (typ === 'dead') badge = '<span class="s-badge s-dead">DEAD</span>';
       
-      // Show QO below cap hold when both exist
-      const qoNote = (typ === 'ch' && qoAmt > 0) 
-        ? `<div style="font-size:10px; color:var(--txt2); margin-top:2px">QO: ${fmt(qoAmt)}</div>` 
-        : '';
-      
       return `
         <div class="sal-cell">
           <span class="s-amt">${fmt(sal)}</span>
           <span class="s-pct">${percentage}</span>
           ${badge ? badge : ''}
-          ${qoNote}
         </div>
       `;
     }).join('');
@@ -1376,7 +1369,7 @@ function renderCapSituation() {
     }).join('');
     
     return `
-      <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 425px; gap:0; padding:12px 0; border-bottom:1px solid var(--bg3)">
+      <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 475px; gap:0; padding:12px 0; border-bottom:1px solid var(--bg3)">
         <div></div>
         <div style="font-weight:700; font-size:14px">${row.label}</div>
         ${cells}
@@ -1409,13 +1402,13 @@ function renderCapSituation() {
   }).join('');
   
   const fullHtml = html + 
-    `<div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 425px; gap:0; padding:16px 0 12px 0; border-top:2px solid var(--bg3)">
+    `<div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 475px; gap:0; padding:16px 0 12px 0; border-top:2px solid var(--bg3)">
       <div></div>
       <div style="font-weight:700; font-size:14px">Total Salary (Plus CHs)</div>
       ${capHoldsRow}
       <div></div>
     </div>` +
-    `<div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 425px; gap:0; padding:12px 0">
+    `<div style="display:grid; grid-template-columns: 50px 200px repeat(5, 165px) 475px; gap:0; padding:12px 0">
       <div></div>
       <div style="font-weight:700; font-size:14px">Max Space (no CHs)</div>
       ${maxCapRow}
