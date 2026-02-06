@@ -372,16 +372,13 @@ body {
     </div>
     <div id="rosterBody"></div>
   </div>
-  
-  <!-- DRAFT PICK CAP HOLDS -->
-  <div style="margin-top:20px; padding:0 20px 20px 20px">
-    <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); margin-bottom:12px">
-      📋 Draft Pick Cap Holds
-    </div>
-    <div id="draftPicksContainer"></div>
-    <button class="btn" onclick="addDraftPick()" style="margin-top:12px">
-      ➕ Add Draft Pick
-    </button>
+</div>
+
+<!-- DEAD MONEY -->
+<div class="section" id="deadSection" style="display:none">
+  <div class="section-hdr">💀 Dead Money</div>
+  <div style="padding:20px">
+    <table class="flip-table" id="deadMoneyTable"></table>
   </div>
 </div>
 
@@ -405,68 +402,56 @@ body {
   </div>
 </div>
 
-<!-- DEAD MONEY -->
-<div class="section" id="deadSection" style="display:none">
-  <div class="section-hdr">💀 Dead Money</div>
-  <div style="padding:20px">
-    <table class="flip-table" id="deadMoneyTable"></table>
-  </div>
-</div>
-
-<!-- CAP FIGURES (Aligned with Roster) -->
+<!-- CAP FIGURES (Flipped) -->
 <div class="section" style="margin-top:22px">
   <div class="section-hdr">📋 Cap Figures</div>
-  <div style="padding:20px 20px 20px 20px">
-    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 145px) 305px; gap:0; padding:0; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); margin-bottom:8px">
-      <div></div>
-      <div style="padding-left:0">Threshold</div>
-      <div style="text-align:center">2025-26</div>
-      <div style="text-align:center">2026-27</div>
-      <div style="text-align:center">2027-28</div>
-      <div style="text-align:center">2028-29</div>
-      <div style="text-align:center">2029-30</div>
-      <div></div>
-    </div>
-    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 145px) 305px; gap:0; padding:12px 0; border-bottom:1px solid var(--bg3)">
-      <div></div>
-      <div style="font-weight:600; font-size:14px">Salary Cap</div>
-      <div style="text-align:center; font-size:13px; font-weight:600">$154.6M</div>
-      <div style="text-align:center; font-size:13px; font-weight:600">$165.5M</div>
-      <div style="text-align:center; font-size:13px; font-weight:600">$173.7M</div>
-      <div style="text-align:center; font-size:13px; font-weight:600">$182.4M</div>
-      <div style="text-align:center; font-size:13px; font-weight:600">$191.6M</div>
-      <div></div>
-    </div>
-    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 145px) 305px; gap:0; padding:12px 0; border-bottom:1px solid var(--bg3)">
-      <div></div>
-      <div style="font-weight:600; font-size:14px">Luxury Tax</div>
-      <div style="text-align:center; font-size:13px; font-weight:600">$187.9M</div>
-      <div style="text-align:center; font-size:13px; font-weight:600">$201.0M</div>
-      <div style="text-align:center; font-size:13px; font-weight:600">$215.1M</div>
-      <div style="text-align:center; font-size:13px; font-weight:600">$230.2M</div>
-      <div style="text-align:center; font-size:13px; font-weight:600">$246.3M</div>
-      <div></div>
-    </div>
-    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 145px) 305px; gap:0; padding:12px 0; border-bottom:1px solid var(--bg3)">
-      <div></div>
-      <div style="font-weight:600; font-size:14px">First Apron</div>
-      <div style="text-align:center; font-size:13px; font-weight:600">$195.9M</div>
-      <div style="text-align:center; font-size:13px; font-weight:600">$209.7M</div>
-      <div style="text-align:center; font-size:13px; font-weight:600">$224.3M</div>
-      <div style="text-align:center; font-size:13px; font-weight:600">$240.0M</div>
-      <div style="text-align:center; font-size:13px; font-weight:600">$256.8M</div>
-      <div></div>
-    </div>
-    <div style="display:grid; grid-template-columns: 50px 200px repeat(5, 145px) 305px; gap:0; padding:12px 0">
-      <div></div>
-      <div style="font-weight:600; font-size:14px">Second Apron</div>
-      <div style="text-align:center; font-size:13px; font-weight:600">$207.8M</div>
-      <div style="text-align:center; font-size:13px; font-weight:600">$222.4M</div>
-      <div style="text-align:center; font-size:13px; font-weight:600">$237.9M</div>
-      <div style="text-align:center; font-size:13px; font-weight:600">$254.6M</div>
-      <div style="text-align:center; font-size:13px; font-weight:600">$272.4M</div>
-      <div></div>
-    </div>
+  <div style="padding:20px">
+    <table class="flip-table">
+      <thead>
+        <tr>
+          <th>Threshold</th>
+          <th>2025-26</th>
+          <th>2026-27</th>
+          <th>2027-28</th>
+          <th>2028-29</th>
+          <th>2029-30</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Salary Cap</td>
+          <td>$154.6M</td>
+          <td>$165.5M</td>
+          <td>$173.7M</td>
+          <td>$182.4M</td>
+          <td>$191.6M</td>
+        </tr>
+        <tr>
+          <td>Luxury Tax</td>
+          <td>$187.9M</td>
+          <td>$201.0M</td>
+          <td>$215.1M</td>
+          <td>$230.2M</td>
+          <td>$246.3M</td>
+        </tr>
+        <tr>
+          <td>First Apron</td>
+          <td>$195.9M</td>
+          <td>$209.7M</td>
+          <td>$224.3M</td>
+          <td>$240.0M</td>
+          <td>$256.8M</td>
+        </tr>
+        <tr>
+          <td>Second Apron</td>
+          <td>$207.8M</td>
+          <td>$222.4M</td>
+          <td>$237.9M</td>
+          <td>$254.6M</td>
+          <td>$272.4M</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
 
@@ -519,7 +504,7 @@ let roster = [
   { id:20, name:"Ousmane Dieng", sal:{'2025-26':6670882, '2026-27':20012646, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''} },
   { id:11, name:"Matas Buzelis", sal:{'2025-26':5455560, '2026-27':5715360, '2027-28':7584283, '2028-29':10689716, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'gtd', '2028-29':'qo', '2029-30':''} },
   { id:12, name:"Noa Essengue", sal:{'2025-26':5429520, '2026-27':5701200, '2027-28':5972760, '2028-29':8230464, '2029-30':11758660}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'gtd', '2028-29':'gtd', '2029-30':'qo'} },
-  { id:21, name:"Guerschon Yabusele", sal:{'2025-26':2087519, '2026-27':2221402, '2027-28':3995924, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'qo', '2028-29':'', '2029-30':''} },
+  { id:14, name:"Dalen Terry", sal:{'2025-26':5399118, '2026-27':7661087, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'qo', '2027-28':'', '2028-29':'', '2029-30':''} },
   { id:15, name:"Julian Phillips", sal:{'2025-26':2221677, '2026-27':2406205, '2027-28':2702711, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'ch', '2028-29':'', '2029-30':''} }
 ];
 
@@ -529,28 +514,6 @@ let deadMoney = [
 
 let capHolds = [];
 let emptyRows = [];
-let draftPicks = []; // Array to store draft picks
-
-// Draft pick cap holds (Year 1 scale amounts from 2025 CBA)
-const DRAFT_PICK_CAP_HOLDS = {
-  1: 12328100, 2: 11030100, 3: 9905400, 4: 8930600, 5: 8087300,
-  6: 7345200, 7: 6705400, 8: 6142900, 9: 5646500, 10: 5364300,
-  11: 5095900, 12: 4841400, 13: 4599100, 14: 4369500, 15: 4150700,
-  16: 3943300, 17: 3745900, 18: 3558900, 19: 3398600, 20: 3262400,
-  21: 3132000, 22: 3006900, 23: 2886700, 24: 2771400, 25: 2660100,
-  26: 2572100, 27: 2497800, 28: 2482300, 29: 2464500, 30: 2446500
-};
-let draftPicks = [];
-
-// 2025 NBA Draft Rookie Scale (Year 1 salaries)
-const DRAFT_SCALE = {
-  1: 12328100, 2: 11030100, 3: 9905400, 4: 8930600, 5: 8087300,
-  6: 7345200, 7: 6705400, 8: 6142900, 9: 5646500, 10: 5364300,
-  11: 5095900, 12: 4841400, 13: 4599100, 14: 4369500, 15: 4150700,
-  16: 3943300, 17: 3745900, 18: 3558900, 19: 3398600, 20: 3262400,
-  21: 3132000, 22: 3006900, 23: 2886700, 24: 2771400, 25: 2660100,
-  26: 2572100, 27: 2497800, 28: 2482300, 29: 2464500, 30: 2446500
-};
 
 // Enhanced NBA_DB with new Bulls players
 const NBA_DB = [
@@ -1141,7 +1104,6 @@ function calculateTradeMatch(outgoing) {
 function render() {
   renderCards();
   renderRoster();
-  renderDraftPicks();
   renderDead();
   renderTrade();
   renderCapSituation();
@@ -1154,11 +1116,8 @@ function render() {
 
 function renderCards() {
   const cards = YEARS.map(year => {
-    const rosterTotal = roster.reduce((sum, p) => sum + (p.sal[year] || 0), 0);
-    const deadTotal = deadMoney.reduce((sum, p) => sum + (p.sal[year] || 0), 0);
-    const draftTotal = year === '2025-26' ? draftPicks.reduce((sum, p) => sum + p.capHold, 0) : 0;
-    const total = rosterTotal + deadTotal + draftTotal;
-    
+    const total = roster.reduce((sum, p) => sum + (p.sal[year] || 0), 0) +
+                  deadMoney.reduce((sum, p) => sum + (p.sal[year] || 0), 0);
     const th = CAP_THRESHOLDS[year];
     const room = th.cap - total;
     
@@ -1425,11 +1384,8 @@ function renderCapSituation() {
   const html = rows.map(row => {
     const cells = YEARS.map(year => {
       const th = CAP_THRESHOLDS[year];
-      const rosterTotal = roster.reduce((sum, p) => sum + (p.sal[year] || 0), 0);
-      const deadTotal = deadMoney.reduce((sum, p) => sum + (p.sal[year] || 0), 0);
-      const draftTotal = year === '2025-26' ? draftPicks.reduce((sum, p) => sum + p.capHold, 0) : 0;
-      const total = rosterTotal + deadTotal + draftTotal;
-      
+      const total = roster.reduce((sum, p) => sum + (p.sal[year] || 0), 0) +
+                    deadMoney.reduce((sum, p) => sum + (p.sal[year] || 0), 0);
       const room = th[row.key] - total;
       const cls = room > 0 ? 'pos' : 'neg';
       return `<td class="${cls}">${fmt(Math.abs(room))}</td>`;
@@ -1976,7 +1932,7 @@ function redo() {
 
 function saveState() {
   localStorage.setItem('bullsCapManager_v5.1', JSON.stringify({
-    roster, capHolds, deadMoney, emptyRows, tradeBlock, incomingPlayers, draftPicks
+    roster, capHolds, deadMoney, emptyRows, tradeBlock, incomingPlayers
   }));
 }
 
@@ -1991,7 +1947,6 @@ function loadState() {
       emptyRows = state.emptyRows || [];
       tradeBlock = state.tradeBlock || [];
       incomingPlayers = state.incomingPlayers || [];
-      draftPicks = state.draftPicks || [];
     } catch (e) {
       console.error('Failed to load state:', e);
     }
@@ -2015,81 +1970,6 @@ function addRow() {
   roster.push(newRow);
   saveHistory();
   render();
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// DRAFT PICK CAP HOLDS
-// ═══════════════════════════════════════════════════════════════════════════
-
-function addDraftPick() {
-  showModal(`
-    <div class="modal-hdr">Add Draft Pick Cap Hold</div>
-    <div class="modal-body">
-      <div class="modal-row">
-        <div class="modal-lbl">Draft Pick Number (1-30)</div>
-        <select class="modal-select" id="pickNumber">
-          ${Array.from({length: 30}, (_, i) => i + 1).map(n => 
-            `<option value="${n}">Pick #${n} - ${fmt(DRAFT_SCALE[n])}</option>`
-          ).join('')}
-        </select>
-      </div>
-      <div class="modal-row">
-        <p style="color:var(--txt2); font-size:12px; line-height:1.6">
-          This will add the rookie scale cap hold for the 2025-26 season.
-        </p>
-      </div>
-      <div class="modal-actions">
-        <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Cancel</button>
-        <button class="modal-btn modal-btn-primary" onclick="saveDraftPick()">Add Pick</button>
-      </div>
-    </div>
-  `);
-}
-
-function saveDraftPick() {
-  const pickNum = parseInt(document.getElementById('pickNumber').value);
-  const capHold = DRAFT_SCALE[pickNum];
-  
-  draftPicks.push({
-    id: Date.now(),
-    pickNumber: pickNum,
-    capHold: capHold
-  });
-  
-  saveHistory();
-  render();
-  closeModal();
-}
-
-function removeDraftPick(id) {
-  if (!confirm('Remove this draft pick cap hold?')) return;
-  
-  draftPicks = draftPicks.filter(p => p.id !== id);
-  saveHistory();
-  render();
-}
-
-function renderDraftPicks() {
-  const container = document.getElementById('draftPicksContainer');
-  
-  if (draftPicks.length === 0) {
-    container.innerHTML = '<div style="color:var(--txt2); font-size:13px; font-style:italic">No draft picks added</div>';
-    return;
-  }
-  
-  const html = draftPicks.map(p => `
-    <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; border:1px solid var(--bg3); border-radius:6px; margin-bottom:8px; background:var(--bg2)">
-      <div>
-        <span style="font-weight:600; font-size:14px">2025 Pick #${p.pickNumber}</span>
-        <span style="color:var(--txt2); font-size:13px; margin-left:12px">${fmt(p.capHold)} cap hold</span>
-      </div>
-      <button class="act-btn" onclick="removeDraftPick(${p.id})" style="padding:6px 12px">
-        <span>🗑️</span><span>Remove</span>
-      </button>
-    </div>
-  `).join('');
-  
-  container.innerHTML = html;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -2142,93 +2022,6 @@ function deletePlayer(id) {
   
   // Refresh the modal
   openManageRoster();
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// DRAFT PICK CAP HOLDS
-// ═══════════════════════════════════════════════════════════════════════════
-
-function renderDraftPicks() {
-  const container = document.getElementById('draftPicksContainer');
-  if (!draftPicks.length) {
-    container.innerHTML = '<div style="color:var(--txt2); font-size:13px; padding:12px 0">No draft picks added. Click "Add Draft Pick" to add one.</div>';
-    return;
-  }
-  
-  const html = draftPicks.map(pick => {
-    const capHold = fmt(DRAFT_PICK_CAP_HOLDS[pick.pickNumber]);
-    return `
-      <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--bg2); border-radius:6px; margin-bottom:8px">
-        <div>
-          <div style="font-weight:600; font-size:14px">Pick #${pick.pickNumber} - ${capHold}</div>
-          <div style="font-size:12px; color:var(--txt2)">Draft Pick Cap Hold (2025-26)</div>
-        </div>
-        <button class="act-btn" onclick="removeDraftPick(${pick.id})" style="padding:6px 12px">
-          <span>🗑️</span><span>Remove</span>
-        </button>
-      </div>
-    `;
-  }).join('');
-  
-  container.innerHTML = html;
-}
-
-function addDraftPick() {
-  const options = Array.from({length: 30}, (_, i) => {
-    const num = i + 1;
-    const amount = fmt(DRAFT_PICK_CAP_HOLDS[num]);
-    return `<option value="${num}">Pick #${num} - ${amount}</option>`;
-  }).join('');
-  
-  showModal(`
-    <div class="modal-hdr">Add Draft Pick Cap Hold</div>
-    <div class="modal-body">
-      <div class="modal-row">
-        <div class="modal-lbl">Select Draft Pick</div>
-        <select class="modal-select" id="draftPickNumber">
-          ${options}
-        </select>
-      </div>
-      <div class="modal-row">
-        <p style="color:var(--txt2); font-size:12px; line-height:1.6">
-          Cap holds for draft picks count against your 2025-26 cap until the pick is made and the player signs.
-        </p>
-      </div>
-      <div class="modal-actions">
-        <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Cancel</button>
-        <button class="modal-btn modal-btn-primary" onclick="saveDraftPick()">Add Pick</button>
-      </div>
-    </div>
-  `);
-}
-
-function saveDraftPick() {
-  const pickNumber = parseInt(document.getElementById('draftPickNumber').value);
-  
-  // Check if this pick already exists
-  if (draftPicks.some(p => p.pickNumber === pickNumber)) {
-    alert(`Pick #${pickNumber} is already added to your cap holds.`);
-    return;
-  }
-  
-  const newPick = {
-    id: Date.now(),
-    pickNumber: pickNumber,
-    capHold: DRAFT_PICK_CAP_HOLDS[pickNumber]
-  };
-  
-  draftPicks.push(newPick);
-  saveHistory();
-  render();
-  closeModal();
-}
-
-function removeDraftPick(id) {
-  if (!confirm('Remove this draft pick cap hold?')) return;
-  
-  draftPicks = draftPicks.filter(p => p.id !== id);
-  saveHistory();
-  render();
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
