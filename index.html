@@ -29,7 +29,7 @@ body {
   background:linear-gradient(135deg,var(--red),var(--red-dark));
   padding:28px 32px; border-radius:14px; margin-bottom:24px;
   box-shadow:0 16px 48px rgba(206,17,65,.3);
-  position:relative; overflow:hidden;
+  position:relative; overflow:hidden; max-width:1280px;
 }
 .header::before {
   content:''; position:absolute; inset:0;
@@ -89,6 +89,7 @@ body {
 .legend {
   background:var(--bg1); border:1px solid var(--bg3); border-radius:10px;
   padding:14px 18px; margin-bottom:20px; display:flex; align-items:center; gap:20px; flex-wrap:wrap;
+  max-width:1280px;
 }
 .legend .lbl { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); }
 .legend-items { display:flex; gap:14px; flex-wrap:wrap; }
@@ -104,7 +105,7 @@ body {
 /* ─── TABLE - PERFECTLY ALIGNED ─── */
 .section {
   background:var(--bg1); border:1px solid var(--bg3); border-radius:10px;
-  padding:0; margin-bottom:20px; overflow:hidden;
+  padding:0; margin-bottom:20px; overflow:hidden; max-width:1280px;
 }
 .section-hdr {
   background:var(--bg2); padding:14px 20px; font-weight:700; font-size:14px;
@@ -150,6 +151,7 @@ body {
 .s-to { background:rgba(236,72,153,.15); color:var(--pink); border:1px solid rgba(236,72,153,.3); }
 .s-qo { background:rgba(168,85,247,.15); color:var(--purple); border:1px solid rgba(168,85,247,.3); }
 .s-ch { background:rgba(245,158,11,.15); color:var(--amber); border:1px solid rgba(245,158,11,.3); }
+.s-dead { background:rgba(107,114,128,.15); color:var(--gray); border:1px solid rgba(107,114,128,.3); }
 
 .act { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding-left:20px; }
 .act-btn {
@@ -280,7 +282,7 @@ body {
 </div>
 
 <!-- Search Bar + Mode Buttons -->
-<div style="display:flex; gap:12px; margin-bottom:12px">
+<div style="display:flex; gap:12px; margin-bottom:12px; max-width:1280px">
   <div class="search-wrap" style="flex:1">
     <input type="text" class="search-input" id="searchInput" placeholder="Search NBA players..." autocomplete="off">
     <div class="dropdown" id="searchDropdown"></div>
@@ -290,7 +292,7 @@ body {
 </div>
 
 <!-- Action Buttons Row -->
-<div style="display:flex; gap:12px; margin-bottom:20px">
+<div style="display:flex; gap:12px; margin-bottom:20px; max-width:1280px">
   <button class="btn" onclick="addRow()">➕ Add Row</button>
   <button class="btn" onclick="openManageRoster()">👥 Manage Roster</button>
   <button class="btn" onclick="undo()">◀ Undo</button>
@@ -499,7 +501,7 @@ let roster = [
   { id:13, name:"Noa Essengue", sal:{'2025-26':5429520, '2026-27':5701200, '2027-28':5972760, '2028-29':8230464, '2029-30':24691389}, typ:{'2025-26':'gtd', '2026-27':'gtd', '2027-28':'gtd', '2028-29':'to', '2029-30':'ch'}, qo:{'2025-26':0, '2026-27':0, '2027-28':0, '2028-29':0, '2029-30':11758660} },
   { id:14, name:"Guerschon Yabusele", sal:{'2025-26':5500000, '2026-27':7507500, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'ch', '2027-28':'', '2028-29':'', '2029-30':''}, qo:{'2025-26':0, '2026-27':5775000, '2027-28':0, '2028-29':0, '2029-30':0} },
   { id:15, name:"Leonard Miller", sal:{'2025-26':2221677, '2026-27':2406205, '2027-28':2702711, '2028-29':0, '2029-30':0}, typ:{'2025-26':'gtd', '2026-27':'to', '2027-28':'ch', '2028-29':'', '2029-30':''} },
-  { id:100, name:"💀 Jevon Carter", sal:{'2025-26':6809524, '2026-27':0, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'dead', '2026-27':'', '2027-28':'', '2028-29':'', '2029-30':''} }
+  { id:100, name:"Jevon Carter", sal:{'2025-26':6809524, '2026-27':0, '2027-28':0, '2028-29':0, '2029-30':0}, typ:{'2025-26':'dead', '2026-27':'', '2027-28':'', '2028-29':'', '2029-30':''} }
 ];
 
 let deadMoney = [];
