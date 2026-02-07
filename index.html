@@ -29,7 +29,7 @@ body {
   background:linear-gradient(135deg,var(--red),var(--red-dark));
   padding:28px 32px; border-radius:14px; margin-bottom:24px;
   box-shadow:0 16px 48px rgba(206,17,65,.3);
-  position:relative; overflow:hidden; max-width:1600px;
+  position:relative; overflow:hidden; max-width:1470px;
 }
 .header::before {
   content:''; position:absolute; inset:0;
@@ -66,6 +66,7 @@ body {
   background:var(--bg1); border:1px solid var(--bg3); color:var(--txt);
   padding:11px 18px; border-radius:8px; font-size:13px; font-weight:600;
   cursor:pointer; transition:.2s; display:flex; align-items:center; gap:6px; white-space:nowrap;
+  height:44px; box-sizing:border-box;
 }
 .btn:hover { background:var(--bg2); transform:translateY(-1px); box-shadow:0 4px 12px rgba(0,0,0,.3); }
 .btn-red { background:var(--red); border-color:var(--red); }
@@ -88,8 +89,8 @@ body {
 /* ─── LEGEND ─── */
 .legend {
   background:var(--bg1); border:1px solid var(--bg3); border-radius:10px;
-  padding:14px 18px; margin-bottom:10px; display:flex; flex-direction:column; gap:8px;
-  max-width:1200px;
+  padding:14px 18px; margin-bottom:20px; display:flex; flex-direction:column; gap:8px;
+  max-width:1470px;
 }
 .legend .lbl { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); }
 .legend-items { display:flex; gap:14px; flex-wrap:wrap; }
@@ -105,7 +106,7 @@ body {
 /* ─── TABLE - PERFECTLY ALIGNED ─── */
 .section {
   background:var(--bg1); border:1px solid var(--bg3); border-radius:10px;
-  padding:0; margin-bottom:20px; overflow:hidden; max-width:1600px;
+  padding:0; margin-bottom:20px; overflow:hidden; max-width:1470px;
 }
 .section-hdr {
   background:var(--bg2); padding:14px 20px; font-weight:700; font-size:14px;
@@ -115,10 +116,10 @@ body {
 
 .tbl-wrap { overflow-x:auto; }
 
-/* Perfect alignment: 50px + 200px + 50px + (5 × 165px) + 475px = 1600px */
+/* Perfect alignment: 50px + 200px + 35px + (5 × 165px) + 360px = 1470px */
 .tbl-head, .tbl-row {
   display:grid;
-  grid-template-columns: 50px 200px 50px repeat(5, 165px) 475px;
+  grid-template-columns: 50px 200px 35px repeat(5, 165px) 360px;
   gap:0; padding:0 20px; align-items:center;
 }
 
@@ -153,12 +154,12 @@ body {
 .s-ch { background:rgba(245,158,11,.15); color:var(--amber); border:1px solid rgba(245,158,11,.3); }
 .s-dead { background:rgba(107,114,128,.15); color:var(--gray); border:1px solid rgba(107,114,128,.3); }
 
-.act { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding-left:20px; }
+.act { display:flex; gap:6px; padding-left:10px; justify-content:flex-start; }
 .act-btn {
   background:var(--bg2); border:1px solid var(--bg3); color:var(--txt);
-  padding:8px 14px; border-radius:6px; font-size:11px; font-weight:600;
+  padding:6px 10px; border-radius:6px; font-size:11px; font-weight:600;
   cursor:pointer; transition:.15s; text-align:center; display:flex;
-  align-items:center; justify-content:center; gap:5px;
+  align-items:center; justify-content:center; gap:4px; white-space:nowrap;
 }
 .act-btn:hover { background:var(--bg3); transform:translateY(-1px); }
 .act-btn.disabled { opacity:.3; cursor:not-allowed; }
@@ -193,7 +194,7 @@ body {
 /* Trade block with year headers */
 .trade-year-headers {
   display:grid;
-  grid-template-columns: 50px 200px 50px repeat(5, 165px) 475px;
+  grid-template-columns: 50px 200px 35px repeat(5, 165px) 360px;
   gap:0; padding:0 20px 8px 20px;
   font-size:10px; font-weight:700; text-transform:uppercase;
   letter-spacing:.06em; color:var(--blue);
@@ -206,7 +207,7 @@ body {
 .trade-total {
   background:rgba(59,130,246,.1); padding:12px 20px; font-size:13px; font-weight:600;
   border-top:2px solid var(--blue); display:grid;
-  grid-template-columns: 50px 200px 50px repeat(5, 165px) 475px;
+  grid-template-columns: 50px 200px 35px repeat(5, 165px) 360px;
   gap:0; align-items:center;
 }
 .trade-total div { text-align:center; font-weight:700; color:var(--blue); }
@@ -281,18 +282,19 @@ body {
   <div class="sub">Created by <a href="https://x.com/Will_Gottlieb" target="_blank">Will Gottlieb</a></div>
 </div>
 
-<!-- Search Bar + Mode Buttons -->
-<div style="display:flex; gap:12px; margin-bottom:12px; max-width:1600px">
-  <div class="search-wrap" style="flex:1">
+<!-- Top Row: Search + Mode Buttons -->
+<div style="display:grid; grid-template-columns:1fr auto auto auto; gap:12px; margin-bottom:12px; max-width:1470px">
+  <div class="search-wrap">
     <input type="text" class="search-input" id="searchInput" placeholder="Search NBA players..." autocomplete="off">
     <div class="dropdown" id="searchDropdown"></div>
   </div>
   <button class="btn btn-red" id="tradeModeBtn" onclick="setAcquisitionMode('trade')">🔄 Trade Mode</button>
   <button class="btn" id="faModeBtn" onclick="setAcquisitionMode('fa')">✍️ FA Mode</button>
+  <div style="width:150px"></div> <!-- Space for future button -->
 </div>
 
-<!-- Action Buttons + Legend Row -->
-<div style="display:flex; gap:12px; margin-bottom:20px; max-width:1600px; align-items:stretch">
+<!-- Bottom Row: Action Buttons + Legend -->
+<div style="display:grid; grid-template-columns:auto 1fr auto; gap:12px; margin-bottom:20px; max-width:1470px; align-items:stretch">
   <div style="display:flex; gap:12px">
     <button class="btn" onclick="addRow()">➕ Add Row</button>
     <button class="btn" onclick="openManageRoster()">👥 Manage Roster</button>
@@ -302,21 +304,23 @@ body {
   </div>
   
   <!-- Legend -->
-  <div class="legend" style="margin:0; flex:1; display:flex; flex-direction:column; justify-content:center">
-    <div style="display:flex; flex-direction:column; gap:8px">
-      <div style="display:flex; gap:14px; align-items:center">
+  <div class="legend" style="margin:0; display:flex; flex-direction:column; justify-content:center; padding:10px 16px">
+    <div style="display:flex; flex-direction:column; gap:6px">
+      <div style="display:flex; gap:12px; align-items:center">
         <span class="lbl">LEGEND:</span>
         <div class="legend-item"><span class="lg-badge lg-gtd">GTD</span> Guaranteed</div>
         <div class="legend-item"><span class="lg-badge lg-po">PO</span> Player Option</div>
         <div class="legend-item"><span class="lg-badge lg-to">TO</span> Team Option</div>
       </div>
-      <div style="display:flex; gap:14px; padding-left:85px">
+      <div style="display:flex; gap:12px; padding-left:75px">
         <div class="legend-item"><span class="lg-badge lg-qo">QO</span> Qualifying Offer</div>
         <div class="legend-item"><span class="lg-badge lg-ch">CH</span> Cap Hold</div>
         <div class="legend-item"><span class="lg-badge lg-dead">DEAD</span> Dead Money</div>
       </div>
     </div>
   </div>
+  
+  <div style="width:150px"></div> <!-- Space for future button -->
 </div>
 
 <!-- TRADE BLOCK -->
@@ -388,7 +392,7 @@ body {
   <div class="section-hdr">📊 Cap Situation</div>
   <div style="padding:0">
     <!-- Year Headers -->
-    <div style="display:grid; grid-template-columns: 50px 200px 50px repeat(5, 165px) 475px; gap:0; padding:12px 20px 8px 20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 50px 200px 35px repeat(5, 165px) 360px; gap:0; padding:12px 20px 8px 20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); border-bottom:1px solid var(--bg3)">
       <div></div>
       <div>Status</div>
       <div></div>
@@ -408,7 +412,7 @@ body {
 <div class="section" style="margin-top:22px">
   <div class="section-hdr">📋 Cap Figures</div>
   <div style="padding:0">
-    <div style="display:grid; grid-template-columns: 50px 200px 50px repeat(5, 165px) 475px; gap:0; padding:12px 20px 8px 20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2)">
+    <div style="display:grid; grid-template-columns: 50px 200px 35px repeat(5, 165px) 360px; gap:0; padding:12px 20px 8px 20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2)">
       <div></div>
       <div>Threshold</div>
       <div></div>
@@ -419,7 +423,7 @@ body {
       <div style="text-align:center">2029-30</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 50px 200px 50px repeat(5, 165px) 475px; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 50px 200px 35px repeat(5, 165px) 360px; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
       <div></div>
       <div style="font-weight:600; font-size:14px">Salary Cap</div>
       <div></div>
@@ -430,7 +434,7 @@ body {
       <div style="text-align:center; font-size:13px; font-weight:600">$191.6M</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 50px 200px 50px repeat(5, 165px) 475px; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 50px 200px 35px repeat(5, 165px) 360px; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
       <div></div>
       <div style="font-weight:600; font-size:14px">Luxury Tax</div>
       <div></div>
@@ -441,7 +445,7 @@ body {
       <div style="text-align:center; font-size:13px; font-weight:600">$246.3M</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 50px 200px 50px repeat(5, 165px) 475px; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 50px 200px 35px repeat(5, 165px) 360px; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
       <div></div>
       <div style="font-weight:600; font-size:14px">First Apron</div>
       <div></div>
@@ -452,7 +456,7 @@ body {
       <div style="text-align:center; font-size:13px; font-weight:600">$256.8M</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 50px 200px 50px repeat(5, 165px) 475px; gap:0; padding:12px 20px">
+    <div style="display:grid; grid-template-columns: 50px 200px 35px repeat(5, 165px) 360px; gap:0; padding:12px 20px">
       <div></div>
       <div style="font-weight:600; font-size:14px">Second Apron</div>
       <div></div>
@@ -1393,7 +1397,7 @@ function renderCapSituation() {
     }).join('');
     
     return `
-      <div style="display:grid; grid-template-columns: 50px 200px 50px repeat(5, 165px) 475px; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
+      <div style="display:grid; grid-template-columns: 50px 200px 35px repeat(5, 165px) 360px; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
         <div></div>
         <div style="font-weight:700; font-size:14px">${row.label}</div>
         <div></div>
@@ -1427,14 +1431,14 @@ function renderCapSituation() {
   }).join('');
   
   const fullHtml = html + 
-    `<div style="display:grid; grid-template-columns: 50px 200px 50px repeat(5, 165px) 475px; gap:0; padding:16px 20px 12px 20px; border-top:2px solid var(--bg3)">
+    `<div style="display:grid; grid-template-columns: 50px 200px 35px repeat(5, 165px) 360px; gap:0; padding:16px 20px 12px 20px; border-top:2px solid var(--bg3)">
       <div></div>
       <div style="font-weight:700; font-size:14px">Total Salary (Plus CHs)</div>
       <div></div>
       ${capHoldsRow}
       <div></div>
     </div>` +
-    `<div style="display:grid; grid-template-columns: 50px 200px 50px repeat(5, 165px) 475px; gap:0; padding:12px 20px">
+    `<div style="display:grid; grid-template-columns: 50px 200px 35px repeat(5, 165px) 360px; gap:0; padding:12px 20px">
       <div></div>
       <div style="font-weight:700; font-size:14px">Max Space (no CHs)</div>
       <div></div>
@@ -2097,7 +2101,7 @@ document.getElementById('modalOverlay').addEventListener('click', e => {
 // AUTO-SCALE TO FIT SCREEN
 function autoScale() {
   const container = document.querySelector('.container');
-  const contentWidth = 1600; // Our max content width
+  const contentWidth = 1470; // Our max content width
   const viewportWidth = window.innerWidth;
   const padding = 40; // Leave some breathing room on sides
   
