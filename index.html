@@ -22,7 +22,7 @@ body {
   background:linear-gradient(135deg,var(--bg0) 0%,#1a0a0f 100%);
   color:var(--txt); min-height:100vh; padding:20px;
 }
-.container { max-width:1900px; margin:0 auto; zoom:0.85; }
+.container { max-width:1900px; margin:0 auto; transform-origin: top center; }
 
 /* ─── HEADER ─── */
 .header {
@@ -2093,6 +2093,23 @@ document.addEventListener('click', e => {
 document.getElementById('modalOverlay').addEventListener('click', e => {
   if (e.target.id === 'modalOverlay') closeModal();
 });
+
+// AUTO-SCALE TO FIT SCREEN
+function autoScale() {
+  const container = document.querySelector('.container');
+  const contentWidth = 1600; // Our max content width
+  const viewportWidth = window.innerWidth;
+  const padding = 40; // Leave some breathing room on sides
+  
+  // Calculate scale to fit, with max of 1.0 (never scale up)
+  const scale = Math.min(1, (viewportWidth - padding) / contentWidth);
+  
+  container.style.transform = `scale(${scale})`;
+}
+
+// Run on load and resize
+autoScale();
+window.addEventListener('resize', autoScale);
 
 </script>
 </body>
