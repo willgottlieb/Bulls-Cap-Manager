@@ -236,13 +236,15 @@ body {
 
 /* ─── MODAL ─── */
 .modal-overlay {
-  display:none; position:fixed; inset:0; background:rgba(0,0,0,.85);
-  z-index:1000; align-items:center; justify-content:center;
+  display:none; position:fixed; top:0; left:0; right:0; bottom:0; 
+  background:rgba(0,0,0,.85); z-index:1000; 
+  align-items:center; justify-content:center; overflow-y:auto;
 }
 .modal-overlay.show { display:flex; }
 .modal {
   background:var(--bg1); border:1px solid var(--bg3); border-radius:12px;
-  max-width:500px; width:90%; max-height:80vh; overflow:auto;
+  max-width:500px; width:90%; max-height:90vh; overflow:auto;
+  margin:auto;
 }
 .modal-hdr {
   background:var(--bg2); padding:18px 24px; border-bottom:1px solid var(--bg3);
@@ -284,7 +286,7 @@ body {
 </div>
 
 <!-- CONTROL SECTION - Two Rows -->
-<div style="display:grid; grid-template-columns:auto 1fr auto auto; gap:12px; margin-bottom:20px;">
+<div style="display:grid; grid-template-columns:auto auto auto auto; gap:12px; margin-bottom:20px;">
   
   <!-- Column 1: Search/Manage Stack -->
   <div style="display:grid; grid-template-rows:auto auto; gap:8px;">
@@ -300,32 +302,33 @@ body {
     
     <!-- Bottom: Manage + Icons -->
     <div style="display:grid; grid-template-columns:1fr auto auto auto; gap:8px;">
-      <button class="btn" onclick="openManageRoster()">👥 MANAGE</button>
+      <button class="btn" onclick="openManageRoster()" style="justify-content:center">👥 MANAGE</button>
       <button class="btn" onclick="undo()" style="min-width:44px; padding:11px 12px">◀</button>
       <button class="btn" onclick="redo()" style="min-width:44px; padding:11px 12px">▶</button>
       <button class="btn" onclick="resetAll()" style="min-width:44px; padding:11px 12px">🗑️</button>
     </div>
   </div>
   
-  <!-- Column 2: Legend (2 rows, compact) -->
-  <div class="legend" style="margin:0; padding:12px 16px; display:grid; grid-template-rows:auto auto; gap:6px; align-content:center">
-    <div style="display:flex; gap:12px; align-items:center">
-      <span class="lbl" style="margin-right:4px">LEGEND:</span>
+  <!-- Column 2: Legend (2 rows of 4) -->
+  <div class="legend" style="margin:0; padding:10px 14px; display:grid; grid-template-rows:auto auto; gap:6px; align-content:center">
+    <div style="display:flex; gap:10px; align-items:center">
+      <span class="lbl" style="margin-right:2px">LEGEND</span>
       <div class="legend-item"><span class="lg-badge lg-gtd">GTD</span> Guaranteed</div>
       <div class="legend-item"><span class="lg-badge lg-po">PO</span> Player Option</div>
       <div class="legend-item"><span class="lg-badge lg-to">TO</span> Team Option</div>
     </div>
-    <div style="display:flex; gap:12px; padding-left:75px">
+    <div style="display:flex; gap:10px; padding-left:65px">
       <div class="legend-item"><span class="lg-badge lg-qo">QO</span> Qualifying Offer</div>
       <div class="legend-item"><span class="lg-badge lg-ch">CH</span> Cap Hold</div>
       <div class="legend-item"><span class="lg-badge lg-dead">DEAD</span> Dead Money</div>
+      <div class="legend-item"><span class="lg-badge" style="background:rgba(139,92,246,.15); color:#8b5cf6; border:1px solid rgba(139,92,246,.3)">2WAY</span> Two-Way</div>
     </div>
   </div>
   
-  <!-- Column 3: Cap Totals -->
-  <div style="background:var(--bg1); border:1px solid var(--bg3); border-radius:8px; padding:12px 16px; display:flex; flex-direction:column; justify-content:center; min-width:160px">
-    <div style="font-weight:700; margin-bottom:6px; font-size:10px; color:var(--txt2); text-transform:uppercase">2025-26 TOTALS</div>
-    <div id="capSummary" style="font-size:11px; font-weight:600; line-height:1.5"></div>
+  <!-- Column 3: Cap Totals (wider, 2 rows only) -->
+  <div style="background:var(--bg1); border:1px solid var(--bg3); border-radius:8px; padding:12px 18px; display:flex; flex-direction:column; justify-content:center; min-width:200px">
+    <div style="font-weight:800; margin-bottom:8px; font-size:13px; color:var(--txt); text-transform:uppercase">2025-26</div>
+    <div id="capSummary" style="font-size:12px; font-weight:600; line-height:1.7"></div>
   </div>
   
   <!-- Column 4: Draft Picks + Trade Exception Stack -->
@@ -1398,14 +1401,10 @@ function updateCapSummary() {
   
   const capSpace = th.cap - total;
   const taxSpace = th.tax - total;
-  const apron1Space = th.apron1 - total;
-  const apron2Space = th.apron2 - total;
   
   document.getElementById('capSummary').innerHTML = `
-    <div style="color:${capSpace > 0 ? 'var(--green)' : 'var(--danger)'}; font-size:10px">Cap: ${fmt(Math.abs(capSpace))}</div>
-    <div style="color:${taxSpace > 0 ? 'var(--green)' : 'var(--danger)'}; font-size:10px">Tax: ${fmt(Math.abs(taxSpace))}</div>
-    <div style="color:${apron1Space > 0 ? 'var(--green)' : 'var(--danger)'}; font-size:10px">1st: ${fmt(Math.abs(apron1Space))}</div>
-    <div style="color:${apron2Space > 0 ? 'var(--green)' : 'var(--danger)'}; font-size:10px">2nd: ${fmt(Math.abs(apron2Space))}</div>
+    <div style="color:${capSpace > 0 ? 'var(--green)' : 'var(--danger)'}; font-size:11px; font-weight:700">Cap Space: ${fmt(Math.abs(capSpace))}</div>
+    <div style="color:${taxSpace > 0 ? 'var(--green)' : 'var(--danger)'}; font-size:11px; font-weight:700">Tax Space: ${fmt(Math.abs(taxSpace))}</div>
   `;
 }
 
@@ -1928,10 +1927,12 @@ function saveSalary(id) {
 function showModal(html) {
   document.getElementById('modal').innerHTML = html;
   document.getElementById('modalOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden'; // Prevent scrolling
 }
 
 function closeModal() {
   document.getElementById('modalOverlay').classList.remove('show');
+  document.body.style.overflow = ''; // Restore scrolling
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
