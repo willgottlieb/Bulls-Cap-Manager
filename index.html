@@ -288,9 +288,17 @@ body {
 <!-- CONTROL SECTION - Two Rows -->
 <div style="display:grid; grid-template-columns:auto auto auto auto; gap:12px; margin-bottom:20px;">
   
-  <!-- Column 1: Search/Manage Stack -->
+  <!-- Column 1: Manage/Search Stack (SWAPPED) -->
   <div style="display:grid; grid-template-rows:auto auto; gap:8px;">
-    <!-- Top: Search + Trade + FA Mode -->
+    <!-- Top: Manage + Undo + Redo + Trash -->
+    <div style="display:grid; grid-template-columns:1fr auto auto auto; gap:8px;">
+      <button class="btn" onclick="openManageRoster()" style="justify-content:center">👥 MANAGE</button>
+      <button class="btn" onclick="undo()" style="min-width:44px; padding:11px 12px">◀</button>
+      <button class="btn" onclick="redo()" style="min-width:44px; padding:11px 12px">▶</button>
+      <button class="btn" onclick="resetAll()" style="min-width:44px; padding:11px 12px">🗑️</button>
+    </div>
+    
+    <!-- Bottom: Search + Trade + FA Mode -->
     <div style="display:grid; grid-template-columns:1fr auto auto; gap:8px;">
       <div class="search-wrap">
         <input type="text" class="search-input" id="searchInput" placeholder="Search NBA players..." autocomplete="off">
@@ -299,42 +307,38 @@ body {
       <button class="btn btn-red" id="tradeModeBtn" onclick="setAcquisitionMode('trade')">🔄 TRADE</button>
       <button class="btn" id="faModeBtn" onclick="setAcquisitionMode('fa')">✍️ FA MODE</button>
     </div>
-    
-    <!-- Bottom: Manage + Icons -->
-    <div style="display:grid; grid-template-columns:1fr auto auto auto; gap:8px;">
-      <button class="btn" onclick="openManageRoster()" style="justify-content:center">👥 MANAGE</button>
-      <button class="btn" onclick="undo()" style="min-width:44px; padding:11px 12px">◀</button>
-      <button class="btn" onclick="redo()" style="min-width:44px; padding:11px 12px">▶</button>
-      <button class="btn" onclick="resetAll()" style="min-width:44px; padding:11px 12px">🗑️</button>
-    </div>
   </div>
   
-  <!-- Column 2: Legend (2 rows of 4) -->
-  <div class="legend" style="margin:0; padding:10px 14px; display:grid; grid-template-rows:auto auto; gap:6px; align-content:center">
-    <div style="display:flex; gap:10px; align-items:center">
-      <span class="lbl" style="margin-right:2px">LEGEND</span>
-      <div class="legend-item"><span class="lg-badge lg-gtd">GTD</span> Guaranteed</div>
-      <div class="legend-item"><span class="lg-badge lg-po">PO</span> Player Option</div>
-      <div class="legend-item"><span class="lg-badge lg-to">TO</span> Team Option</div>
-    </div>
-    <div style="display:flex; gap:10px; padding-left:65px">
+  <!-- Column 2: Legend (compact - badge under LEGEND) -->
+  <div class="legend" style="margin:0; padding:10px 14px; display:grid; grid-template-columns:auto 1fr; gap:6px 10px; align-content:center">
+    <div style="display:flex; flex-direction:column; gap:6px">
+      <span class="lbl">LEGEND</span>
       <div class="legend-item"><span class="lg-badge lg-qo">QO</span> Qualifying Offer</div>
-      <div class="legend-item"><span class="lg-badge lg-ch">CH</span> Cap Hold</div>
-      <div class="legend-item"><span class="lg-badge lg-dead">DEAD</span> Dead Money</div>
-      <div class="legend-item"><span class="lg-badge" style="background:rgba(139,92,246,.15); color:#8b5cf6; border:1px solid rgba(139,92,246,.3)">2WAY</span> Two-Way</div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px">
+      <div style="display:flex; gap:10px">
+        <div class="legend-item"><span class="lg-badge lg-gtd">GTD</span> Guaranteed</div>
+        <div class="legend-item"><span class="lg-badge lg-po">PO</span> Player Option</div>
+        <div class="legend-item"><span class="lg-badge lg-to">TO</span> Team Option</div>
+      </div>
+      <div style="display:flex; gap:10px">
+        <div class="legend-item"><span class="lg-badge lg-ch">CH</span> Cap Hold</div>
+        <div class="legend-item"><span class="lg-badge lg-dead">DEAD</span> Dead Money</div>
+        <div class="legend-item"><span class="lg-badge" style="background:rgba(139,92,246,.15); color:#8b5cf6; border:1px solid rgba(139,92,246,.3)">2WAY</span> Two-Way</div>
+      </div>
     </div>
   </div>
   
-  <!-- Column 3: Cap Totals (wider, 2 rows only) -->
-  <div style="background:var(--bg1); border:1px solid var(--bg3); border-radius:8px; padding:12px 18px; display:flex; flex-direction:column; justify-content:center; min-width:200px">
+  <!-- Column 3: Cap Totals (side by side, bigger text) -->
+  <div style="background:var(--bg1); border:1px solid var(--bg3); border-radius:8px; padding:12px 18px; display:flex; flex-direction:column; justify-content:center; min-width:220px">
     <div style="font-weight:800; margin-bottom:8px; font-size:13px; color:var(--txt); text-transform:uppercase">2025-26</div>
-    <div id="capSummary" style="font-size:12px; font-weight:600; line-height:1.7"></div>
+    <div id="capSummary" style="display:grid; grid-template-columns:1fr 1fr; gap:12px; font-weight:700"></div>
   </div>
   
   <!-- Column 4: Draft Picks + Trade Exception Stack -->
   <div style="display:grid; grid-template-rows:1fr 1fr; gap:8px;">
-    <button class="btn" onclick="alert('Draft Picks - Coming Soon')" style="white-space:nowrap">📋 DRAFT PICKS</button>
-    <button class="btn" onclick="alert('Trade Exception - Coming Soon')" style="white-space:nowrap">💰 TRADE EXCEPTION</button>
+    <button class="btn" onclick="alert('Draft Picks - Coming Soon')" style="white-space:nowrap; justify-content:center">📋 DRAFT PICKS</button>
+    <button class="btn" onclick="alert('Trade Exception - Coming Soon')" style="white-space:nowrap; justify-content:center">💰 TRADE EXCEPTION</button>
   </div>
   
 </div>
@@ -1403,8 +1407,14 @@ function updateCapSummary() {
   const taxSpace = th.tax - total;
   
   document.getElementById('capSummary').innerHTML = `
-    <div style="color:${capSpace > 0 ? 'var(--green)' : 'var(--danger)'}; font-size:11px; font-weight:700">Cap Space: ${fmt(Math.abs(capSpace))}</div>
-    <div style="color:${taxSpace > 0 ? 'var(--green)' : 'var(--danger)'}; font-size:11px; font-weight:700">Tax Space: ${fmt(Math.abs(taxSpace))}</div>
+    <div style="color:${capSpace > 0 ? 'var(--green)' : 'var(--danger)'}">
+      <div style="font-size:10px; color:var(--txt2); margin-bottom:2px">CAP SPACE</div>
+      <div style="font-size:14px">${fmt(Math.abs(capSpace))}</div>
+    </div>
+    <div style="color:${taxSpace > 0 ? 'var(--green)' : 'var(--danger)'}">
+      <div style="font-size:10px; color:var(--txt2); margin-bottom:2px">TAX SPACE</div>
+      <div style="font-size:14px">${fmt(Math.abs(taxSpace))}</div>
+    </div>
   `;
 }
 
