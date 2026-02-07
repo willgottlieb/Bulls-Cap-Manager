@@ -290,9 +290,9 @@ body {
   
   <!-- Column 1: Search & Manage Stack -->
   <div style="display:grid; grid-template-rows:auto auto; gap:8px;">
-    <!-- Top: Search + Undo + Redo + Trash -->
+    <!-- Top: Search (flex to fill) + Undo + Redo + Trash (aligned right) -->
     <div style="display:flex; gap:8px;">
-      <div class="search-wrap" style="width:350px">
+      <div class="search-wrap" style="flex:1">
         <input type="text" class="search-input" id="searchInput" placeholder="Search NBA players..." autocomplete="off">
         <div class="dropdown" id="searchDropdown"></div>
       </div>
@@ -1415,7 +1415,6 @@ function updateCapSummary() {
       <div style="color:${taxSpace > 0 ? 'var(--green)' : 'var(--danger)'}; font-size:15px; font-weight:800">${fmt(Math.abs(taxSpace))}</div>
     </div>
   `;
-}
 }
 
 function renderCapSituation() {
