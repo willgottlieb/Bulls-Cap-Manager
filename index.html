@@ -117,10 +117,10 @@ body {
 
 .tbl-wrap { overflow-x:auto; }
 
-/* Perfect alignment: 40px + 220px + 35px + (5 × 165px) + 120px = 1240px */
+/* Percentage-based grid: scales proportionally with container */
 .tbl-head, .tbl-row {
   display:grid;
-  grid-template-columns: 40px 220px 35px repeat(5, 165px) 120px;
+  grid-template-columns: 3.23% 17.74% 2.82% 13.31% 13.31% 13.31% 13.31% 13.31% 9.68%;
   gap:0; padding:0 20px; align-items:center;
 }
 
@@ -195,7 +195,7 @@ body {
 /* Trade block with year headers */
 .trade-year-headers {
   display:grid;
-  grid-template-columns: 40px 220px 35px repeat(5, 165px) 120px;
+  grid-template-columns: 3.23% 17.74% 2.82% 13.31% 13.31% 13.31% 13.31% 13.31% 9.68%;
   gap:0; padding:0 20px 8px 20px;
   font-size:10px; font-weight:700; text-transform:uppercase;
   letter-spacing:.06em; color:var(--blue);
@@ -208,7 +208,7 @@ body {
 .trade-total {
   background:rgba(59,130,246,.1); padding:12px 20px; font-size:13px; font-weight:600;
   border-top:2px solid var(--blue); display:grid;
-  grid-template-columns: 40px 220px 35px repeat(5, 165px) 120px;
+  grid-template-columns: 3.23% 17.74% 2.82% 13.31% 13.31% 13.31% 13.31% 13.31% 9.68%;
   gap:0; align-items:center;
 }
 .trade-total div { text-align:center; font-weight:700; color:var(--blue); }
@@ -411,7 +411,7 @@ body {
   <div class="section-hdr">📊 Cap Situation</div>
   <div style="padding:0">
     <!-- Year Headers -->
-    <div style="display:grid; grid-template-columns: 40px 220px 35px repeat(5, 165px) 120px; gap:0; padding:12px 20px 8px 20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 3.23% 17.74% 2.82% 13.31% 13.31% 13.31% 13.31% 13.31% 9.68%; gap:0; padding:12px 20px 8px 20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); border-bottom:1px solid var(--bg3)">
       <div></div>
       <div>Status</div>
       <div></div>
@@ -431,7 +431,7 @@ body {
 <div class="section" style="margin-top:22px">
   <div class="section-hdr">📋 Cap Figures</div>
   <div style="padding:0">
-    <div style="display:grid; grid-template-columns: 40px 220px 35px repeat(5, 165px) 120px; gap:0; padding:12px 20px 8px 20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2)">
+    <div style="display:grid; grid-template-columns: 3.23% 17.74% 2.82% 13.31% 13.31% 13.31% 13.31% 13.31% 9.68%; gap:0; padding:12px 20px 8px 20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2)">
       <div></div>
       <div>Threshold</div>
       <div></div>
@@ -442,7 +442,7 @@ body {
       <div style="text-align:center">2029-30</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 40px 220px 35px repeat(5, 165px) 120px; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 3.23% 17.74% 2.82% 13.31% 13.31% 13.31% 13.31% 13.31% 9.68%; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
       <div></div>
       <div style="font-weight:600; font-size:14px">Salary Cap</div>
       <div></div>
@@ -453,7 +453,7 @@ body {
       <div style="text-align:center; font-size:13px; font-weight:600">$191.6M</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 40px 220px 35px repeat(5, 165px) 120px; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 3.23% 17.74% 2.82% 13.31% 13.31% 13.31% 13.31% 13.31% 9.68%; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
       <div></div>
       <div style="font-weight:600; font-size:14px">Luxury Tax</div>
       <div></div>
@@ -464,7 +464,7 @@ body {
       <div style="text-align:center; font-size:13px; font-weight:600">$246.3M</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 40px 220px 35px repeat(5, 165px) 120px; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 3.23% 17.74% 2.82% 13.31% 13.31% 13.31% 13.31% 13.31% 9.68%; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
       <div></div>
       <div style="font-weight:600; font-size:14px">First Apron</div>
       <div></div>
@@ -475,7 +475,7 @@ body {
       <div style="text-align:center; font-size:13px; font-weight:600">$256.8M</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 40px 220px 35px repeat(5, 165px) 120px; gap:0; padding:12px 20px">
+    <div style="display:grid; grid-template-columns: 3.23% 17.74% 2.82% 13.31% 13.31% 13.31% 13.31% 13.31% 9.68%; gap:0; padding:12px 20px">
       <div></div>
       <div style="font-weight:600; font-size:14px">Second Apron</div>
       <div></div>
@@ -1255,8 +1255,8 @@ function renderRoster() {
       </div>
     `;
     
-    // Always show row number, no special displays
-    const displayNum = i + 1;
+    // Show dash for 2-way players, row number for others
+    const displayNum = is2Way ? '—' : (i + 1);
     
     return `
       <div class="tbl-row" id="player-${p.id}">
@@ -1435,7 +1435,7 @@ function renderCapSituation() {
     }).join('');
     
     return `
-      <div style="display:grid; grid-template-columns: 40px 220px 35px repeat(5, 165px) 120px; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
+      <div style="display:grid; grid-template-columns: 3.23% 17.74% 2.82% 13.31% 13.31% 13.31% 13.31% 13.31% 9.68%; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
         <div></div>
         <div style="font-weight:700; font-size:14px">${row.label}</div>
         <div></div>
@@ -1469,14 +1469,14 @@ function renderCapSituation() {
   }).join('');
   
   const fullHtml = html + 
-    `<div style="display:grid; grid-template-columns: 40px 220px 35px repeat(5, 165px) 120px; gap:0; padding:16px 20px 12px 20px; border-top:2px solid var(--bg3)">
+    `<div style="display:grid; grid-template-columns: 3.23% 17.74% 2.82% 13.31% 13.31% 13.31% 13.31% 13.31% 9.68%; gap:0; padding:16px 20px 12px 20px; border-top:2px solid var(--bg3)">
       <div></div>
       <div style="font-weight:700; font-size:14px">Total Salary (Plus CHs)</div>
       <div></div>
       ${capHoldsRow}
       <div></div>
     </div>` +
-    `<div style="display:grid; grid-template-columns: 40px 220px 35px repeat(5, 165px) 120px; gap:0; padding:12px 20px">
+    `<div style="display:grid; grid-template-columns: 3.23% 17.74% 2.82% 13.31% 13.31% 13.31% 13.31% 13.31% 9.68%; gap:0; padding:12px 20px">
       <div></div>
       <div style="font-weight:700; font-size:14px">Max Space (no CHs)</div>
       <div></div>
@@ -1932,6 +1932,7 @@ function saveSalary(id) {
 // ═══════════════════════════════════════════════════════════════════════════
 
 function showModal(html) {
+  window.scrollTo({ top: 0, behavior: 'instant' }); // Scroll to top immediately
   document.getElementById('modal').innerHTML = html;
   document.getElementById('modalOverlay').classList.add('show');
   document.body.style.overflow = 'hidden'; // Prevent scrolling
@@ -2278,17 +2279,15 @@ document.getElementById('modalOverlay').addEventListener('click', e => {
   if (e.target.id === 'modalOverlay') closeModal();
 });
 
-// AUTO-SCALE TO FIT SCREEN
+// AUTO-SCALE TO FIT SCREEN - DISABLED (using responsive CSS grid instead)
 function autoScale() {
-  const container = document.querySelector('.container');
-  const contentWidth = 1280; // Our max content width
-  const viewportWidth = window.innerWidth;
-  const padding = 40; // Leave some breathing room on sides
-  
-  // Calculate scale to fit, with max of 1.0 (never scale up)
-  const scale = Math.min(1, (viewportWidth - padding) / contentWidth);
-  
-  container.style.transform = `scale(${scale})`;
+  // Responsive grid handles scaling automatically
+  // const container = document.querySelector('.container');
+  // const contentWidth = 1280;
+  // const viewportWidth = window.innerWidth;
+  // const padding = 40;
+  // const scale = Math.min(1, (viewportWidth - padding) / contentWidth);
+  // container.style.transform = `scale(${scale})`;
 }
 
 // Run on load and resize
