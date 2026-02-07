@@ -120,7 +120,7 @@ body {
 /* Percentage-based grid: scales proportionally with container */
 .tbl-head, .tbl-row {
   display:grid;
-  grid-template-columns: 3.23% 17.74% 2.82% 13.31% 13.31% 13.31% 13.31% 13.31% 9.68%;
+  grid-template-columns: 3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%;
   gap:0; padding:0 20px; align-items:center;
 }
 
@@ -129,6 +129,7 @@ body {
   text-transform:uppercase; letter-spacing:.06em; color:var(--txt2);
   border-bottom:1px solid var(--bg3);
 }
+.h-num { text-align:center; }
 .h-sal { text-align:center; }
 .h-act { text-align:center; padding-left:20px; }
 
@@ -140,7 +141,7 @@ body {
 .tbl-row:last-child { border-bottom:none; }
 
 .r-num { color:var(--txt2); font-size:13px; font-weight:600; text-align:center; }
-.r-name { font-weight:600; font-size:14px; padding-right:15px; }
+.r-name { font-weight:600; font-size:14px; padding-right:5px; }
 .sal-cell { text-align:center; padding:0 5px; }
 .s-amt { font-size:13px; font-weight:600; display:block; }
 .s-pct { font-size:10px; color:var(--txt2); margin-top:2px; display:block; }
@@ -195,7 +196,7 @@ body {
 /* Trade block with year headers */
 .trade-year-headers {
   display:grid;
-  grid-template-columns: 3.23% 17.74% 2.82% 13.31% 13.31% 13.31% 13.31% 13.31% 9.68%;
+  grid-template-columns: 3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%;
   gap:0; padding:0 20px 8px 20px;
   font-size:10px; font-weight:700; text-transform:uppercase;
   letter-spacing:.06em; color:var(--blue);
@@ -208,7 +209,7 @@ body {
 .trade-total {
   background:rgba(59,130,246,.1); padding:12px 20px; font-size:13px; font-weight:600;
   border-top:2px solid var(--blue); display:grid;
-  grid-template-columns: 3.23% 17.74% 2.82% 13.31% 13.31% 13.31% 13.31% 13.31% 9.68%;
+  grid-template-columns: 3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%;
   gap:0; align-items:center;
 }
 .trade-total div { text-align:center; font-weight:700; color:var(--blue); }
@@ -411,7 +412,7 @@ body {
   <div class="section-hdr">📊 Cap Situation</div>
   <div style="padding:0">
     <!-- Year Headers -->
-    <div style="display:grid; grid-template-columns: 3.23% 17.74% 2.82% 13.31% 13.31% 13.31% 13.31% 13.31% 9.68%; gap:0; padding:12px 20px 8px 20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%; gap:0; padding:12px 20px 8px 20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); border-bottom:1px solid var(--bg3)">
       <div></div>
       <div>Status</div>
       <div></div>
@@ -431,7 +432,7 @@ body {
 <div class="section" style="margin-top:22px">
   <div class="section-hdr">📋 Cap Figures</div>
   <div style="padding:0">
-    <div style="display:grid; grid-template-columns: 3.23% 17.74% 2.82% 13.31% 13.31% 13.31% 13.31% 13.31% 9.68%; gap:0; padding:12px 20px 8px 20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2)">
+    <div style="display:grid; grid-template-columns: 3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%; gap:0; padding:12px 20px 8px 20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2)">
       <div></div>
       <div>Threshold</div>
       <div></div>
@@ -442,7 +443,7 @@ body {
       <div style="text-align:center">2029-30</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 3.23% 17.74% 2.82% 13.31% 13.31% 13.31% 13.31% 13.31% 9.68%; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
       <div></div>
       <div style="font-weight:600; font-size:14px">Salary Cap</div>
       <div></div>
@@ -453,7 +454,7 @@ body {
       <div style="text-align:center; font-size:13px; font-weight:600">$191.6M</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 3.23% 17.74% 2.82% 13.31% 13.31% 13.31% 13.31% 13.31% 9.68%; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
       <div></div>
       <div style="font-weight:600; font-size:14px">Luxury Tax</div>
       <div></div>
@@ -464,7 +465,7 @@ body {
       <div style="text-align:center; font-size:13px; font-weight:600">$246.3M</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 3.23% 17.74% 2.82% 13.31% 13.31% 13.31% 13.31% 13.31% 9.68%; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
       <div></div>
       <div style="font-weight:600; font-size:14px">First Apron</div>
       <div></div>
@@ -475,7 +476,7 @@ body {
       <div style="text-align:center; font-size:13px; font-weight:600">$256.8M</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 3.23% 17.74% 2.82% 13.31% 13.31% 13.31% 13.31% 13.31% 9.68%; gap:0; padding:12px 20px">
+    <div style="display:grid; grid-template-columns: 3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%; gap:0; padding:12px 20px">
       <div></div>
       <div style="font-weight:600; font-size:14px">Second Apron</div>
       <div></div>
@@ -1255,8 +1256,8 @@ function renderRoster() {
       </div>
     `;
     
-    // Show dash for 2-way players, row number for others
-    const displayNum = is2Way ? '—' : (i + 1);
+    // Show dash for 2-way players and dead money, row number for active roster
+    const displayNum = (is2Way || isDead) ? '—' : (i + 1);
     
     return `
       <div class="tbl-row" id="player-${p.id}">
@@ -1435,7 +1436,7 @@ function renderCapSituation() {
     }).join('');
     
     return `
-      <div style="display:grid; grid-template-columns: 3.23% 17.74% 2.82% 13.31% 13.31% 13.31% 13.31% 13.31% 9.68%; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
+      <div style="display:grid; grid-template-columns: 3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
         <div></div>
         <div style="font-weight:700; font-size:14px">${row.label}</div>
         <div></div>
@@ -1469,14 +1470,14 @@ function renderCapSituation() {
   }).join('');
   
   const fullHtml = html + 
-    `<div style="display:grid; grid-template-columns: 3.23% 17.74% 2.82% 13.31% 13.31% 13.31% 13.31% 13.31% 9.68%; gap:0; padding:16px 20px 12px 20px; border-top:2px solid var(--bg3)">
+    `<div style="display:grid; grid-template-columns: 3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%; gap:0; padding:16px 20px 12px 20px; border-top:2px solid var(--bg3)">
       <div></div>
       <div style="font-weight:700; font-size:14px">Total Salary (Plus CHs)</div>
       <div></div>
       ${capHoldsRow}
       <div></div>
     </div>` +
-    `<div style="display:grid; grid-template-columns: 3.23% 17.74% 2.82% 13.31% 13.31% 13.31% 13.31% 13.31% 9.68%; gap:0; padding:12px 20px">
+    `<div style="display:grid; grid-template-columns: 3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%; gap:0; padding:12px 20px">
       <div></div>
       <div style="font-weight:700; font-size:14px">Max Space (no CHs)</div>
       <div></div>
