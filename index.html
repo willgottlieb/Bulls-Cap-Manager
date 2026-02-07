@@ -22,7 +22,7 @@ body {
   background:linear-gradient(135deg,var(--bg0) 0%,#1a0a0f 100%);
   color:var(--txt); min-height:100vh; padding:20px;
 }
-.container { max-width:1900px; margin:0 auto; }
+.container { max-width:1900px; margin:0 auto; zoom:0.85; }
 
 /* ─── HEADER ─── */
 .header {
@@ -292,7 +292,7 @@ body {
 </div>
 
 <!-- Action Buttons + Legend Row -->
-<div style="display:flex; gap:12px; margin-bottom:20px; max-width:1600px; align-items:center">
+<div style="display:flex; gap:12px; margin-bottom:20px; max-width:1600px; align-items:stretch">
   <div style="display:flex; gap:12px">
     <button class="btn" onclick="addRow()">➕ Add Row</button>
     <button class="btn" onclick="openManageRoster()">👥 Manage Roster</button>
@@ -302,15 +302,15 @@ body {
   </div>
   
   <!-- Legend -->
-  <div class="legend" style="margin:0; flex:1; min-height:92px">
-    <span class="lbl" style="margin-bottom:6px">LEGEND:</span>
-    <div class="legend-items" style="flex-direction:column; gap:8px">
-      <div style="display:flex; gap:14px">
+  <div class="legend" style="margin:0; flex:1; display:flex; flex-direction:column; justify-content:center">
+    <div style="display:flex; flex-direction:column; gap:8px">
+      <div style="display:flex; gap:14px; align-items:center">
+        <span class="lbl">LEGEND:</span>
         <div class="legend-item"><span class="lg-badge lg-gtd">GTD</span> Guaranteed</div>
         <div class="legend-item"><span class="lg-badge lg-po">PO</span> Player Option</div>
         <div class="legend-item"><span class="lg-badge lg-to">TO</span> Team Option</div>
       </div>
-      <div style="display:flex; gap:14px">
+      <div style="display:flex; gap:14px; padding-left:85px">
         <div class="legend-item"><span class="lg-badge lg-qo">QO</span> Qualifying Offer</div>
         <div class="legend-item"><span class="lg-badge lg-ch">CH</span> Cap Hold</div>
         <div class="legend-item"><span class="lg-badge lg-dead">DEAD</span> Dead Money</div>
