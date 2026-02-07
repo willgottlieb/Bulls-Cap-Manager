@@ -243,14 +243,14 @@ body {
 .modal-overlay.show { display:flex; }
 .modal {
   background:var(--bg1); border:1px solid var(--bg3); border-radius:12px;
-  max-width:500px; width:90%; max-height:90vh; overflow:auto;
+  width:90%; max-height:90vh; overflow:auto;
   margin:auto;
 }
+.modal-body { padding:24px; max-width:500px; margin:0 auto; }
 .modal-hdr {
   background:var(--bg2); padding:18px 24px; border-bottom:1px solid var(--bg3);
   font-size:16px; font-weight:700;
 }
-.modal-body { padding:24px; }
 .modal-row { margin-bottom:16px; }
 .modal-row:last-child { margin-bottom:0; }
 .modal-lbl { font-size:12px; font-weight:600; color:var(--txt2); margin-bottom:6px; text-transform:uppercase; letter-spacing:.04em; }
@@ -336,8 +336,8 @@ body {
   
   <!-- Column 4: Draft Picks + Exceptions Stack (narrower) -->
   <div style="display:grid; grid-template-rows:1fr 1fr; gap:8px;">
-    <button class="btn" onclick="alert('Draft Picks - Coming Soon')" style="justify-content:center; padding:11px 14px; white-space:nowrap">📋 DRAFT PICKS</button>
-    <button class="btn" onclick="alert('Exceptions - Coming Soon')" style="justify-content:center; padding:11px 14px; white-space:nowrap">💰 EXCEPTIONS</button>
+    <button class="btn" onclick="openDraftPicks()" style="justify-content:center; padding:11px 14px; white-space:nowrap">📋 DRAFT PICKS</button>
+    <button class="btn" onclick="openExceptions()" style="justify-content:center; padding:11px 14px; white-space:nowrap">💰 EXCEPTIONS</button>
   </div>
   
 </div>
@@ -1255,10 +1255,8 @@ function renderRoster() {
       </div>
     `;
     
-    let displayNum;
-    if (isDead) displayNum = '💀';
-    else if (is2Way) displayNum = '2Way';
-    else displayNum = i + 1;
+    // Always show row number, no special displays
+    const displayNum = i + 1;
     
     return `
       <div class="tbl-row" id="player-${p.id}">
@@ -2071,6 +2069,145 @@ function addRow() {
 // ═══════════════════════════════════════════════════════════════════════════
 // ROSTER MANAGEMENT
 // ═══════════════════════════════════════════════════════════════════════════
+
+function openManageRoster() {
+  const playerRows = roster.map(p => {
+    const sal2025 = fmt(p.sal['2025-26']);
+    return `
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid var(--bg3)">
+        <div>
+          <div style="font-weight:600; font-size:14px">${p.name}</div>
+          <div style="font-size:12px; color:var(--txt2)">${sal2025} · 2025-26</div>
+        </div>
+        <button class="modal-btn modal-btn-danger" onclick="deletePlayer(${p.id})" style="padding:6px 12px">
+          🗑️ Remove
+        </button>
+      </div>
+    `;
+  }).join('');
+  
+  showModal(`
+    <div class="modal-hdr">👥 Manage Roster (${roster.length} players)</div>
+    <div class="modal-body">
+      <div style="margin-bottom:16px">
+        <p style="color:var(--txt2); font-size:13px; line-height:1.6">
+          Remove players from your roster or use the search bar above to add new players.
+        </p>
+      </div>
+      <div style="max-height:400px; overflow-y:auto">
+        ${playerRows}
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn" onclick="addRow(); closeModal()">➕ Add Empty Row</button>
+        <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  `);
+}
+
+function openDraftPicks() {
+  const firstRound = [
+    { year: '2026', pick: 'Own', note: '' },
+    { year: '2026', pick: 'Portland', note: 'Top-14 Protected Through 2028' },
+    { year: '2027', pick: 'Own', note: '' },
+    { year: '2028', pick: 'Own', note: '' },
+    { year: '2029', pick: 'Own', note: '' },
+    { year: '2030', pick: 'Own', note: '' },
+    { year: '2031', pick: 'Own', note: '' },
+    { year: '2032', pick: 'Own', note: '' }
+  ];
+  
+  const secondRound = [
+    { year: '2026', pick: 'MIN/NYK/NOP/POR', note: 'Most Favorable' },
+    { year: '2027', pick: 'DEN/GSW', note: 'Least Favorable' },
+    { year: '2028', pick: 'CLE', note: 'Unprotected' },
+    { year: '2029', pick: 'Own', note: '' },
+    { year: '2029', pick: 'DET/MIL/NYK', note: 'Least Favorable' },
+    { year: '2030', pick: 'Own', note: '' },
+    { year: '2031', pick: 'Own', note: '' },
+    { year: '2031', pick: 'DEN', note: 'Unprotected' },
+    { year: '2031', pick: 'MIL', note: 'Unprotected' },
+    { year: '2031', pick: 'MIN/GSW', note: 'Most Favorable' },
+    { year: '2032', pick: 'Own', note: '' },
+    { year: '2032', pick: 'HOU/PHO', note: 'Most Favorable' }
+  ];
+  
+  const firstRoundHTML = firstRound.map(p => `
+    <div style="display:grid; grid-template-columns:60px 1fr 1fr; gap:12px; padding:10px; border-bottom:1px solid var(--bg3); align-items:center">
+      <div style="font-weight:700; font-size:14px; color:var(--txt)">${p.year}</div>
+      <div style="font-weight:600; font-size:13px">${p.pick}</div>
+      <div style="font-size:12px; color:var(--txt2)">${p.note}</div>
+    </div>
+  `).join('');
+  
+  const secondRoundHTML = secondRound.map(p => `
+    <div style="display:grid; grid-template-columns:60px 1fr 1fr; gap:12px; padding:10px; border-bottom:1px solid var(--bg3); align-items:center">
+      <div style="font-weight:700; font-size:14px; color:var(--txt)">${p.year}</div>
+      <div style="font-weight:600; font-size:13px">${p.pick}</div>
+      <div style="font-size:12px; color:var(--txt2)">${p.note}</div>
+    </div>
+  `).join('');
+  
+  showModal(`
+    <div class="modal-hdr">📋 Draft Picks</div>
+    <div class="modal-body" style="max-width:650px">
+      <div style="margin-bottom:20px">
+        <div style="font-weight:700; font-size:14px; margin-bottom:10px; color:var(--txt)">First Round Picks</div>
+        <div style="max-height:250px; overflow-y:auto">
+          ${firstRoundHTML}
+        </div>
+      </div>
+      
+      <div style="margin-bottom:16px">
+        <div style="font-weight:700; font-size:14px; margin-bottom:10px; color:var(--txt)">Second Round Picks</div>
+        <div style="max-height:300px; overflow-y:auto">
+          ${secondRoundHTML}
+        </div>
+      </div>
+      
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  `);
+}
+
+function openExceptions() {
+  const exceptions = [
+    { name: 'Non-Tax Mid-Level', value: 3330698, expires: '4/12/2026' },
+    { name: 'Bi-Annual', value: 4278333, expires: '4/12/2026' },
+    { name: 'Traded Player (Kevin Huerter)', value: 17991071, expires: '2/2/2027' },
+    { name: 'Traded Player (Ousmane Dieng)', value: 6670882, expires: '2/4/2027' },
+    { name: 'Traded Player (Julian Phillips)', value: 2221667, expires: '2/4/2027' },
+    { name: 'Traded Player (Coby White)', value: 1218007, expires: '2/4/0207' },
+    { name: 'Disabled Player (Noa Essengue)', value: 2714760, expires: '3/10/2026' }
+  ];
+  
+  const exceptionsHTML = exceptions.map(e => `
+    <div style="display:grid; grid-template-columns:1fr auto auto; gap:16px; padding:12px; border-bottom:1px solid var(--bg3); align-items:center">
+      <div style="font-weight:600; font-size:13px">${e.name}</div>
+      <div style="font-weight:700; font-size:14px; color:var(--green)">$${(e.value / 1000000).toFixed(2)}M</div>
+      <div style="font-size:12px; color:var(--txt2)">Exp: ${e.expires}</div>
+    </div>
+  `).join('');
+  
+  showModal(`
+    <div class="modal-hdr">💰 Trade Exceptions</div>
+    <div class="modal-body" style="max-width:600px">
+      <div style="margin-bottom:16px">
+        <p style="color:var(--txt2); font-size:13px; line-height:1.6">
+          Available trade exceptions and their expiration dates.
+        </p>
+      </div>
+      <div style="max-height:400px; overflow-y:auto">
+        ${exceptionsHTML}
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  `);
+}
 
 function openManageRoster() {
   const playerRows = roster.map(p => {
