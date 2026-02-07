@@ -29,7 +29,7 @@ body {
   background:linear-gradient(135deg,var(--red),var(--red-dark));
   padding:28px 32px; border-radius:14px; margin-bottom:24px;
   box-shadow:0 16px 48px rgba(206,17,65,.3);
-  position:relative; overflow:hidden; max-width:1470px;
+  position:relative; overflow:hidden; 
 }
 .header::before {
   content:''; position:absolute; inset:0;
@@ -90,7 +90,7 @@ body {
 .legend {
   background:var(--bg1); border:1px solid var(--bg3); border-radius:10px;
   padding:14px 18px; margin-bottom:20px; display:flex; flex-direction:column; gap:8px;
-  max-width:1470px;
+  
 }
 .legend .lbl { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); }
 .legend-items { display:flex; gap:14px; flex-wrap:wrap; }
@@ -106,7 +106,7 @@ body {
 /* ─── TABLE - PERFECTLY ALIGNED ─── */
 .section {
   background:var(--bg1); border:1px solid var(--bg3); border-radius:10px;
-  padding:0; margin-bottom:20px; overflow:hidden; max-width:1470px;
+  padding:0; margin-bottom:20px; overflow:hidden; 
 }
 .section-hdr {
   background:var(--bg2); padding:14px 20px; font-weight:700; font-size:14px;
@@ -116,10 +116,10 @@ body {
 
 .tbl-wrap { overflow-x:auto; }
 
-/* Perfect alignment: 50px + 200px + 35px + (5 × 165px) + 360px = 1470px */
+/* Perfect alignment: 40px + 220px + 35px + (5 × 165px) + 120px = 1240px */
 .tbl-head, .tbl-row {
   display:grid;
-  grid-template-columns: 50px 200px 35px repeat(5, 165px) 360px;
+  grid-template-columns: 40px 220px 35px repeat(5, 165px) 120px;
   gap:0; padding:0 20px; align-items:center;
 }
 
@@ -154,12 +154,12 @@ body {
 .s-ch { background:rgba(245,158,11,.15); color:var(--amber); border:1px solid rgba(245,158,11,.3); }
 .s-dead { background:rgba(107,114,128,.15); color:var(--gray); border:1px solid rgba(107,114,128,.3); }
 
-.act { display:flex; gap:6px; padding-left:10px; justify-content:flex-start; }
+.act { display:grid; grid-template-columns:1fr 1fr; gap:4px; padding-left:8px; }
 .act-btn {
   background:var(--bg2); border:1px solid var(--bg3); color:var(--txt);
-  padding:6px 10px; border-radius:6px; font-size:11px; font-weight:600;
+  padding:5px 8px; border-radius:4px; font-size:10px; font-weight:600;
   cursor:pointer; transition:.15s; text-align:center; display:flex;
-  align-items:center; justify-content:center; gap:4px; white-space:nowrap;
+  align-items:center; justify-content:center; gap:3px; white-space:nowrap;
 }
 .act-btn:hover { background:var(--bg3); transform:translateY(-1px); }
 .act-btn.disabled { opacity:.3; cursor:not-allowed; }
@@ -194,7 +194,7 @@ body {
 /* Trade block with year headers */
 .trade-year-headers {
   display:grid;
-  grid-template-columns: 50px 200px 35px repeat(5, 165px) 360px;
+  grid-template-columns: 40px 220px 35px repeat(5, 165px) 120px;
   gap:0; padding:0 20px 8px 20px;
   font-size:10px; font-weight:700; text-transform:uppercase;
   letter-spacing:.06em; color:var(--blue);
@@ -207,7 +207,7 @@ body {
 .trade-total {
   background:rgba(59,130,246,.1); padding:12px 20px; font-size:13px; font-weight:600;
   border-top:2px solid var(--blue); display:grid;
-  grid-template-columns: 50px 200px 35px repeat(5, 165px) 360px;
+  grid-template-columns: 40px 220px 35px repeat(5, 165px) 120px;
   gap:0; align-items:center;
 }
 .trade-total div { text-align:center; font-weight:700; color:var(--blue); }
@@ -282,45 +282,51 @@ body {
   <div class="sub">Created by <a href="https://x.com/Will_Gottlieb" target="_blank">Will Gottlieb</a></div>
 </div>
 
-<!-- Top Row: Search + Mode Buttons -->
-<div style="display:grid; grid-template-columns:1fr auto auto auto; gap:12px; margin-bottom:12px; max-width:1470px">
+<!-- TOP ROW: Search, Trade, FA Mode, Cap Summary, Draft Picks -->
+<div style="display:grid; grid-template-columns:1fr auto auto 280px auto; gap:12px; margin-bottom:12px; align-items:center">
   <div class="search-wrap">
     <input type="text" class="search-input" id="searchInput" placeholder="Search NBA players..." autocomplete="off">
     <div class="dropdown" id="searchDropdown"></div>
   </div>
-  <button class="btn btn-red" id="tradeModeBtn" onclick="setAcquisitionMode('trade')">🔄 Trade Mode</button>
-  <button class="btn" id="faModeBtn" onclick="setAcquisitionMode('fa')">✍️ FA Mode</button>
-  <div style="width:150px"></div> <!-- Space for future button -->
+  <button class="btn btn-red" id="tradeModeBtn" onclick="setAcquisitionMode('trade')">🔄 TRADE</button>
+  <button class="btn" id="faModeBtn" onclick="setAcquisitionMode('fa')">✍️ FA MODE</button>
+  
+  <!-- Cap Summary Box -->
+  <div style="background:var(--bg1); border:1px solid var(--bg3); border-radius:8px; padding:10px 14px; font-size:11px; line-height:1.6">
+    <div style="font-weight:700; margin-bottom:4px; font-size:10px; color:var(--txt2); text-transform:uppercase">2025-26 TOTALS</div>
+    <div id="capSummary" style="font-size:11px; font-weight:600"></div>
+  </div>
+  
+  <button class="btn" onclick="alert('Draft Picks - Coming Soon')">📋 DRAFT PICKS</button>
 </div>
 
-<!-- Bottom Row: Action Buttons + Legend -->
-<div style="display:grid; grid-template-columns:auto 1fr auto; gap:12px; margin-bottom:20px; max-width:1470px; align-items:stretch">
-  <div style="display:flex; gap:12px">
-    <button class="btn" onclick="addRow()">➕ Add Row</button>
-    <button class="btn" onclick="openManageRoster()">👥 Manage Roster</button>
-    <button class="btn" onclick="undo()">◀ Undo</button>
-    <button class="btn" onclick="redo()">▶ Redo</button>
-    <button class="btn" onclick="resetAll()">🗑️ Reset</button>
+<!-- SECOND ROW: Manage + Icons, Legend, Trade Exception -->
+<div style="display:grid; grid-template-columns:auto 1fr auto; gap:12px; margin-bottom:20px; align-items:stretch">
+  <!-- Left: Manage + Icon Buttons -->
+  <div style="display:flex; gap:8px; align-items:center">
+    <button class="btn" onclick="openManageRoster()">👥 MANAGE</button>
+    <button class="btn" onclick="addRow()" style="min-width:44px; padding:11px 12px">➕</button>
+    <button class="btn" onclick="undo()" style="min-width:44px; padding:11px 12px">◀</button>
+    <button class="btn" onclick="redo()" style="min-width:44px; padding:11px 12px">▶</button>
+    <button class="btn" onclick="resetAll()" style="min-width:44px; padding:11px 12px">🗑️</button>
   </div>
   
-  <!-- Legend -->
-  <div class="legend" style="margin:0; display:flex; flex-direction:column; justify-content:center; padding:10px 16px">
-    <div style="display:flex; flex-direction:column; gap:6px">
-      <div style="display:flex; gap:12px; align-items:center">
-        <span class="lbl">LEGEND:</span>
-        <div class="legend-item"><span class="lg-badge lg-gtd">GTD</span> Guaranteed</div>
-        <div class="legend-item"><span class="lg-badge lg-po">PO</span> Player Option</div>
-        <div class="legend-item"><span class="lg-badge lg-to">TO</span> Team Option</div>
-      </div>
-      <div style="display:flex; gap:12px; padding-left:75px">
-        <div class="legend-item"><span class="lg-badge lg-qo">QO</span> Qualifying Offer</div>
-        <div class="legend-item"><span class="lg-badge lg-ch">CH</span> Cap Hold</div>
-        <div class="legend-item"><span class="lg-badge lg-dead">DEAD</span> Dead Money</div>
-      </div>
-    </div>
+  <!-- Center: Legend -->
+  <div class="legend" style="margin:0; display:flex; align-items:center; gap:16px; padding:10px 16px; flex-wrap:wrap">
+    <span class="lbl">LEGEND:</span>
+    <div class="legend-item"><span class="lg-badge lg-gtd">GTD</span> Guaranteed</div>
+    <div class="legend-item"><span class="lg-badge lg-po">PO</span> Player Option</div>
+    <div class="legend-item"><span class="lg-badge lg-to">TO</span> Team Option</div>
+    <div class="legend-item"><span class="lg-badge lg-qo">QO</span> Qualifying Offer</div>
+    <div class="legend-item"><span class="lg-badge lg-ch">CH</span> Cap Hold</div>
+    <div class="legend-item"><span class="lg-badge lg-dead">DEAD</span> Dead Money</div>
   </div>
   
-  <div style="width:150px"></div> <!-- Space for future button -->
+  <!-- Right: Trade Exception -->
+  <div style="background:var(--bg1); border:1px solid var(--bg3); border-radius:8px; padding:10px 14px; min-width:160px">
+    <div style="font-weight:700; margin-bottom:4px; font-size:10px; color:var(--txt2); text-transform:uppercase">TRADE EXCEPTION</div>
+    <div style="font-size:12px; font-weight:600; color:var(--txt)">$0.00M</div>
+  </div>
 </div>
 
 <!-- TRADE BLOCK -->
@@ -392,7 +398,7 @@ body {
   <div class="section-hdr">📊 Cap Situation</div>
   <div style="padding:0">
     <!-- Year Headers -->
-    <div style="display:grid; grid-template-columns: 50px 200px 35px repeat(5, 165px) 360px; gap:0; padding:12px 20px 8px 20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 40px 220px 35px repeat(5, 165px) 120px; gap:0; padding:12px 20px 8px 20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); border-bottom:1px solid var(--bg3)">
       <div></div>
       <div>Status</div>
       <div></div>
@@ -412,7 +418,7 @@ body {
 <div class="section" style="margin-top:22px">
   <div class="section-hdr">📋 Cap Figures</div>
   <div style="padding:0">
-    <div style="display:grid; grid-template-columns: 50px 200px 35px repeat(5, 165px) 360px; gap:0; padding:12px 20px 8px 20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2)">
+    <div style="display:grid; grid-template-columns: 40px 220px 35px repeat(5, 165px) 120px; gap:0; padding:12px 20px 8px 20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2)">
       <div></div>
       <div>Threshold</div>
       <div></div>
@@ -423,7 +429,7 @@ body {
       <div style="text-align:center">2029-30</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 50px 200px 35px repeat(5, 165px) 360px; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 40px 220px 35px repeat(5, 165px) 120px; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
       <div></div>
       <div style="font-weight:600; font-size:14px">Salary Cap</div>
       <div></div>
@@ -434,7 +440,7 @@ body {
       <div style="text-align:center; font-size:13px; font-weight:600">$191.6M</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 50px 200px 35px repeat(5, 165px) 360px; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 40px 220px 35px repeat(5, 165px) 120px; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
       <div></div>
       <div style="font-weight:600; font-size:14px">Luxury Tax</div>
       <div></div>
@@ -445,7 +451,7 @@ body {
       <div style="text-align:center; font-size:13px; font-weight:600">$246.3M</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 50px 200px 35px repeat(5, 165px) 360px; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 40px 220px 35px repeat(5, 165px) 120px; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
       <div></div>
       <div style="font-weight:600; font-size:14px">First Apron</div>
       <div></div>
@@ -456,7 +462,7 @@ body {
       <div style="text-align:center; font-size:13px; font-weight:600">$256.8M</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 50px 200px 35px repeat(5, 165px) 360px; gap:0; padding:12px 20px">
+    <div style="display:grid; grid-template-columns: 40px 220px 35px repeat(5, 165px) 120px; gap:0; padding:12px 20px">
       <div></div>
       <div style="font-weight:600; font-size:14px">Second Apron</div>
       <div></div>
@@ -1128,6 +1134,7 @@ function render() {
   renderRoster();
   renderTrade();
   renderCapSituation();
+  updateCapSummary();
   
   YEARS.forEach(y => {
     const el = document.getElementById(`sort-${y}`);
@@ -1377,6 +1384,24 @@ function renderTrade() {
   }
 }
 
+function updateCapSummary() {
+  const year = '2025-26';
+  const th = CAP_THRESHOLDS[year];
+  const total = roster.reduce((sum, p) => sum + (p.sal[year] || 0), 0);
+  
+  const capSpace = th.cap - total;
+  const taxSpace = th.tax - total;
+  const apron1Space = th.apron1 - total;
+  const apron2Space = th.apron2 - total;
+  
+  document.getElementById('capSummary').innerHTML = `
+    <div style="color:${capSpace > 0 ? 'var(--green)' : 'var(--danger)'}">Cap: ${fmt(Math.abs(capSpace))}</div>
+    <div style="color:${taxSpace > 0 ? 'var(--green)' : 'var(--danger)'}">Tax: ${fmt(Math.abs(taxSpace))}</div>
+    <div style="color:${apron1Space > 0 ? 'var(--green)' : 'var(--danger)'}">1st: ${fmt(Math.abs(apron1Space))}</div>
+    <div style="color:${apron2Space > 0 ? 'var(--green)' : 'var(--danger)'}">2nd: ${fmt(Math.abs(apron2Space))}</div>
+  `;
+}
+
 function renderCapSituation() {
   const rows = [
     { label: 'Cap Room', key: 'cap' },
@@ -1397,7 +1422,7 @@ function renderCapSituation() {
     }).join('');
     
     return `
-      <div style="display:grid; grid-template-columns: 50px 200px 35px repeat(5, 165px) 360px; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
+      <div style="display:grid; grid-template-columns: 40px 220px 35px repeat(5, 165px) 120px; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
         <div></div>
         <div style="font-weight:700; font-size:14px">${row.label}</div>
         <div></div>
@@ -1431,14 +1456,14 @@ function renderCapSituation() {
   }).join('');
   
   const fullHtml = html + 
-    `<div style="display:grid; grid-template-columns: 50px 200px 35px repeat(5, 165px) 360px; gap:0; padding:16px 20px 12px 20px; border-top:2px solid var(--bg3)">
+    `<div style="display:grid; grid-template-columns: 40px 220px 35px repeat(5, 165px) 120px; gap:0; padding:16px 20px 12px 20px; border-top:2px solid var(--bg3)">
       <div></div>
       <div style="font-weight:700; font-size:14px">Total Salary (Plus CHs)</div>
       <div></div>
       ${capHoldsRow}
       <div></div>
     </div>` +
-    `<div style="display:grid; grid-template-columns: 50px 200px 35px repeat(5, 165px) 360px; gap:0; padding:12px 20px">
+    `<div style="display:grid; grid-template-columns: 40px 220px 35px repeat(5, 165px) 120px; gap:0; padding:12px 20px">
       <div></div>
       <div style="font-weight:700; font-size:14px">Max Space (no CHs)</div>
       <div></div>
@@ -2101,7 +2126,7 @@ document.getElementById('modalOverlay').addEventListener('click', e => {
 // AUTO-SCALE TO FIT SCREEN
 function autoScale() {
   const container = document.querySelector('.container');
-  const contentWidth = 1470; // Our max content width
+  const contentWidth = 1280; // Our max content width
   const viewportWidth = window.innerWidth;
   const padding = 40; // Leave some breathing room on sides
   
