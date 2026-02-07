@@ -43,10 +43,11 @@ body {
 /* ─── CONTROLS ─── */
 .controls { display:flex; gap:10px; margin-bottom:14px; flex-wrap:wrap; align-items:center; }
 .controls-row-2 { display:flex; gap:8px; margin-bottom:20px; }
-.search-wrap { position:relative; flex:1; max-width:320px; }
+.search-wrap { position:relative; flex:1; }
 .search-input {
   width:100%; background:var(--bg1); border:1px solid var(--bg3); color:var(--txt);
   padding:11px 14px; border-radius:8px; font-size:14px; font-family:inherit;
+  height:44px; box-sizing:border-box;
 }
 .search-input:focus { outline:none; border-color:var(--red); }
 
@@ -282,51 +283,57 @@ body {
   <div class="sub">Created by <a href="https://x.com/Will_Gottlieb" target="_blank">Will Gottlieb</a></div>
 </div>
 
-<!-- TOP ROW: Search, Trade, FA Mode, Cap Summary, Draft Picks -->
-<div style="display:grid; grid-template-columns:1fr auto auto 280px auto; gap:12px; margin-bottom:12px; align-items:center">
-  <div class="search-wrap">
-    <input type="text" class="search-input" id="searchInput" placeholder="Search NBA players..." autocomplete="off">
-    <div class="dropdown" id="searchDropdown"></div>
-  </div>
-  <button class="btn btn-red" id="tradeModeBtn" onclick="setAcquisitionMode('trade')">🔄 TRADE</button>
-  <button class="btn" id="faModeBtn" onclick="setAcquisitionMode('fa')">✍️ FA MODE</button>
+<!-- CONTROL SECTION - Two Rows -->
+<div style="display:grid; grid-template-columns:auto 1fr auto auto; gap:12px; margin-bottom:20px;">
   
-  <!-- Cap Summary Box -->
-  <div style="background:var(--bg1); border:1px solid var(--bg3); border-radius:8px; padding:10px 14px; font-size:11px; line-height:1.6">
-    <div style="font-weight:700; margin-bottom:4px; font-size:10px; color:var(--txt2); text-transform:uppercase">2025-26 TOTALS</div>
-    <div id="capSummary" style="font-size:11px; font-weight:600"></div>
-  </div>
-  
-  <button class="btn" onclick="alert('Draft Picks - Coming Soon')">📋 DRAFT PICKS</button>
-</div>
-
-<!-- SECOND ROW: Manage + Icons, Legend, Trade Exception -->
-<div style="display:grid; grid-template-columns:auto 1fr auto; gap:12px; margin-bottom:20px; align-items:stretch">
-  <!-- Left: Manage + Icon Buttons -->
-  <div style="display:flex; gap:8px; align-items:center">
-    <button class="btn" onclick="openManageRoster()">👥 MANAGE</button>
-    <button class="btn" onclick="addRow()" style="min-width:44px; padding:11px 12px">➕</button>
-    <button class="btn" onclick="undo()" style="min-width:44px; padding:11px 12px">◀</button>
-    <button class="btn" onclick="redo()" style="min-width:44px; padding:11px 12px">▶</button>
-    <button class="btn" onclick="resetAll()" style="min-width:44px; padding:11px 12px">🗑️</button>
+  <!-- Column 1: Search/Manage Stack -->
+  <div style="display:grid; grid-template-rows:auto auto; gap:8px;">
+    <!-- Top: Search + Trade + FA Mode -->
+    <div style="display:grid; grid-template-columns:1fr auto auto; gap:8px;">
+      <div class="search-wrap">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search NBA players..." autocomplete="off">
+        <div class="dropdown" id="searchDropdown"></div>
+      </div>
+      <button class="btn btn-red" id="tradeModeBtn" onclick="setAcquisitionMode('trade')">🔄 TRADE</button>
+      <button class="btn" id="faModeBtn" onclick="setAcquisitionMode('fa')">✍️ FA MODE</button>
+    </div>
+    
+    <!-- Bottom: Manage + Icons -->
+    <div style="display:grid; grid-template-columns:1fr auto auto auto; gap:8px;">
+      <button class="btn" onclick="openManageRoster()">👥 MANAGE</button>
+      <button class="btn" onclick="undo()" style="min-width:44px; padding:11px 12px">◀</button>
+      <button class="btn" onclick="redo()" style="min-width:44px; padding:11px 12px">▶</button>
+      <button class="btn" onclick="resetAll()" style="min-width:44px; padding:11px 12px">🗑️</button>
+    </div>
   </div>
   
-  <!-- Center: Legend -->
-  <div class="legend" style="margin:0; display:flex; align-items:center; gap:16px; padding:10px 16px; flex-wrap:wrap">
-    <span class="lbl">LEGEND:</span>
-    <div class="legend-item"><span class="lg-badge lg-gtd">GTD</span> Guaranteed</div>
-    <div class="legend-item"><span class="lg-badge lg-po">PO</span> Player Option</div>
-    <div class="legend-item"><span class="lg-badge lg-to">TO</span> Team Option</div>
-    <div class="legend-item"><span class="lg-badge lg-qo">QO</span> Qualifying Offer</div>
-    <div class="legend-item"><span class="lg-badge lg-ch">CH</span> Cap Hold</div>
-    <div class="legend-item"><span class="lg-badge lg-dead">DEAD</span> Dead Money</div>
+  <!-- Column 2: Legend (2 rows, compact) -->
+  <div class="legend" style="margin:0; padding:12px 16px; display:grid; grid-template-rows:auto auto; gap:6px; align-content:center">
+    <div style="display:flex; gap:12px; align-items:center">
+      <span class="lbl" style="margin-right:4px">LEGEND:</span>
+      <div class="legend-item"><span class="lg-badge lg-gtd">GTD</span> Guaranteed</div>
+      <div class="legend-item"><span class="lg-badge lg-po">PO</span> Player Option</div>
+      <div class="legend-item"><span class="lg-badge lg-to">TO</span> Team Option</div>
+    </div>
+    <div style="display:flex; gap:12px; padding-left:75px">
+      <div class="legend-item"><span class="lg-badge lg-qo">QO</span> Qualifying Offer</div>
+      <div class="legend-item"><span class="lg-badge lg-ch">CH</span> Cap Hold</div>
+      <div class="legend-item"><span class="lg-badge lg-dead">DEAD</span> Dead Money</div>
+    </div>
   </div>
   
-  <!-- Right: Trade Exception -->
-  <div style="background:var(--bg1); border:1px solid var(--bg3); border-radius:8px; padding:10px 14px; min-width:160px">
-    <div style="font-weight:700; margin-bottom:4px; font-size:10px; color:var(--txt2); text-transform:uppercase">TRADE EXCEPTION</div>
-    <div style="font-size:12px; font-weight:600; color:var(--txt)">$0.00M</div>
+  <!-- Column 3: Cap Totals -->
+  <div style="background:var(--bg1); border:1px solid var(--bg3); border-radius:8px; padding:12px 16px; display:flex; flex-direction:column; justify-content:center; min-width:160px">
+    <div style="font-weight:700; margin-bottom:6px; font-size:10px; color:var(--txt2); text-transform:uppercase">2025-26 TOTALS</div>
+    <div id="capSummary" style="font-size:11px; font-weight:600; line-height:1.5"></div>
   </div>
+  
+  <!-- Column 4: Draft Picks + Trade Exception Stack -->
+  <div style="display:grid; grid-template-rows:1fr 1fr; gap:8px;">
+    <button class="btn" onclick="alert('Draft Picks - Coming Soon')" style="white-space:nowrap">📋 DRAFT PICKS</button>
+    <button class="btn" onclick="alert('Trade Exception - Coming Soon')" style="white-space:nowrap">💰 TRADE EXCEPTION</button>
+  </div>
+  
 </div>
 
 <!-- TRADE BLOCK -->
@@ -1395,10 +1402,10 @@ function updateCapSummary() {
   const apron2Space = th.apron2 - total;
   
   document.getElementById('capSummary').innerHTML = `
-    <div style="color:${capSpace > 0 ? 'var(--green)' : 'var(--danger)'}">Cap: ${fmt(Math.abs(capSpace))}</div>
-    <div style="color:${taxSpace > 0 ? 'var(--green)' : 'var(--danger)'}">Tax: ${fmt(Math.abs(taxSpace))}</div>
-    <div style="color:${apron1Space > 0 ? 'var(--green)' : 'var(--danger)'}">1st: ${fmt(Math.abs(apron1Space))}</div>
-    <div style="color:${apron2Space > 0 ? 'var(--green)' : 'var(--danger)'}">2nd: ${fmt(Math.abs(apron2Space))}</div>
+    <div style="color:${capSpace > 0 ? 'var(--green)' : 'var(--danger)'}; font-size:10px">Cap: ${fmt(Math.abs(capSpace))}</div>
+    <div style="color:${taxSpace > 0 ? 'var(--green)' : 'var(--danger)'}; font-size:10px">Tax: ${fmt(Math.abs(taxSpace))}</div>
+    <div style="color:${apron1Space > 0 ? 'var(--green)' : 'var(--danger)'}; font-size:10px">1st: ${fmt(Math.abs(apron1Space))}</div>
+    <div style="color:${apron2Space > 0 ? 'var(--green)' : 'var(--danger)'}; font-size:10px">2nd: ${fmt(Math.abs(apron2Space))}</div>
   `;
 }
 
@@ -2083,6 +2090,7 @@ function openManageRoster() {
         ${playerRows}
       </div>
       <div class="modal-actions">
+        <button class="modal-btn" onclick="addRow(); closeModal()">➕ Add Empty Row</button>
         <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Close</button>
       </div>
     </div>
