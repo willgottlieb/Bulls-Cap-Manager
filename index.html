@@ -305,8 +305,8 @@ body {
     <!-- Bottom: Manage Roster + Trade Machine + FA Mode (all same width) -->
     <div style="display:flex; gap:8px;">
       <button class="btn" onclick="openManageRoster()" style="flex:1; justify-content:center" title="Add or remove players from your roster">👥 MANAGE ROSTER</button>
-      <button class="btn btn-red" id="tradeModeBtn" onclick="setAcquisitionMode('trade')" style="flex:1; justify-content:center" title="Build and evaluate trades with other teams">🔄 TRADE MACHINE</button>
-      <button class="btn" id="faModeBtn" onclick="setAcquisitionMode('fa')" style="flex:1; justify-content:center" title="Search and add free agents to your roster">✍️ FA MODE</button>
+      <button class="btn btn-red" id="tradeModeBtn" onclick="openTradeSearch()" style="flex:1; justify-content:center" title="Search players and build trades">🔄 TRADE MACHINE</button>
+      <button class="btn" id="faModeBtn" onclick="openFASearch()" style="flex:1; justify-content:center" title="Search and sign free agents">✍️ FA MODE</button>
     </div>
   </div>
   
@@ -377,33 +377,45 @@ body {
 
 <!-- ACTIVE ROSTER -->
 <div class="section" id="activeSection">
-  <div class="section-hdr">
-    Active Roster
-    <span class="section-hdr-sub"><span id="activeCount">0</span> players · <span id="gtdCount">0</span> GTD</span>
+  <div class="section-hdr" style="display:grid; grid-template-columns:3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%; gap:0; padding:14px 20px; align-items:center;">
+    <div></div>
+    <div style="font-weight:700; font-size:14px">Active Roster</div>
+    <div></div>
+    <div onclick="setSortYear('2025-26')" style="cursor:pointer; text-align:center; font-weight:700; font-size:14px" title="Click to sort by 2025-26 salary">
+      2025-26 <span id="sort-2025-26">▼</span>
+    </div>
+    <div onclick="setSortYear('2026-27')" style="cursor:pointer; text-align:center; font-weight:700; font-size:14px" title="Click to sort by 2026-27 salary">
+      2026-27 <span id="sort-2026-27" style="display:none">▼</span>
+    </div>
+    <div onclick="setSortYear('2027-28')" style="cursor:pointer; text-align:center; font-weight:700; font-size:14px" title="Click to sort by 2027-28 salary">
+      2027-28 <span id="sort-2027-28" style="display:none">▼</span>
+    </div>
+    <div onclick="setSortYear('2028-29')" style="cursor:pointer; text-align:center; font-weight:700; font-size:14px" title="Click to sort by 2028-29 salary">
+      2028-29 <span id="sort-2028-29" style="display:none">▼</span>
+    </div>
+    <div onclick="setSortYear('2029-30')" style="cursor:pointer; text-align:center; font-weight:700; font-size:14px" title="Click to sort by 2029-30 salary">
+      2029-30 <span id="sort-2029-30" style="display:none">▼</span>
+    </div>
+    <div></div>
   </div>
   <div class="tbl-wrap">
     <div class="tbl-head">
       <div class="h-num">#</div>
       <div class="h-name">Player</div>
       <div class="h-age" style="text-align:center; font-size:11px">Age</div>
-      <div class="h-sal" onclick="setSortYear('2025-26')" style="cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:2px" title="Click to sort by 2025-26 salary">
-        <div>2025-26 <span id="sort-2025-26">▼</span></div>
+      <div style="text-align:center">
         <div id="count-2025-26" style="font-size:9px; font-weight:600; color:var(--txt2); text-transform:none"></div>
       </div>
-      <div class="h-sal" onclick="setSortYear('2026-27')" style="cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:2px" title="Click to sort by 2026-27 salary">
-        <div>2026-27 <span id="sort-2026-27" style="display:none">▼</span></div>
+      <div style="text-align:center">
         <div id="count-2026-27" style="font-size:9px; font-weight:600; color:var(--txt2); text-transform:none"></div>
       </div>
-      <div class="h-sal" onclick="setSortYear('2027-28')" style="cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:2px" title="Click to sort by 2027-28 salary">
-        <div>2027-28 <span id="sort-2027-28" style="display:none">▼</span></div>
+      <div style="text-align:center">
         <div id="count-2027-28" style="font-size:9px; font-weight:600; color:var(--txt2); text-transform:none"></div>
       </div>
-      <div class="h-sal" onclick="setSortYear('2028-29')" style="cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:2px" title="Click to sort by 2028-29 salary">
-        <div>2028-29 <span id="sort-2028-29" style="display:none">▼</span></div>
+      <div style="text-align:center">
         <div id="count-2028-29" style="font-size:9px; font-weight:600; color:var(--txt2); text-transform:none"></div>
       </div>
-      <div class="h-sal" onclick="setSortYear('2029-30')" style="cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:2px" title="Click to sort by 2029-30 salary">
-        <div>2029-30 <span id="sort-2029-30" style="display:none">▼</span></div>
+      <div style="text-align:center">
         <div id="count-2029-30" style="font-size:9px; font-weight:600; color:var(--txt2); text-transform:none"></div>
       </div>
       <div class="h-act">Actions</div>
@@ -1230,9 +1242,10 @@ function renderRoster() {
   const s = sorted();
   const activeRoster = s.filter(p => !tradeBlock.some(t => t.id === p.id));
   
-  document.getElementById('activeCount').textContent = activeRoster.length;
-  const gtdCount = activeRoster.filter(p => p.typ['2025-26'] === 'gtd' && p.sal['2025-26']).length;
-  document.getElementById('gtdCount').textContent = gtdCount;
+  // Player count removed from header
+  // document.getElementById('activeCount').textContent = activeRoster.length;
+  // const gtdCount = activeRoster.filter(p => p.typ['2025-26'] === 'gtd' && p.sal['2025-26']).length;
+  // document.getElementById('gtdCount').textContent = gtdCount;
   
   const html = activeRoster.map((p, i) => {
     const salCells = YEARS.map(year => {
@@ -2124,19 +2137,185 @@ function openManageRoster() {
     <div class="modal-hdr">👥 Manage Roster (${roster.length} players)</div>
     <div class="modal-body">
       <div style="margin-bottom:16px">
+        <div class="modal-lbl">Search Players</div>
+        <input type="text" class="modal-input" id="manageSearchInput" placeholder="Search NBA players to add..." autocomplete="off" oninput="filterManagePlayers()">
+        <div id="manageSearchResults" style="max-height:200px; overflow-y:auto; margin-top:8px; border:1px solid var(--bg3); border-radius:6px; display:none"></div>
+      </div>
+      <div style="margin-bottom:16px">
         <p style="color:var(--txt2); font-size:13px; line-height:1.6">
-          Remove players from your roster or use the search bar above to add new players.
+          Remove players from your roster or search to add new ones.
         </p>
       </div>
       <div style="max-height:400px; overflow-y:auto">
         ${playerRows}
       </div>
       <div class="modal-actions">
-        <button class="modal-btn" onclick="addRow(); closeModal()">➕ Add Empty Row</button>
         <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Close</button>
       </div>
     </div>
   `);
+}
+
+function openTradeSearch() {
+  showModal(`
+    <div class="modal-hdr">🔄 Trade Machine - Search Players</div>
+    <div class="modal-body">
+      <div style="margin-bottom:16px">
+        <div class="modal-lbl">Search NBA Players</div>
+        <input type="text" class="modal-input" id="tradeSearchInput" placeholder="Search players to add to trade..." autocomplete="off" oninput="filterTradeSearchPlayers()">
+        <div id="tradeSearchResults" style="max-height:400px; overflow-y:auto; margin-top:8px"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  `);
+  
+  // Set trade mode
+  setAcquisitionMode('trade');
+  
+  // Auto-focus search
+  setTimeout(() => {
+    document.getElementById('tradeSearchInput')?.focus();
+  }, 100);
+}
+
+function openFASearch() {
+  showModal(`
+    <div class="modal-hdr">✍️ Sign Free Agents - Search Players</div>
+    <div class="modal-body">
+      <div style="margin-bottom:16px">
+        <div class="modal-lbl">Search Free Agents</div>
+        <input type="text" class="modal-input" id="faSearchInput" placeholder="Search free agents to sign..." autocomplete="off" oninput="filterFASearchPlayers()">
+        <div id="faSearchResults" style="max-height:400px; overflow-y:auto; margin-top:8px"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  `);
+  
+  // Set FA mode
+  setAcquisitionMode('fa');
+  
+  // Auto-focus search
+  setTimeout(() => {
+    document.getElementById('faSearchInput')?.focus();
+  }, 100);
+}
+
+// Search filter functions for modals
+function filterManagePlayers() {
+  const input = document.getElementById('manageSearchInput');
+  const resultsDiv = document.getElementById('manageSearchResults');
+  if (!input || !resultsDiv) return;
+  
+  const query = input.value.toLowerCase().trim();
+  if (!query) {
+    resultsDiv.style.display = 'none';
+    return;
+  }
+  
+  const matches = NBA_DB.filter(p => p.name.toLowerCase().includes(query)).slice(0, 10);
+  if (matches.length === 0) {
+    resultsDiv.innerHTML = '<div style="padding:12px; color:var(--txt2)">No players found</div>';
+    resultsDiv.style.display = 'block';
+    return;
+  }
+  
+  resultsDiv.innerHTML = matches.map(p => `
+    <div style="padding:10px; border-bottom:1px solid var(--bg3); cursor:pointer; transition:background .15s" 
+         onmouseover="this.style.background='var(--bg2)'" 
+         onmouseout="this.style.background='transparent'"
+         onclick="addPlayerFromManage('${p.name}')">
+      <div style="font-weight:600">${p.name}</div>
+      <div style="font-size:12px; color:var(--txt2)">${p.pos} • ${p.team}</div>
+    </div>
+  `).join('');
+  resultsDiv.style.display = 'block';
+}
+
+function filterTradeSearchPlayers() {
+  const input = document.getElementById('tradeSearchInput');
+  const resultsDiv = document.getElementById('tradeSearchResults');
+  if (!input || !resultsDiv) return;
+  
+  const query = input.value.toLowerCase().trim();
+  if (!query) {
+    resultsDiv.innerHTML = '';
+    return;
+  }
+  
+  const matches = NBA_DB.filter(p => p.name.toLowerCase().includes(query)).slice(0, 10);
+  if (matches.length === 0) {
+    resultsDiv.innerHTML = '<div style="padding:12px; color:var(--txt2)">No players found</div>';
+    return;
+  }
+  
+  resultsDiv.innerHTML = matches.map(p => `
+    <div style="padding:10px; border-bottom:1px solid var(--bg3); cursor:pointer; transition:background .15s"
+         onmouseover="this.style.background='var(--bg2)'" 
+         onmouseout="this.style.background='transparent'"
+         onclick="addPlayerFromSearch('${p.name}'); closeModal();">
+      <div style="font-weight:600">${p.name}</div>
+      <div style="font-size:12px; color:var(--txt2)">${p.pos} • ${p.team}</div>
+    </div>
+  `).join('');
+}
+
+function filterFASearchPlayers() {
+  const input = document.getElementById('faSearchInput');
+  const resultsDiv = document.getElementById('faSearchResults');
+  if (!input || !resultsDiv) return;
+  
+  const query = input.value.toLowerCase().trim();
+  if (!query) {
+    resultsDiv.innerHTML = '';
+    return;
+  }
+  
+  const matches = NBA_DB.filter(p => p.name.toLowerCase().includes(query)).slice(0, 10);
+  if (matches.length === 0) {
+    resultsDiv.innerHTML = '<div style="padding:12px; color:var(--txt2)">No players found</div>';
+    return;
+  }
+  
+  resultsDiv.innerHTML = matches.map(p => `
+    <div style="padding:10px; border-bottom:1px solid var(--bg3); cursor:pointer; transition:background .15s"
+         onmouseover="this.style.background='var(--bg2)'" 
+         onmouseout="this.style.background='transparent'"
+         onclick="addPlayerFromSearch('${p.name}'); closeModal();">
+      <div style="font-weight:600">${p.name}</div>
+      <div style="font-size:12px; color:var(--txt2)">${p.pos} • ${p.team}</div>
+    </div>
+  `).join('');
+}
+
+function addPlayerFromManage(playerName) {
+  addPlayerFromSearch(playerName);
+  document.getElementById('manageSearchInput').value = '';
+  document.getElementById('manageSearchResults').style.display = 'none';
+  closeModal();
+  setTimeout(() => openManageRoster(), 100);
+}
+
+function addPlayerFromSearch(playerName) {
+  const playerData = NBA_DB.find(p => p.name === playerName);
+  if (!playerData) return;
+  
+  if (acquisitionMode === 'trade') {
+    incomingPlayers.push({
+      id: Date.now(),
+      name: playerData.name,
+      team: playerData.team,
+      sal: playerData.sal,
+      typ: YEARS.reduce((acc, y) => ({...acc, [y]: 'gtd'}), {})
+    });
+    saveHistory();
+    render();
+  } else {
+    addPlayerToRoster(playerData);
+  }
 }
 
 function openDraftPicks() {
@@ -2237,41 +2416,6 @@ function openExceptions() {
         ${exceptionsHTML}
       </div>
       <div class="modal-actions">
-        <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Close</button>
-      </div>
-    </div>
-  `);
-}
-
-function openManageRoster() {
-  const playerRows = roster.map(p => {
-    const sal2025 = fmt(p.sal['2025-26']);
-    return `
-      <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid var(--bg3)">
-        <div>
-          <div style="font-weight:600; font-size:14px">${p.name}</div>
-          <div style="font-size:12px; color:var(--txt2)">${sal2025} · 2025-26</div>
-        </div>
-        <button class="modal-btn modal-btn-danger" onclick="deletePlayer(${p.id})" style="padding:6px 12px">
-          🗑️ Remove
-        </button>
-      </div>
-    `;
-  }).join('');
-  
-  showModal(`
-    <div class="modal-hdr">👥 Manage Roster (${roster.length} players)</div>
-    <div class="modal-body">
-      <div style="margin-bottom:16px">
-        <p style="color:var(--txt2); font-size:13px; line-height:1.6">
-          Remove players from your roster or use the search bar above to add new players.
-        </p>
-      </div>
-      <div style="max-height:400px; overflow-y:auto">
-        ${playerRows}
-      </div>
-      <div class="modal-actions">
-        <button class="modal-btn" onclick="addRow(); closeModal()">➕ Add Empty Row</button>
         <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Close</button>
       </div>
     </div>
