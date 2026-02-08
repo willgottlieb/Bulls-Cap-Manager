@@ -290,49 +290,33 @@ body {
   </div>
   
   <!-- 2025-26 Cap Summary in Header -->
-  <div style="background:var(--bg1); border:2px solid var(--bg3); border-radius:10px; padding:16px 24px; display:grid; grid-template-rows:auto auto auto; gap:8px; align-content:center; min-width:280px">
-    <!-- Row 1: Merged header -->
-    <div style="font-weight:900; font-size:16px; color:var(--txt); text-transform:uppercase; text-align:center; letter-spacing:.06em">2025-26 CAP</div>
+  <div style="background:linear-gradient(135deg, rgba(34,197,94,0.15), rgba(16,185,129,0.15)); border:3px solid var(--green); border-radius:12px; padding:20px 28px; display:grid; grid-template-rows:auto auto; gap:12px; align-content:center; min-width:320px; box-shadow:0 8px 24px rgba(34,197,94,0.2)">
+    <!-- Row 1: Header -->
+    <div style="font-weight:900; font-size:18px; color:var(--green); text-transform:uppercase; text-align:center; letter-spacing:.08em">2025-26 CAP SITUATION</div>
     
-    <!-- Row 2: Column headers and values -->
-    <div id="capSummaryHeader" style="display:grid; grid-template-columns:1fr 1fr; gap:20px; text-align:center"></div>
+    <!-- Row 2: Values -->
+    <div id="capSummaryHeader" style="display:grid; grid-template-columns:1fr 1fr; gap:24px; text-align:center"></div>
   </div>
 </div>
 
-<!-- CONTROL SECTION - Two Rows -->
-<div style="display:grid; grid-template-rows:auto auto; gap:12px; margin-bottom:20px;">
+<!-- CONTROL SECTION - Two Rows with Square Legend -->
+<div style="display:grid; grid-template-columns:1fr auto; gap:12px; margin-bottom:20px;">
   
-  <!-- Row 1: Search + Undo + Redo + Reset -->
-  <div style="display:flex; gap:8px;">
-    <div class="search-wrap" style="flex:1">
-      <input type="text" class="search-input" id="searchInput" placeholder="Search NBA players..." autocomplete="off">
-      <div class="dropdown" id="searchDropdown"></div>
-    </div>
-    <button class="btn" onclick="undo()" style="min-width:44px; padding:11px 12px; justify-content:center" title="Undo last change">◀</button>
-    <button class="btn" onclick="redo()" style="min-width:44px; padding:11px 12px; justify-content:center" title="Redo last undone change">▶</button>
-    <button class="btn" onclick="resetAll()" style="min-width:44px; padding:11px 12px; justify-content:center" title="Reset to default Bulls roster">🗑️</button>
-  </div>
-  
-  <!-- Row 2: Legend + Buttons -->
-  <div style="display:grid; grid-template-columns:auto 1fr; gap:12px; align-items:center">
+  <!-- Left Side: Buttons and Search -->
+  <div style="display:grid; grid-template-rows:auto auto; gap:12px;">
     
-    <!-- Legend (left side) -->
-    <div class="legend" style="margin:0; padding:10px 16px; display:flex; flex-direction:column; gap:8px; align-items:center">
-      <div style="font-weight:700; font-size:11px; color:var(--txt2); text-transform:uppercase; letter-spacing:.06em">LEGEND</div>
-      <div style="display:flex; gap:12px; align-items:center">
-        <div class="legend-item"><span class="lg-badge lg-gtd">GTD</span> Guaranteed</div>
-        <div class="legend-item"><span class="lg-badge lg-po">PO</span> Player Option</div>
-        <div class="legend-item"><span class="lg-badge lg-to">TO</span> Team Option</div>
-      </div>
-      <div style="display:flex; gap:12px; align-items:center">
-        <div class="legend-item"><span class="lg-badge lg-qo">QO</span> Qualifying Offer</div>
-        <div class="legend-item"><span class="lg-badge lg-ch">CH</span> Cap Hold</div>
-        <div class="legend-item"><span class="lg-badge lg-dead">DEAD</span> Dead Money</div>
-        <div class="legend-item"><span class="lg-badge" style="background:rgba(139,92,246,.15); color:#8b5cf6; border:1px solid rgba(139,92,246,.3)">2WAY</span> Two-Way</div>
+    <!-- Row 1: Undo + Redo + Reset + Search (half width) -->
+    <div style="display:flex; gap:8px; align-items:center;">
+      <button class="btn" onclick="undo()" style="min-width:44px; padding:11px 12px; justify-content:center" title="Undo last change">◀</button>
+      <button class="btn" onclick="redo()" style="min-width:44px; padding:11px 12px; justify-content:center" title="Redo last undone change">▶</button>
+      <button class="btn" onclick="resetAll()" style="min-width:44px; padding:11px 12px; justify-content:center" title="Reset to default Bulls roster">🗑️</button>
+      <div class="search-wrap" style="width:400px">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search NBA players..." autocomplete="off">
+        <div class="dropdown" id="searchDropdown"></div>
       </div>
     </div>
     
-    <!-- Buttons (right side) -->
+    <!-- Row 2: All 5 Buttons -->
     <div style="display:flex; gap:8px;">
       <button class="btn" onclick="openManageRoster()" style="flex:1; justify-content:center; font-size:13px; padding:12px 16px" title="Add or remove players from your roster">👥 MANAGE ROSTER</button>
       <button class="btn btn-red" id="tradeModeBtn" onclick="setAcquisitionMode('trade')" style="flex:1; justify-content:center; font-size:13px; padding:12px 16px" title="Build and evaluate trades with other teams">🔄 TRADE MACHINE</button>
@@ -341,6 +325,28 @@ body {
       <button class="btn" onclick="openExceptions()" style="flex:1; justify-content:center; white-space:nowrap; font-size:13px; padding:12px 16px" title="View available trade exceptions and salary cap tools">💰 EXCEPTIONS</button>
     </div>
     
+  </div>
+  
+  <!-- Right Side: Square Legend (spans both rows) -->
+  <div class="legend" style="margin:0; padding:16px 20px; display:flex; flex-direction:column; gap:10px; align-items:center; justify-content:center; width:280px; height:100%">
+    <div style="font-weight:700; font-size:11px; color:var(--txt2); text-transform:uppercase; letter-spacing:.06em">LEGEND</div>
+    <div style="display:flex; flex-direction:column; gap:8px; width:100%">
+      <div style="display:flex; gap:8px; justify-content:center">
+        <div class="legend-item"><span class="lg-badge lg-gtd">GTD</span> Guaranteed</div>
+        <div class="legend-item"><span class="lg-badge lg-po">PO</span> Player Option</div>
+      </div>
+      <div style="display:flex; gap:8px; justify-content:center">
+        <div class="legend-item"><span class="lg-badge lg-to">TO</span> Team Option</div>
+        <div class="legend-item"><span class="lg-badge lg-qo">QO</span> Qualifying Offer</div>
+      </div>
+      <div style="display:flex; gap:8px; justify-content:center">
+        <div class="legend-item"><span class="lg-badge lg-ch">CH</span> Cap Hold</div>
+        <div class="legend-item"><span class="lg-badge lg-dead">DEAD</span> Dead Money</div>
+      </div>
+      <div style="display:flex; justify-content:center">
+        <div class="legend-item"><span class="lg-badge" style="background:rgba(139,92,246,.15); color:#8b5cf6; border:1px solid rgba(139,92,246,.3)">2WAY</span> Two-Way</div>
+      </div>
+    </div>
   </div>
   
 </div>
@@ -379,32 +385,45 @@ body {
 
 <!-- ACTIVE ROSTER -->
 <div class="section" id="activeSection">
-  <div class="section-hdr">
-    Active Roster
+  <div class="section-hdr" style="display:grid; grid-template-columns:3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%; gap:0; padding:14px 20px; align-items:center;">
+    <div></div>
+    <div style="font-weight:700; font-size:14px">Active Roster</div>
+    <div></div>
+    <div onclick="setSortYear('2025-26')" style="cursor:pointer; text-align:center; font-weight:700; font-size:14px" title="Click to sort by 2025-26 salary">
+      2025-26 <span id="sort-2025-26">▼</span>
+    </div>
+    <div onclick="setSortYear('2026-27')" style="cursor:pointer; text-align:center; font-weight:700; font-size:14px" title="Click to sort by 2026-27 salary">
+      2026-27 <span id="sort-2026-27" style="display:none">▼</span>
+    </div>
+    <div onclick="setSortYear('2027-28')" style="cursor:pointer; text-align:center; font-weight:700; font-size:14px" title="Click to sort by 2027-28 salary">
+      2027-28 <span id="sort-2027-28" style="display:none">▼</span>
+    </div>
+    <div onclick="setSortYear('2028-29')" style="cursor:pointer; text-align:center; font-weight:700; font-size:14px" title="Click to sort by 2028-29 salary">
+      2028-29 <span id="sort-2028-29" style="display:none">▼</span>
+    </div>
+    <div onclick="setSortYear('2029-30')" style="cursor:pointer; text-align:center; font-weight:700; font-size:14px" title="Click to sort by 2029-30 salary">
+      2029-30 <span id="sort-2029-30" style="display:none">▼</span>
+    </div>
+    <div></div>
   </div>
   <div class="tbl-wrap">
     <div class="tbl-head">
       <div class="h-num">#</div>
       <div class="h-name">Player</div>
       <div class="h-age" style="text-align:center; font-size:11px">Age</div>
-      <div class="h-sal" onclick="setSortYear('2025-26')" style="cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:2px" title="Click to sort by 2025-26 salary">
-        <div>2025-26 <span id="sort-2025-26">▼</span></div>
+      <div style="text-align:center">
         <div id="count-2025-26" style="font-size:9px; font-weight:600; color:var(--txt2); text-transform:none"></div>
       </div>
-      <div class="h-sal" onclick="setSortYear('2026-27')" style="cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:2px" title="Click to sort by 2026-27 salary">
-        <div>2026-27 <span id="sort-2026-27" style="display:none">▼</span></div>
+      <div style="text-align:center">
         <div id="count-2026-27" style="font-size:9px; font-weight:600; color:var(--txt2); text-transform:none"></div>
       </div>
-      <div class="h-sal" onclick="setSortYear('2027-28')" style="cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:2px" title="Click to sort by 2027-28 salary">
-        <div>2027-28 <span id="sort-2027-28" style="display:none">▼</span></div>
+      <div style="text-align:center">
         <div id="count-2027-28" style="font-size:9px; font-weight:600; color:var(--txt2); text-transform:none"></div>
       </div>
-      <div class="h-sal" onclick="setSortYear('2028-29')" style="cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:2px" title="Click to sort by 2028-29 salary">
-        <div>2028-29 <span id="sort-2028-29" style="display:none">▼</span></div>
+      <div style="text-align:center">
         <div id="count-2028-29" style="font-size:9px; font-weight:600; color:var(--txt2); text-transform:none"></div>
       </div>
-      <div class="h-sal" onclick="setSortYear('2029-30')" style="cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:2px" title="Click to sort by 2029-30 salary">
-        <div>2029-30 <span id="sort-2029-30" style="display:none">▼</span></div>
+      <div style="text-align:center">
         <div id="count-2029-30" style="font-size:9px; font-weight:600; color:var(--txt2); text-transform:none"></div>
       </div>
       <div class="h-act">Actions</div>
@@ -1434,12 +1453,12 @@ function updateCapSummary() {
   if (headerEl) {
     headerEl.innerHTML = `
       <div style="text-align:center">
-        <div style="font-size:12px; color:var(--txt2); margin-bottom:6px; text-transform:uppercase; font-weight:700; letter-spacing:.04em">Cap Space</div>
-        <div style="color:${capSpace > 0 ? 'var(--green)' : 'var(--danger)'}; font-size:20px; font-weight:900">${fmt(Math.abs(capSpace))}</div>
+        <div style="font-size:13px; color:rgba(255,255,255,0.85); margin-bottom:8px; text-transform:uppercase; font-weight:700; letter-spacing:.05em">Cap Space</div>
+        <div style="color:${capSpace > 0 ? 'var(--green)' : '#ef4444'}; font-size:24px; font-weight:900; text-shadow:0 2px 8px rgba(0,0,0,0.3)">${fmt(Math.abs(capSpace))}</div>
       </div>
       <div style="text-align:center">
-        <div style="font-size:12px; color:var(--txt2); margin-bottom:6px; text-transform:uppercase; font-weight:700; letter-spacing:.04em">Tax Space</div>
-        <div style="color:${taxSpace > 0 ? 'var(--green)' : 'var(--danger)'}; font-size:20px; font-weight:900">${fmt(Math.abs(taxSpace))}</div>
+        <div style="font-size:13px; color:rgba(255,255,255,0.85); margin-bottom:8px; text-transform:uppercase; font-weight:700; letter-spacing:.05em">Tax Space</div>
+        <div style="color:${taxSpace > 0 ? 'var(--green)' : '#ef4444'}; font-size:24px; font-weight:900; text-shadow:0 2px 8px rgba(0,0,0,0.3)">${fmt(Math.abs(taxSpace))}</div>
       </div>
     `;
   }
