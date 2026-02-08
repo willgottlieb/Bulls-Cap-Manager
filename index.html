@@ -289,64 +289,60 @@ body {
     <div class="sub">Created by <a href="https://x.com/Will_Gottlieb" target="_blank">Will Gottlieb</a></div>
   </div>
   
-  <!-- 2025-26 Cap Summary in Header -->
-  <div style="background:linear-gradient(135deg, rgba(34,197,94,0.15), rgba(16,185,129,0.15)); border:3px solid var(--green); border-radius:12px; padding:20px 28px; display:grid; grid-template-rows:auto auto; gap:12px; align-content:center; min-width:320px; box-shadow:0 8px 24px rgba(34,197,94,0.2)">
-    <!-- Row 1: Header -->
-    <div style="font-weight:900; font-size:18px; color:var(--green); text-transform:uppercase; text-align:center; letter-spacing:.08em">2025-26 CAP SITUATION</div>
-    
-    <!-- Row 2: Values -->
-    <div id="capSummaryHeader" style="display:grid; grid-template-columns:1fr 1fr; gap:24px; text-align:center"></div>
+  <!-- Legend in Header (top right) -->
+  <div class="legend" style="margin:0; padding:16px 20px; display:flex; flex-direction:column; gap:8px; align-items:center; justify-content:center; min-width:300px;">
+    <div style="font-weight:700; font-size:12px; color:rgba(255,255,255,0.9); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px">LEGEND</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px 10px; width:100%">
+      <div class="legend-item" style="font-size:11px"><span class="lg-badge lg-gtd">GTD</span> Guaranteed</div>
+      <div class="legend-item" style="font-size:11px"><span class="lg-badge lg-po">PO</span> Player Opt</div>
+      <div class="legend-item" style="font-size:11px"><span class="lg-badge lg-to">TO</span> Team Opt</div>
+      <div class="legend-item" style="font-size:11px"><span class="lg-badge lg-qo">QO</span> Qual Offer</div>
+      <div class="legend-item" style="font-size:11px"><span class="lg-badge lg-ch">CH</span> Cap Hold</div>
+      <div class="legend-item" style="font-size:11px"><span class="lg-badge lg-dead">DEAD</span> Dead $</div>
+      <div class="legend-item" style="grid-column:span 2; justify-content:center; font-size:11px"><span class="lg-badge" style="background:rgba(139,92,246,.15); color:#8b5cf6; border:1px solid rgba(139,92,246,.3)">2WAY</span> Two-Way</div>
+    </div>
   </div>
 </div>
 
-<!-- CONTROL SECTION - Two Rows with Square Legend -->
-<div style="display:grid; grid-template-columns:1fr auto; gap:12px; margin-bottom:20px;">
+<!-- CONTROL SECTION - Single Row, Uniform Height -->
+<div style="display:grid; grid-template-columns:1fr 1fr 1fr auto auto auto auto; gap:12px; margin-bottom:20px; align-items:stretch;">
   
-  <!-- Left Side: Buttons and Search -->
-  <div style="display:grid; grid-template-rows:auto auto; gap:12px;">
-    
-    <!-- Row 1: Undo + Redo + Reset + Search (half width) -->
-    <div style="display:flex; gap:8px; align-items:center;">
-      <button class="btn" onclick="undo()" style="min-width:44px; padding:11px 12px; justify-content:center" title="Undo last change">◀</button>
-      <button class="btn" onclick="redo()" style="min-width:44px; padding:11px 12px; justify-content:center" title="Redo last undone change">▶</button>
-      <button class="btn" onclick="resetAll()" style="min-width:44px; padding:11px 12px; justify-content:center" title="Reset to default Bulls roster">🗑️</button>
-      <div class="search-wrap" style="width:400px">
-        <input type="text" class="search-input" id="searchInput" placeholder="Search NBA players..." autocomplete="off">
-        <div class="dropdown" id="searchDropdown"></div>
-      </div>
-    </div>
-    
-    <!-- Row 2: All 5 Buttons -->
-    <div style="display:flex; gap:8px;">
-      <button class="btn" onclick="openManageRoster()" style="flex:1; justify-content:center; font-size:13px; padding:12px 16px" title="Add or remove players from your roster">👥 MANAGE ROSTER</button>
-      <button class="btn btn-red" id="tradeModeBtn" onclick="setAcquisitionMode('trade')" style="flex:1; justify-content:center; font-size:13px; padding:12px 16px" title="Build and evaluate trades with other teams">🔄 TRADE MACHINE</button>
-      <button class="btn" id="faModeBtn" onclick="setAcquisitionMode('fa')" style="flex:1; justify-content:center; font-size:13px; padding:12px 16px" title="Search and add free agents to your roster">✍️ FA MODE</button>
-      <button class="btn" onclick="openDraftPicks()" style="flex:1; justify-content:center; white-space:nowrap; font-size:13px; padding:12px 16px" title="View all Bulls draft picks through 2032">📋 DRAFT PICKS</button>
-      <button class="btn" onclick="openExceptions()" style="flex:1; justify-content:center; white-space:nowrap; font-size:13px; padding:12px 16px" title="View available trade exceptions and salary cap tools">💰 EXCEPTIONS</button>
-    </div>
-    
+  <!-- MANAGE ROSTER -->
+  <button class="btn" onclick="openManageRoster()" style="justify-content:center; font-size:14px; padding:20px 16px; font-weight:700" title="Add or remove players from your roster">
+    👥 MANAGE ROSTER
+  </button>
+  
+  <!-- TRADE MACHINE -->
+  <button class="btn btn-red" id="tradeModeBtn" onclick="openTradeSearch()" style="justify-content:center; font-size:14px; padding:20px 16px; font-weight:700" title="Search players and build trades">
+    🔄 TRADE MACHINE
+  </button>
+  
+  <!-- SIGN FA -->
+  <button class="btn" id="faModeBtn" onclick="openFASearch()" style="justify-content:center; font-size:14px; padding:20px 16px; font-weight:700" title="Search and sign free agents">
+    ✍️ SIGN FA
+  </button>
+  
+  <!-- DRAFT PICKS -->
+  <button class="btn" onclick="openDraftPicks()" style="justify-content:center; font-size:12px; padding:20px 14px; white-space:nowrap; min-width:110px" title="View all Bulls draft picks through 2032">
+    📋 DRAFT PICKS
+  </button>
+  
+  <!-- TRADE EXCEPTIONS -->
+  <button class="btn" onclick="openExceptions()" style="justify-content:center; font-size:12px; padding:20px 14px; white-space:nowrap; min-width:110px" title="View available trade exceptions">
+    💰 EXCEPTIONS
+  </button>
+  
+  <!-- CAP SITUATION (CAP25) -->
+  <div style="background:#000; border:2px solid #333; border-radius:8px; padding:12px 16px; display:flex; flex-direction:column; justify-content:center; align-items:center; min-width:120px">
+    <div style="font-weight:800; font-size:11px; color:#999; text-transform:uppercase; margin-bottom:6px; letter-spacing:.04em">CAP 25</div>
+    <div id="capSummaryControl" style="text-align:center; font-size:16px; font-weight:900"></div>
   </div>
   
-  <!-- Right Side: Square Legend (spans both rows) -->
-  <div class="legend" style="margin:0; padding:16px 20px; display:flex; flex-direction:column; gap:10px; align-items:center; justify-content:center; width:280px; height:100%">
-    <div style="font-weight:700; font-size:11px; color:var(--txt2); text-transform:uppercase; letter-spacing:.06em">LEGEND</div>
-    <div style="display:flex; flex-direction:column; gap:8px; width:100%">
-      <div style="display:flex; gap:8px; justify-content:center">
-        <div class="legend-item"><span class="lg-badge lg-gtd">GTD</span> Guaranteed</div>
-        <div class="legend-item"><span class="lg-badge lg-po">PO</span> Player Option</div>
-      </div>
-      <div style="display:flex; gap:8px; justify-content:center">
-        <div class="legend-item"><span class="lg-badge lg-to">TO</span> Team Option</div>
-        <div class="legend-item"><span class="lg-badge lg-qo">QO</span> Qualifying Offer</div>
-      </div>
-      <div style="display:flex; gap:8px; justify-content:center">
-        <div class="legend-item"><span class="lg-badge lg-ch">CH</span> Cap Hold</div>
-        <div class="legend-item"><span class="lg-badge lg-dead">DEAD</span> Dead Money</div>
-      </div>
-      <div style="display:flex; justify-content:center">
-        <div class="legend-item"><span class="lg-badge" style="background:rgba(139,92,246,.15); color:#8b5cf6; border:1px solid rgba(139,92,246,.3)">2WAY</span> Two-Way</div>
-      </div>
-    </div>
+  <!-- UNDO/REDO/RESET STACK -->
+  <div style="display:grid; grid-template-rows:1fr 1fr 1fr; gap:4px; min-width:50px">
+    <button class="btn" onclick="undo()" style="justify-content:center; padding:6px 10px; font-size:16px" title="Undo last change">◀</button>
+    <button class="btn" onclick="redo()" style="justify-content:center; padding:6px 10px; font-size:16px" title="Redo last undone change">▶</button>
+    <button class="btn" onclick="resetAll()" style="justify-content:center; padding:6px 10px; font-size:16px" title="Reset to default Bulls roster">🗑️</button>
   </div>
   
 </div>
@@ -1165,6 +1161,25 @@ function calculateTradeMatch(outgoing) {
   }
 }
 
+function addPlayerFromSearch(playerName) {
+  const playerData = PLAYER_DB.find(p => p.name === playerName);
+  if (!playerData) return;
+  
+  if (acquisitionMode === 'trade') {
+    incomingPlayers.push({
+      id: Date.now(),
+      name: playerData.name,
+      team: playerData.team,
+      sal: playerData.sal,
+      typ: YEARS.reduce((acc, y) => ({...acc, [y]: 'gtd'}), {})
+    });
+    saveHistory();
+    render();
+  } else {
+    addPlayerToRoster(playerData);
+  }
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // RENDERING FUNCTIONS
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1448,22 +1463,29 @@ function updateCapSummary() {
   const capSpace = th.cap - total;
   const taxSpace = th.tax - total;
   
-  // Update header version (new location)
+  // Update CAP25 control box (new location)
+  const controlEl = document.getElementById('capSummaryControl');
+  if (controlEl) {
+    controlEl.innerHTML = `
+      <div style="color:${capSpace > 0 ? 'var(--green)' : '#ef4444'}">${fmt(Math.abs(capSpace))}</div>
+    `;
+  }
+  
+  // Also update old locations if they exist (for backwards compatibility)
   const headerEl = document.getElementById('capSummaryHeader');
   if (headerEl) {
     headerEl.innerHTML = `
       <div style="text-align:center">
-        <div style="font-size:13px; color:rgba(255,255,255,0.85); margin-bottom:8px; text-transform:uppercase; font-weight:700; letter-spacing:.05em">Cap Space</div>
-        <div style="color:${capSpace > 0 ? 'var(--green)' : '#ef4444'}; font-size:24px; font-weight:900; text-shadow:0 2px 8px rgba(0,0,0,0.3)">${fmt(Math.abs(capSpace))}</div>
+        <div style="font-size:13px; color:#999; margin-bottom:8px; text-transform:uppercase; font-weight:700; letter-spacing:.05em">Cap Space</div>
+        <div style="color:${capSpace > 0 ? 'var(--green)' : '#ef4444'}; font-size:24px; font-weight:900">${fmt(Math.abs(capSpace))}</div>
       </div>
       <div style="text-align:center">
-        <div style="font-size:13px; color:rgba(255,255,255,0.85); margin-bottom:8px; text-transform:uppercase; font-weight:700; letter-spacing:.05em">Tax Space</div>
-        <div style="color:${taxSpace > 0 ? 'var(--green)' : '#ef4444'}; font-size:24px; font-weight:900; text-shadow:0 2px 8px rgba(0,0,0,0.3)">${fmt(Math.abs(taxSpace))}</div>
+        <div style="font-size:13px; color:#999; margin-bottom:8px; text-transform:uppercase; font-weight:700; letter-spacing:.05em">Tax Space</div>
+        <div style="color:${taxSpace > 0 ? 'var(--green)' : '#ef4444'}; font-size:24px; font-weight:900">${fmt(Math.abs(taxSpace))}</div>
       </div>
     `;
   }
   
-  // Also update old location if it exists (for backwards compatibility)
   const oldEl = document.getElementById('capSummary');
   if (oldEl) {
     oldEl.innerHTML = `
@@ -1815,9 +1837,11 @@ function waiveStretch(id) {
 // SEARCH & ADD PLAYERS
 // ═══════════════════════════════════════════════════════════════════════════
 
-const searchInput = document.getElementById('searchInput');
-const dropdown = document.getElementById('searchDropdown');
+// Old search bar removed - search now in modals
+// const searchInput = document.getElementById('searchInput');
+// const dropdown = document.getElementById('searchDropdown');
 
+/*
 searchInput.addEventListener('input', e => {
   const query = e.target.value.trim().toLowerCase();
   if (query.length < 2) {
@@ -1848,10 +1872,11 @@ searchInput.addEventListener('input', e => {
   
   dropdown.classList.add('show');
 });
+*/
 
 function selectPlayer(name, team, sal) {
-  dropdown.classList.remove('show');
-  searchInput.value = '';
+  // dropdown.classList.remove('show');
+  // searchInput.value = '';
   
   if (acquisitionMode === 'trade') {
     incomingPlayers.push({
@@ -2164,19 +2189,157 @@ function openManageRoster() {
     <div class="modal-hdr">👥 Manage Roster (${roster.length} players)</div>
     <div class="modal-body">
       <div style="margin-bottom:16px">
+        <div class="modal-lbl">Search Players</div>
+        <input type="text" class="modal-input" id="manageSearchInput" placeholder="Search NBA players to add..." autocomplete="off" oninput="filterManagePlayers()">
+        <div id="manageSearchResults" style="max-height:200px; overflow-y:auto; margin-top:8px; border:1px solid var(--bg3); border-radius:6px; display:none"></div>
+      </div>
+      <div style="margin-bottom:16px">
         <p style="color:var(--txt2); font-size:13px; line-height:1.6">
-          Remove players from your roster or use the search bar above to add new players.
+          Remove players from your roster or search to add new ones.
         </p>
       </div>
       <div style="max-height:400px; overflow-y:auto">
         ${playerRows}
       </div>
       <div class="modal-actions">
-        <button class="modal-btn" onclick="addRow(); closeModal()">➕ Add Empty Row</button>
         <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Close</button>
       </div>
     </div>
   `);
+}
+
+function openTradeSearch() {
+  showModal(`
+    <div class="modal-hdr">🔄 Trade Machine - Search Players</div>
+    <div class="modal-body">
+      <div style="margin-bottom:16px">
+        <div class="modal-lbl">Search NBA Players</div>
+        <input type="text" class="modal-input" id="tradeSearchInput" placeholder="Search players to add to trade..." autocomplete="off" oninput="filterTradeSearchPlayers()">
+        <div id="tradeSearchResults" style="max-height:400px; overflow-y:auto; margin-top:8px"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  `);
+  
+  // Set trade mode
+  setAcquisitionMode('trade');
+  
+  // Auto-focus search
+  setTimeout(() => {
+    document.getElementById('tradeSearchInput')?.focus();
+  }, 100);
+}
+
+function openFASearch() {
+  showModal(`
+    <div class="modal-hdr">✍️ Sign Free Agents - Search Players</div>
+    <div class="modal-body">
+      <div style="margin-bottom:16px">
+        <div class="modal-lbl">Search Free Agents</div>
+        <input type="text" class="modal-input" id="faSearchInput" placeholder="Search free agents to sign..." autocomplete="off" oninput="filterFASearchPlayers()">
+        <div id="faSearchResults" style="max-height:400px; overflow-y:auto; margin-top:8px"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  `);
+  
+  // Set FA mode
+  setAcquisitionMode('fa');
+  
+  // Auto-focus search
+  setTimeout(() => {
+    document.getElementById('faSearchInput')?.focus();
+  }, 100);
+}
+
+// Search filter functions for modals
+function filterManagePlayers() {
+  const input = document.getElementById('manageSearchInput');
+  const resultsDiv = document.getElementById('manageSearchResults');
+  if (!input || !resultsDiv) return;
+  
+  const query = input.value.toLowerCase().trim();
+  if (!query) {
+    resultsDiv.style.display = 'none';
+    return;
+  }
+  
+  const matches = PLAYER_DB.filter(p => p.name.toLowerCase().includes(query)).slice(0, 10);
+  if (matches.length === 0) {
+    resultsDiv.innerHTML = '<div style="padding:12px; color:var(--txt2)">No players found</div>';
+    resultsDiv.style.display = 'block';
+    return;
+  }
+  
+  resultsDiv.innerHTML = matches.map(p => `
+    <div style="padding:10px; border-bottom:1px solid var(--bg3); cursor:pointer; hover:background:var(--bg2)" onclick="addPlayerFromManage('${p.name}')">
+      <div style="font-weight:600">${p.name}</div>
+      <div style="font-size:12px; color:var(--txt2)">${p.pos} • ${p.team}</div>
+    </div>
+  `).join('');
+  resultsDiv.style.display = 'block';
+}
+
+function filterTradeSearchPlayers() {
+  const input = document.getElementById('tradeSearchInput');
+  const resultsDiv = document.getElementById('tradeSearchResults');
+  if (!input || !resultsDiv) return;
+  
+  const query = input.value.toLowerCase().trim();
+  if (!query) {
+    resultsDiv.innerHTML = '';
+    return;
+  }
+  
+  const matches = PLAYER_DB.filter(p => p.name.toLowerCase().includes(query)).slice(0, 10);
+  if (matches.length === 0) {
+    resultsDiv.innerHTML = '<div style="padding:12px; color:var(--txt2)">No players found</div>';
+    return;
+  }
+  
+  resultsDiv.innerHTML = matches.map(p => `
+    <div style="padding:10px; border-bottom:1px solid var(--bg3); cursor:pointer" onclick="addPlayerFromSearch('${p.name}'); closeModal();">
+      <div style="font-weight:600">${p.name}</div>
+      <div style="font-size:12px; color:var(--txt2)">${p.pos} • ${p.team}</div>
+    </div>
+  `).join('');
+}
+
+function filterFASearchPlayers() {
+  const input = document.getElementById('faSearchInput');
+  const resultsDiv = document.getElementById('faSearchResults');
+  if (!input || !resultsDiv) return;
+  
+  const query = input.value.toLowerCase().trim();
+  if (!query) {
+    resultsDiv.innerHTML = '';
+    return;
+  }
+  
+  const matches = PLAYER_DB.filter(p => p.name.toLowerCase().includes(query)).slice(0, 10);
+  if (matches.length === 0) {
+    resultsDiv.innerHTML = '<div style="padding:12px; color:var(--txt2)">No players found</div>';
+    return;
+  }
+  
+  resultsDiv.innerHTML = matches.map(p => `
+    <div style="padding:10px; border-bottom:1px solid var(--bg3); cursor:pointer" onclick="addPlayerFromSearch('${p.name}'); closeModal();">
+      <div style="font-weight:600">${p.name}</div>
+      <div style="font-size:12px; color:var(--txt2)">${p.pos} • ${p.team}</div>
+    </div>
+  `).join('');
+}
+
+function addPlayerFromManage(playerName) {
+  addPlayerFromSearch(playerName);
+  document.getElementById('manageSearchInput').value = '';
+  document.getElementById('manageSearchResults').style.display = 'none';
+  closeModal();
+  setTimeout(() => openManageRoster(), 100);
 }
 
 function openDraftPicks() {
@@ -2283,41 +2446,6 @@ function openExceptions() {
   `);
 }
 
-function openManageRoster() {
-  const playerRows = roster.map(p => {
-    const sal2025 = fmt(p.sal['2025-26']);
-    return `
-      <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid var(--bg3)">
-        <div>
-          <div style="font-weight:600; font-size:14px">${p.name}</div>
-          <div style="font-size:12px; color:var(--txt2)">${sal2025} · 2025-26</div>
-        </div>
-        <button class="modal-btn modal-btn-danger" onclick="deletePlayer(${p.id})" style="padding:6px 12px">
-          🗑️ Remove
-        </button>
-      </div>
-    `;
-  }).join('');
-  
-  showModal(`
-    <div class="modal-hdr">👥 Manage Roster (${roster.length} players)</div>
-    <div class="modal-body">
-      <div style="margin-bottom:16px">
-        <p style="color:var(--txt2); font-size:13px; line-height:1.6">
-          Remove players from your roster or use the search bar above to add new players.
-        </p>
-      </div>
-      <div style="max-height:400px; overflow-y:auto">
-        ${playerRows}
-      </div>
-      <div class="modal-actions">
-        <button class="modal-btn" onclick="addRow(); closeModal()">➕ Add Empty Row</button>
-        <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Close</button>
-      </div>
-    </div>
-  `);
-}
-
 function deletePlayer(id) {
   const player = roster.find(p => p.id === id);
   if (!player) return;
@@ -2342,11 +2470,7 @@ saveHistory();
 render();
 setAcquisitionMode('trade');
 
-document.addEventListener('click', e => {
-  if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
-    dropdown.classList.remove('show');
-  }
-});
+// Old search bar removed - search now in modals
 
 document.getElementById('modalOverlay').addEventListener('click', e => {
   if (e.target.id === 'modalOverlay') closeModal();
