@@ -2284,7 +2284,7 @@ function filterFASearchPlayers() {
     <div style="padding:10px; border-bottom:1px solid var(--bg3); cursor:pointer; transition:background .15s"
          onmouseover="this.style.background='var(--bg2)'" 
          onmouseout="this.style.background='transparent'"
-         onclick="addPlayerFromSearch('${p.name}'); closeModal();">
+         onclick="openFAContractEdit('${p.name}');">
       <div style="font-weight:600">${p.name}</div>
       <div style="font-size:12px; color:var(--txt2)">${p.pos} • ${p.team}</div>
     </div>
@@ -2292,11 +2292,110 @@ function filterFASearchPlayers() {
 }
 
 function addPlayerFromManage(playerName) {
-  addPlayerFromSearch(playerName);
-  document.getElementById('manageSearchInput').value = '';
-  document.getElementById('manageSearchResults').style.display = 'none';
+  const playerData = NBA_DB.find(p => p.name === playerName);
+  if (!playerData) return;
+  
+  // Close current modal
   closeModal();
-  setTimeout(() => openManageRoster(), 100);
+  
+  // Open contract edit modal with manage context
+  setTimeout(() => {
+    openFAContractEdit(playerName, 'manage');
+  }, 100);
+}
+
+function openFAContractEdit(playerName, returnToModal = 'fa') {
+  const playerData = NBA_DB.find(p => p.name === playerName);
+  if (!playerData) return;
+  
+  // Store player data temporarily for the save function
+  window.tempFAPlayer = playerData;
+  window.tempFAReturnModal = returnToModal;
+  
+  const inputs = YEARS.map(year => {
+    return `
+      <div class="modal-row">
+        <div class="modal-lbl">${year}</div>
+        <div class="modal-input-group">
+          <input type="number" step="0.1" class="modal-input" id="sal-${year}" value="0" placeholder="0" />
+          <span>M</span>
+          <select class="modal-select" id="typ-${year}" style="margin-left:8px; width:90px">
+            <option value="">Auto</option>
+            <option value="gtd">GTD</option>
+            <option value="po">PO</option>
+            <option value="to">TO</option>
+            <option value="qo">QO</option>
+            <option value="ch">CH</option>
+          </select>
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  const cancelAction = returnToModal === 'fa' ? 'openFASearch()' : 'openManageRoster()';
+  
+  showModal(`
+    <div class="modal-hdr">Sign Free Agent - ${playerData.name}</div>
+    <div class="modal-body">
+      <div class="modal-row">
+        <p style="color:var(--txt2); font-size:12px; line-height:1.6; margin-bottom:12px">
+          Enter contract details for <strong>${playerData.name}</strong>. Player will be added to your roster.
+        </p>
+      </div>
+      ${inputs}
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-cancel" onclick="closeModal(); ${cancelAction};">Cancel</button>
+        <button class="modal-btn modal-btn-primary" onclick="saveFAContract()">Sign Player</button>
+      </div>
+    </div>
+  `);
+}
+
+function saveFAContract() {
+  const playerData = window.tempFAPlayer;
+  if (!playerData) return;
+  
+  // Create new player object with entered contract details
+  const newPlayer = {
+    id: Date.now(),
+    name: playerData.name,
+    team: 'CHI', // Bulls team
+    pos: playerData.pos || '',
+    age: playerData.age || 0,
+    sal: {},
+    typ: {}
+  };
+  
+  // Get contract values from inputs
+  YEARS.forEach(year => {
+    const salInput = document.getElementById(`sal-${year}`);
+    const typSelect = document.getElementById(`typ-${year}`);
+    
+    if (salInput && typSelect) {
+      const val = parseFloat(salInput.value) || 0;
+      const newSal = Math.floor(val * 1000000);
+      const selectedType = typSelect.value;
+      
+      newPlayer.sal[year] = newSal;
+      
+      // Use manually selected type, or auto-set to gtd if not specified
+      if (selectedType) {
+        newPlayer.typ[year] = selectedType;
+      } else {
+        newPlayer.typ[year] = newSal > 0 ? 'gtd' : '';
+      }
+    }
+  });
+  
+  // Add to roster
+  roster.push(newPlayer);
+  
+  // Clear temp data
+  delete window.tempFAPlayer;
+  
+  saveHistory();
+  render();
+  closeModal();
 }
 
 function addPlayerFromSearch(playerName) {
