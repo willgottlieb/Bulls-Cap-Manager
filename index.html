@@ -1816,44 +1816,46 @@ function waiveStretch(id) {
 // ═══════════════════════════════════════════════════════════════════════════
 // SEARCH & ADD PLAYERS
 // ═══════════════════════════════════════════════════════════════════════════
+// OLD SEARCH BAR CODE - COMMENTED OUT (Now using modal-based search)
+// ═══════════════════════════════════════════════════════════════════════════
 
-const searchInput = document.getElementById('searchInput');
-const dropdown = document.getElementById('searchDropdown');
+// const searchInput = document.getElementById('searchInput');
+// const dropdown = document.getElementById('searchDropdown');
 
-searchInput.addEventListener('input', e => {
-  const query = e.target.value.trim().toLowerCase();
-  if (query.length < 2) {
-    dropdown.classList.remove('show');
-    return;
-  }
-  
-  const results = NBA_DB.filter(p => 
-    p.name.toLowerCase().includes(query) ||
-    p.team.toLowerCase().includes(query)
-  ).slice(0, 8);
-  
-  if (results.length === 0) {
-    dropdown.innerHTML = '<div class="dropdown-item"><div class="d-name">No players found</div></div>';
-    dropdown.classList.add('show');
-    return;
-  }
-  
-  dropdown.innerHTML = results.map(p => {
-    const sal = fmt(p.sal['2025-26']);
-    return `
-      <div class="dropdown-item" onclick="selectPlayer('${p.name}', '${p.team}', ${JSON.stringify(p.sal).replace(/"/g, '&quot;')})">
-        <div class="d-name">${p.name}</div>
-        <div class="d-meta">${p.team} · ${sal}</div>
-      </div>
-    `;
-  }).join('');
-  
-  dropdown.classList.add('show');
-});
+// searchInput.addEventListener('input', e => {
+//   const query = e.target.value.trim().toLowerCase();
+//   if (query.length < 2) {
+//     dropdown.classList.remove('show');
+//     return;
+//   }
+//   
+//   const results = NBA_DB.filter(p => 
+//     p.name.toLowerCase().includes(query) ||
+//     p.team.toLowerCase().includes(query)
+//   ).slice(0, 8);
+//   
+//   if (results.length === 0) {
+//     dropdown.innerHTML = '<div class="dropdown-item"><div class="d-name">No players found</div></div>';
+//     dropdown.classList.add('show');
+//     return;
+//   }
+//   
+//   dropdown.innerHTML = results.map(p => {
+//     const sal = fmt(p.sal['2025-26']);
+//     return `
+//       <div class="dropdown-item" onclick="selectPlayer('${p.name}', '${p.team}', ${JSON.stringify(p.sal).replace(/"/g, '&quot;')})">
+//         <div class="d-name">${p.name}</div>
+//         <div class="d-meta">${p.team} · ${sal}</div>
+//       </div>
+//     `;
+//   }).join('');
+//   
+//   dropdown.classList.add('show');
+// });
 
 function selectPlayer(name, team, sal) {
-  dropdown.classList.remove('show');
-  searchInput.value = '';
+  // dropdown.classList.remove('show');
+  // searchInput.value = '';
   
   if (acquisitionMode === 'trade') {
     incomingPlayers.push({
@@ -2574,11 +2576,12 @@ saveHistory();
 render();
 setAcquisitionMode('trade');
 
-document.addEventListener('click', e => {
-  if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
-    dropdown.classList.remove('show');
-  }
-});
+// Old search dropdown click handler - commented out
+// document.addEventListener('click', e => {
+//   if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
+//     dropdown.classList.remove('show');
+//   }
+// });
 
 document.getElementById('modalOverlay').addEventListener('click', e => {
   if (e.target.id === 'modalOverlay') closeModal();
