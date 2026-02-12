@@ -120,7 +120,7 @@ body {
 /* Percentage-based grid: scales proportionally with container */
 .tbl-head, .tbl-row {
   display:grid;
-  grid-template-columns: 3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%;
+  grid-template-columns: 3.23% 15% 2.5% 14.31% 13.31% 13.31% 13.31% 13.31% 11.72%;
   gap:0; padding:0 20px; align-items:center;
 }
 
@@ -196,7 +196,7 @@ body {
 /* Trade block with year headers */
 .trade-year-headers {
   display:grid;
-  grid-template-columns: 3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%;
+  grid-template-columns: 3.23% 15% 2.5% 14.31% 13.31% 13.31% 13.31% 13.31% 11.72%;
   gap:0; padding:0 20px 8px 20px;
   font-size:10px; font-weight:700; text-transform:uppercase;
   letter-spacing:.06em; color:var(--blue);
@@ -209,7 +209,7 @@ body {
 .trade-total {
   background:rgba(59,130,246,.1); padding:12px 20px; font-size:13px; font-weight:600;
   border-top:2px solid var(--blue); display:grid;
-  grid-template-columns: 3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%;
+  grid-template-columns: 3.23% 15% 2.5% 14.31% 13.31% 13.31% 13.31% 13.31% 11.72%;
   gap:0; align-items:center;
 }
 .trade-total div { text-align:center; font-weight:700; color:var(--blue); }
@@ -275,6 +275,10 @@ body {
 .modal-btn-danger { background:var(--danger); color:#fff; }
 .modal-btn-danger:hover { background:#dc2626; }
 
+/* Cap value colors */
+.cap-value-green { color: var(--green); }
+.cap-value-red { color: var(--danger); }
+
 </style>
 </head>
 <body>
@@ -286,59 +290,62 @@ body {
   <div class="sub">Created by <a href="https://x.com/Will_Gottlieb" target="_blank">Will Gottlieb</a></div>
 </div>
 
-<!-- CONTROL SECTION - Two Rows -->
-<div style="display:grid; grid-template-columns:auto auto auto auto; gap:12px; margin-bottom:20px;">
+<!-- CONTROL SECTION - Compact 3-Segment Layout -->
+<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:30px; align-items:stretch; max-height:90px;">
   
-  <!-- Column 1: Search & Manage Stack -->
-  <div style="display:grid; grid-template-rows:auto auto; gap:8px;">
-    <!-- Top: Search (flex to fill) + Undo + Redo + Trash (aligned right) -->
-    <div style="display:flex; gap:8px;">
-      <div class="search-wrap" style="flex:1">
-        <input type="text" class="search-input" id="searchInput" placeholder="Search NBA players..." autocomplete="off">
-        <div class="dropdown" id="searchDropdown"></div>
-      </div>
-      <button class="btn" onclick="undo()" style="min-width:44px; padding:11px 12px; justify-content:center" title="Undo last change">◀</button>
-      <button class="btn" onclick="redo()" style="min-width:44px; padding:11px 12px; justify-content:center" title="Redo last undone change">▶</button>
-      <button class="btn" onclick="resetAll()" style="min-width:44px; padding:11px 12px; justify-content:center" title="Reset to default Bulls roster">🗑️</button>
-    </div>
+  <!-- LEFT SEGMENT: 2x3 Button Grid -->
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; grid-template-rows:1fr 1fr; gap:8px;">
+    <!-- Row 1 -->
+    <button class="btn" onclick="openManageRoster()" style="justify-content:center; font-size:12px; padding:8px 12px;" title="Add or remove players from your roster">👥 MANAGE ROSTER</button>
+    <button class="btn btn-red" id="tradeModeBtn" onclick="openTradeSearch()" style="justify-content:center; font-size:12px; padding:8px 12px;" title="Search players and build trades">🔄 TRADE MACHINE</button>
+    <button class="btn" id="faModeBtn" onclick="openFASearch()" style="justify-content:center; font-size:12px; padding:8px 12px;" title="Search and sign free agents">✍️ SIGN FAs</button>
     
-    <!-- Bottom: Manage Roster + Trade Machine + FA Mode (all same width) -->
-    <div style="display:flex; gap:8px;">
-      <button class="btn" onclick="openManageRoster()" style="flex:1; justify-content:center" title="Add or remove players from your roster">👥 MANAGE ROSTER</button>
-      <button class="btn btn-red" id="tradeModeBtn" onclick="openTradeSearch()" style="flex:1; justify-content:center" title="Search players and build trades">🔄 TRADE MACHINE</button>
-      <button class="btn" id="faModeBtn" onclick="openFASearch()" style="flex:1; justify-content:center" title="Search and sign free agents">✍️ FA MODE</button>
+    <!-- Row 2 -->
+    <button class="btn" onclick="openDraftPicks()" style="justify-content:center; font-size:12px; padding:8px 12px;" title="View all Bulls draft picks through 2032">📋 PICKS</button>
+    <button class="btn" onclick="openExceptions()" style="justify-content:center; font-size:12px; padding:8px 12px;" title="View available trade exceptions and salary cap tools">💰 EXCEPTIONS</button>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px;">
+      <button class="btn" onclick="undo()" style="justify-content:center; padding:6px; font-size:14px;" title="Undo last change">◀</button>
+      <button class="btn" onclick="redo()" style="justify-content:center; padding:6px; font-size:14px;" title="Redo last undone change">▶</button>
+      <button class="btn" onclick="resetAll()" style="justify-content:center; padding:6px; font-size:14px;" title="Reset to default Bulls roster">🗑️</button>
     </div>
   </div>
   
-  <!-- Column 2: Legend (centered, fit to text) -->
-  <div class="legend" style="margin:0; padding:10px 16px; display:flex; flex-direction:column; gap:8px; align-items:center">
-    <div style="font-weight:700; font-size:11px; color:var(--txt2); text-transform:uppercase; letter-spacing:.06em">LEGEND</div>
-    <div style="display:flex; gap:12px; align-items:center">
+  <!-- MIDDLE SEGMENT: Cap Situation - Dashboard Style (2025-26, Side-by-Side) -->
+  <div style="background:linear-gradient(to bottom, var(--bg1), var(--bg2)); border:1px solid var(--bg3); border-radius:10px; padding:12px 16px; display:flex; flex-direction:column; position:relative; overflow:hidden;">
+    <!-- Accent stripe -->
+    <div style="position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg, var(--red), var(--green));"></div>
+    
+    <div style="font-weight:800; font-size:11px; color:var(--txt); text-transform:uppercase; text-align:center; margin-bottom:10px; letter-spacing:.08em; position:relative; z-index:1">2025-26 CAP SITUATION</div>
+    
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; position:relative; z-index:1;">
+      <!-- Cap Space -->
+      <div style="background:rgba(0,0,0,0.3); border-radius:6px; padding:10px 12px; border:1px solid rgba(255,255,255,0.05); text-align:center;">
+        <div style="font-size:9px; color:rgba(255,255,255,0.5); margin-bottom:4px; text-transform:uppercase; font-weight:600">CAP SPACE</div>
+        <div id="capSummaryControl" class="cap-value-green" style="font-size:20px; font-weight:900"></div>
+      </div>
+      
+      <!-- Tax Space -->
+      <div style="background:rgba(0,0,0,0.3); border-radius:6px; padding:10px 12px; border:1px solid rgba(255,255,255,0.05); text-align:center;">
+        <div style="font-size:9px; color:rgba(255,255,255,0.5); margin-bottom:4px; text-transform:uppercase; font-weight:600">TAX SPACE</div>
+        <div id="taxSummaryControl" class="cap-value-green" style="font-size:20px; font-weight:900"></div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- RIGHT SEGMENT: Legend -->
+  <div class="legend" style="margin:0; padding:10px 14px; display:flex; flex-direction:column; gap:6px; align-items:center; justify-content:center">
+    <div style="font-weight:700; font-size:10px; color:var(--txt2); text-transform:uppercase; letter-spacing:.06em">LEGEND</div>
+    <div style="display:flex; gap:10px; align-items:center; font-size:11px;">
       <div class="legend-item"><span class="lg-badge lg-gtd">GTD</span> Guaranteed</div>
       <div class="legend-item"><span class="lg-badge lg-po">PO</span> Player Option</div>
       <div class="legend-item"><span class="lg-badge lg-to">TO</span> Team Option</div>
     </div>
-    <div style="display:flex; gap:12px; align-items:center">
+    <div style="display:flex; gap:10px; align-items:center; font-size:11px;">
       <div class="legend-item"><span class="lg-badge lg-qo">QO</span> Qualifying Offer</div>
       <div class="legend-item"><span class="lg-badge lg-ch">CH</span> Cap Hold</div>
       <div class="legend-item"><span class="lg-badge lg-dead">DEAD</span> Dead Money</div>
       <div class="legend-item"><span class="lg-badge" style="background:rgba(139,92,246,.15); color:#8b5cf6; border:1px solid rgba(139,92,246,.3)">2WAY</span> Two-Way</div>
     </div>
-  </div>
-  
-  <!-- Column 3: Cap Summary (wider, 2 columns x 3 rows) -->
-  <div style="background:var(--bg1); border:1px solid var(--bg3); border-radius:8px; padding:12px 20px; display:grid; grid-template-rows:auto auto auto; gap:6px; align-content:center; min-width:260px">
-    <!-- Row 1: Merged header -->
-    <div style="font-weight:800; font-size:13px; color:var(--txt); text-transform:uppercase; text-align:center; grid-column:1/-1">2025-26 CAP</div>
-    
-    <!-- Row 2: Column headers -->
-    <div id="capSummary" style="display:grid; grid-template-columns:1fr 1fr; gap:16px; text-align:center"></div>
-  </div>
-  
-  <!-- Column 4: Draft Picks + Exceptions Stack (narrower) -->
-  <div style="display:grid; grid-template-rows:1fr 1fr; gap:8px;">
-    <button class="btn" onclick="openDraftPicks()" style="justify-content:center; padding:11px 14px; white-space:nowrap" title="View all Bulls draft picks through 2032">📋 DRAFT PICKS</button>
-    <button class="btn" onclick="openExceptions()" style="justify-content:center; padding:11px 14px; white-space:nowrap" title="View available trade exceptions and salary cap tools">💰 EXCEPTIONS</button>
   </div>
   
 </div>
@@ -377,7 +384,7 @@ body {
 
 <!-- ACTIVE ROSTER -->
 <div class="section" id="activeSection">
-  <div class="section-hdr" style="display:grid; grid-template-columns:3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%; gap:0; padding:14px 20px; align-items:center;">
+  <div class="section-hdr" style="display:grid; grid-template-columns:3.23% 15% 2.5% 14.31% 13.31% 13.31% 13.31% 13.31% 11.72%; gap:0; padding:14px 20px; align-items:center;">
     <div></div>
     <div style="font-weight:700; font-size:14px">Active Roster</div>
     <div></div>
@@ -429,7 +436,7 @@ body {
   <div class="section-hdr">📊 Cap Situation</div>
   <div style="padding:0">
     <!-- Year Headers -->
-    <div style="display:grid; grid-template-columns: 3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%; gap:0; padding:12px 20px 8px 20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 3.23% 15% 2.5% 14.31% 13.31% 13.31% 13.31% 13.31% 11.72%; gap:0; padding:12px 20px 8px 20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2); border-bottom:1px solid var(--bg3)">
       <div></div>
       <div>Status</div>
       <div></div>
@@ -449,7 +456,7 @@ body {
 <div class="section" style="margin-top:22px">
   <div class="section-hdr">📋 Cap Figures</div>
   <div style="padding:0">
-    <div style="display:grid; grid-template-columns: 3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%; gap:0; padding:12px 20px 8px 20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2)">
+    <div style="display:grid; grid-template-columns: 3.23% 15% 2.5% 14.31% 13.31% 13.31% 13.31% 13.31% 11.72%; gap:0; padding:12px 20px 8px 20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--txt2)">
       <div></div>
       <div>Threshold</div>
       <div></div>
@@ -460,7 +467,7 @@ body {
       <div style="text-align:center">2029-30</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 3.23% 15% 2.5% 14.31% 13.31% 13.31% 13.31% 13.31% 11.72%; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
       <div></div>
       <div style="font-weight:600; font-size:14px">Salary Cap</div>
       <div></div>
@@ -471,7 +478,7 @@ body {
       <div style="text-align:center; font-size:13px; font-weight:600">$191.6M</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 3.23% 15% 2.5% 14.31% 13.31% 13.31% 13.31% 13.31% 11.72%; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
       <div></div>
       <div style="font-weight:600; font-size:14px">Luxury Tax</div>
       <div></div>
@@ -482,7 +489,7 @@ body {
       <div style="text-align:center; font-size:13px; font-weight:600">$246.3M</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
+    <div style="display:grid; grid-template-columns: 3.23% 15% 2.5% 14.31% 13.31% 13.31% 13.31% 13.31% 11.72%; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
       <div></div>
       <div style="font-weight:600; font-size:14px">First Apron</div>
       <div></div>
@@ -493,7 +500,7 @@ body {
       <div style="text-align:center; font-size:13px; font-weight:600">$256.8M</div>
       <div></div>
     </div>
-    <div style="display:grid; grid-template-columns: 3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%; gap:0; padding:12px 20px">
+    <div style="display:grid; grid-template-columns: 3.23% 15% 2.5% 14.31% 13.31% 13.31% 13.31% 13.31% 11.72%; gap:0; padding:12px 20px">
       <div></div>
       <div style="font-weight:600; font-size:14px">Second Apron</div>
       <div></div>
@@ -1440,16 +1447,38 @@ function updateCapSummary() {
   const capSpace = th.cap - total;
   const taxSpace = th.tax - total;
   
-  document.getElementById('capSummary').innerHTML = `
-    <div style="text-align:center">
-      <div style="font-size:11px; color:var(--txt2); margin-bottom:4px; text-transform:uppercase; font-weight:700">Cap Space</div>
-      <div style="color:${capSpace > 0 ? 'var(--green)' : 'var(--danger)'}; font-size:17px; font-weight:800">${fmt(Math.abs(capSpace))}</div>
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:11px; color:var(--txt2); margin-bottom:4px; text-transform:uppercase; font-weight:700">Tax Space</div>
-      <div style="color:${taxSpace > 0 ? 'var(--green)' : 'var(--danger)'}; font-size:17px; font-weight:800">${fmt(Math.abs(taxSpace))}</div>
-    </div>
-  `;
+  // Update control panel cap situation boxes
+  const capControl = document.getElementById('capSummaryControl');
+  const taxControl = document.getElementById('taxSummaryControl');
+  
+  if (capControl) {
+    capControl.textContent = fmt(Math.abs(capSpace));
+    capControl.className = capSpace > 0 ? 'cap-value-green' : 'cap-value-red';
+    capControl.style.fontSize = '20px';
+    capControl.style.fontWeight = '900';
+  }
+  
+  if (taxControl) {
+    taxControl.textContent = fmt(Math.abs(taxSpace));
+    taxControl.className = taxSpace > 0 ? 'cap-value-green' : 'cap-value-red';
+    taxControl.style.fontSize = '20px';
+    taxControl.style.fontWeight = '900';
+  }
+  
+  // Legacy cap summary (if exists)
+  const legacyEl = document.getElementById('capSummary');
+  if (legacyEl) {
+    legacyEl.innerHTML = `
+      <div style="text-align:center">
+        <div style="font-size:11px; color:var(--txt2); margin-bottom:4px; text-transform:uppercase; font-weight:700">Cap Space</div>
+        <div style="color:${capSpace > 0 ? 'var(--green)' : 'var(--danger)'}; font-size:17px; font-weight:800">${fmt(Math.abs(capSpace))}</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:11px; color:var(--txt2); margin-bottom:4px; text-transform:uppercase; font-weight:700">Tax Space</div>
+        <div style="color:${taxSpace > 0 ? 'var(--green)' : 'var(--danger)'}; font-size:17px; font-weight:800">${fmt(Math.abs(taxSpace))}</div>
+      </div>
+    `;
+  }
 }
 
 function renderCapSituation() {
@@ -1472,7 +1501,7 @@ function renderCapSituation() {
     }).join('');
     
     return `
-      <div style="display:grid; grid-template-columns: 3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
+      <div style="display:grid; grid-template-columns: 3.23% 15% 2.5% 14.31% 13.31% 13.31% 13.31% 13.31% 11.72%; gap:0; padding:12px 20px; border-bottom:1px solid var(--bg3)">
         <div></div>
         <div style="font-weight:700; font-size:14px">${row.label}</div>
         <div></div>
@@ -1515,14 +1544,14 @@ function renderCapSituation() {
   }).join('');
   
   const fullHtml = html + 
-    `<div style="display:grid; grid-template-columns: 3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%; gap:0; padding:16px 20px 12px 20px; border-top:2px solid var(--bg3)">
+    `<div style="display:grid; grid-template-columns: 3.23% 15% 2.5% 14.31% 13.31% 13.31% 13.31% 13.31% 11.72%; gap:0; padding:16px 20px 12px 20px; border-top:2px solid var(--bg3)">
       <div></div>
       <div style="font-weight:700; font-size:14px">Total Cap Holds</div>
       <div></div>
       ${capHoldsRow}
       <div></div>
     </div>` +
-    `<div style="display:grid; grid-template-columns: 3.23% 17% 2.5% 13.31% 13.31% 13.31% 13.31% 13.31% 10.72%; gap:0; padding:12px 20px">
+    `<div style="display:grid; grid-template-columns: 3.23% 15% 2.5% 14.31% 13.31% 13.31% 13.31% 13.31% 11.72%; gap:0; padding:12px 20px">
       <div></div>
       <div style="font-weight:700; font-size:14px">Max Cap Space</div>
       <div></div>
